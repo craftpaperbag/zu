@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>zu — 伝わりやすい形について</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231a1d24'/%3E%3Ctext x='30' y='45' font-family='sans-serif' font-size='34' font-weight='700' fill='%23ffffff' text-anchor='middle'%3Ezu%3C/text%3E%3Ccircle cx='49' cy='19' r='5' fill='%23e0533d'/%3E%3C/svg%3E">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1a1d24;        /* 主たる文字 */
+    --ink-soft:#5b6270;   /* 副次的な文字 */
+    --line:#dfe3ea;       /* 罫・境界 */
+    --paper:#f7f6f2;      /* 紙の地 */
+    --card:#ffffff;
+    --accent:#e0533d;     /* 朱：ここぞの一点だけ */
+    --accent-soft:#fbeae6;
+    --calm:#3f7d6e;       /* 図の補助色（落ち着いた緑） */
+    --calm-soft:#e6f0ec;
+  }
+  *{box-sizing:border-box;}
+  body{
+    font-family:'Zen Kaku Gothic New',sans-serif;
+    color:var(--ink);
+    background:var(--paper);
+    -webkit-font-smoothing:antialiased;
+    margin:0; line-height:1.8;
+  }
+  .maru{font-family:'Zen Maru Gothic',sans-serif;}
+  .tnum{font-feature-settings:"tnum";}
+  /* やわらかい角丸を全体の通奏低音にする（思想：現実に90°はない） */
+  .soft{border-radius:18px;}
+  .softer{border-radius:26px;}
+  .card-shadow{box-shadow:0 1px 2px rgba(26,29,36,.04),0 8px 24px -12px rgba(26,29,36,.12);}
+  .chip{transition:all .18s ease;}
+  .chip:active{transform:scale(.96);}
+  .tipcard{transition:transform .2s ease, box-shadow .2s ease;}
+  .tipcard:hover{transform:translateY(-3px);box-shadow:0 4px 8px rgba(26,29,36,.05),0 18px 40px -16px rgba(26,29,36,.22);}
+  ::selection{background:var(--accent-soft);}
+  .focusable:focus-visible{outline:3px solid var(--accent);outline-offset:2px;}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
+  .fade-in{animation:fade .5s ease both;}
+  @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+</style>
+</head>
+<body>
+
+<!-- ヘッダー / ヒーロー -->
+<header class="px-6 pt-14 pb-10 md:pt-20 md:pb-14 max-w-5xl mx-auto">
+  <div class="flex items-baseline gap-3">
+    <h1 class="maru font-bold leading-none" style="font-size:clamp(3.2rem,11vw,5.5rem);letter-spacing:-.02em">zu</h1>
+    <span class="inline-block w-2.5 h-2.5 rounded-full mb-2" style="background:var(--accent)"></span>
+  </div>
+
+  <p class="maru mt-1 font-bold" style="font-size:clamp(1.1rem,3.5vw,1.5rem);color:var(--ink)">
+    伝わりやすい形について
+  </p>
+
+  <p class="mt-6 max-w-2xl text-base md:text-lg" style="color:var(--ink-soft)">
+    紙の上に文字を置いた時点で、それはもう「図」です。<br>
+    見せて伝えるすべてのものを、ここでは〈図〉と呼ぶことにします。<br>
+    その図を、ほんの少し伝わりやすくするための覚え書き。
+  </p>
+
+  <!-- 思想の核を一文で。数字ではなく比喩で開く -->
+  <div class="mt-8 p-5 md:p-6 soft" style="background:var(--calm-soft)">
+    <p class="text-sm md:text-base" style="color:#2c5249">
+      理解に1分かかる図を30秒にできたら。120人が見れば、それだけで1時間が生まれます。
+      見た目は枝葉ではなく、人が人に伝えるための本質です。
+    </p>
+  </div>
+</header>
+
+<!-- 検索 + カテゴリ -->
+<div class="px-6 max-w-5xl mx-auto sticky top-0 z-20 pt-2 pb-4" style="background:linear-gradient(var(--paper) 70%,transparent)">
+  <div class="relative">
+    <i data-lucide="search" class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2" style="color:var(--ink-soft)"></i>
+    <input id="q" type="text" placeholder="キーワードで探す（例：余白、角丸、色）"
+      class="focusable w-full pl-12 pr-4 py-3.5 soft border bg-white text-base"
+      style="border-color:var(--line)">
+  </div>
+  <div id="cats" class="flex flex-wrap gap-2 mt-3"></div>
+</div>
+
+<!-- Tips一覧 -->
+<main class="px-6 max-w-5xl mx-auto pb-8">
+  <div id="count" class="text-sm mb-4" style="color:var(--ink-soft)"></div>
+  <div id="grid" class="grid gap-5 md:grid-cols-2"></div>
+  <div id="empty" class="hidden text-center py-16" style="color:var(--ink-soft)">
+    <i data-lucide="telescope" class="w-8 h-8 mx-auto mb-3"></i>
+    <p>その言葉では、まだ橋がかかっていません。別の言葉で探してみてください。</p>
+  </div>
+</main>
+
+<!-- フッター：思想 -->
+<footer class="px-6 py-14 mt-6" style="background:var(--ink);color:#cfd4dd">
+  <div class="max-w-2xl mx-auto">
+    <p class="maru text-lg" style="color:#fff">溜め込んでいても、何も生まれなかった。</p>
+    <p class="mt-4 text-sm leading-loose">
+      知識は、誰かに使ってもらわなければ、脳のノイズとしていつか消えていくだけ。
+      このページは、わたしが溜め込んできたものを、できる限りすべて、できる限り読みやすく開くための場所です。<br>
+      あなたはこれから、どこに橋をかけようとしているでしょう。その橋の、支えの一石になれたら。
+    </p>
+    <p class="mt-6 text-xs" style="color:#7c8492">craftpaperbag</p>
+  </div>
+</footer>
+
+<script>
+/* =========================================================
+   ▼▼▼ ここだけ触れば増やせる：Tipsのたね ▼▼▼
+   why = 現実世界の観察・例え（このサイトの命）
+   visual = SVG/HTML直描きの図（主役・6〜7割）
+   ========================================================= */
+const CATEGORIES = [
+  { id:"align",  label:"整列と余白", icon:"align-start-vertical" },
+  { id:"shape",  label:"形と質感",   icon:"square-dashed" },
+  { id:"color",  label:"色",         icon:"palette" },
+  { id:"text",   label:"文字と図",   icon:"type" },
+  { id:"cut",    label:"削る",       icon:"scissors" },
+];
+
+const TIPS = [
+  {
+    id:"radius",
+    cat:"shape",
+    title:"角丸は、安心する",
+    claim:"角を丸めるだけで、図はやわらかく、近づきやすくなる。",
+    why:"現実の世界に、画面の中のような完全な90°の角はほとんど存在しません。石も、葉も、机の縁も、よく見れば丸い。だから丸みは「自然なもの」として無意識に受け入れられ、鋭い直角は「人工物・注意」として身構えさせます。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="直角の四角と角丸の四角の比較">
+      <rect x="24" y="30" width="90" height="60" fill="none" stroke="var(--ink)" stroke-width="2"/>
+      <text x="69" y="108" text-anchor="middle" font-size="11" fill="var(--ink-soft)">身構える</text>
+      <rect x="206" y="30" width="90" height="60" rx="16" fill="var(--calm-soft)" stroke="var(--calm)" stroke-width="2"/>
+      <text x="251" y="108" text-anchor="middle" font-size="11" fill="var(--calm)">近づける</text>
+      <path d="M130 60 H190" stroke="var(--ink-soft)" stroke-width="1.5" stroke-dasharray="3 3"/>
+      <path d="M184 54 L192 60 L184 66" fill="none" stroke="var(--ink-soft)" stroke-width="1.5"/>
+    </svg>`,
+    apply:"見出しカード・ボタン・囲みは、まず角を少し丸める。安心させたい場面ほど大きめに。",
+    term:"",
+  },
+  {
+    id:"kanizsa",
+    cat:"align",
+    title:"並べると、線が見えてくる",
+    claim:"余白と整列だけで、引いていない線が見えてくる。",
+    why:"人の目は、意味のある形を勝手に見つけ出します。バラバラに置かれた点も、揃えて並べれば、そこに「列」という見えない線が浮かび上がる。罫線をたくさん引くより、揃えるほうが構造は伝わります。線は、引かないことで引ける。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="揃っていない配置と揃った配置の比較">
+      <g fill="var(--ink-soft)">
+        <circle cx="30" cy="34" r="7"/><circle cx="70" cy="58" r="7"/><circle cx="48" cy="86" r="7"/><circle cx="92" cy="40" r="7"/>
+      </g>
+      <text x="60" y="112" text-anchor="middle" font-size="11" fill="var(--ink-soft)">散らばり</text>
+      <g fill="var(--calm)">
+        <circle cx="210" cy="40" r="7"/><circle cx="250" cy="40" r="7"/><circle cx="290" cy="40" r="7"/>
+        <circle cx="210" cy="76" r="7"/><circle cx="250" cy="76" r="7"/><circle cx="290" cy="76" r="7"/>
+      </g>
+      <line x1="196" y1="40" x2="304" y2="40" stroke="var(--calm)" stroke-width="1" stroke-dasharray="2 4" opacity=".6"/>
+      <line x1="196" y1="76" x2="304" y2="76" stroke="var(--calm)" stroke-width="1" stroke-dasharray="2 4" opacity=".6"/>
+      <text x="250" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">見えない線</text>
+    </svg>`,
+    apply:"罫線を足す前に、まず端を揃える。揃えるだけで多くの線は不要になる。",
+    term:"主観的輪郭（カニッツァの三角形）",
+  },
+  {
+    id:"contrast",
+    cat:"color",
+    title:"一点だけ、色を許す",
+    claim:"全部を目立たせると、何も目立たない。",
+    why:"夜空に星が一つなら必ず見つかる。だが空一面が光れば、どれも見えなくなります。強調は希少だから効く。色を足すほど主役は埋もれます。本当に見てほしい一点にだけ色を許し、残りは静かにさせる。",
+    visual:`<div class="flex gap-6 items-end justify-center py-2">
+      <div class="text-center">
+        <div class="flex gap-1.5 justify-center">
+          <span class="inline-block w-6 h-10 soft" style="background:var(--accent)"></span>
+          <span class="inline-block w-6 h-10 soft" style="background:var(--calm)"></span>
+          <span class="inline-block w-6 h-10 soft" style="background:#d9a23c"></span>
+          <span class="inline-block w-6 h-10 soft" style="background:#4a6fb0"></span>
+        </div>
+        <p class="text-xs mt-2" style="color:var(--ink-soft)">全部 → 埋もれる</p>
+      </div>
+      <div class="text-center">
+        <div class="flex gap-1.5 justify-center">
+          <span class="inline-block w-6 h-10 soft" style="background:var(--line)"></span>
+          <span class="inline-block w-6 h-10 soft" style="background:var(--accent)"></span>
+          <span class="inline-block w-6 h-10 soft" style="background:var(--line)"></span>
+          <span class="inline-block w-6 h-10 soft" style="background:var(--line)"></span>
+        </div>
+        <p class="text-xs mt-2" style="color:var(--calm)">一点 → 際立つ</p>
+      </div>
+    </div>`,
+    apply:"資料の色は『地の色＋文字色＋強調色1つ』から始める。増やすのは、理由ができてから。",
+    term:"",
+  },
+  {
+    id:"chunk",
+    cat:"cut",
+    title:"近いものは、仲間に見える",
+    claim:"間を空けるだけで、情報はグループに分かれる。",
+    why:"人混みの中でも、寄り添って歩く二人は『連れ』だと一目でわかる。距離が関係を語るからです。項目の間の余白を変えるだけで、囲み線がなくても『ここからここまでが一塊』だと伝わります。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="均等配置とグループ化された配置の比較">
+      <g fill="var(--ink-soft)">
+        <rect x="20" y="30" width="80" height="12" rx="4"/><rect x="20" y="50" width="80" height="12" rx="4"/>
+        <rect x="20" y="70" width="80" height="12" rx="4"/><rect x="20" y="90" width="80" height="12" rx="4"/>
+      </g>
+      <g fill="var(--calm)">
+        <rect x="220" y="22" width="80" height="12" rx="4"/><rect x="220" y="38" width="80" height="12" rx="4"/>
+        <rect x="220" y="74" width="80" height="12" rx="4"/><rect x="220" y="90" width="80" height="12" rx="4"/>
+      </g>
+      <text x="60" y="114" text-anchor="middle" font-size="11" fill="var(--ink-soft)">均等＝関係不明</text>
+      <text x="260" y="114" text-anchor="middle" font-size="11" fill="var(--calm)">余白＝2つの組</text>
+    </svg>`,
+    apply:"見出しと本文は近づけ、段落と段落は離す。線で囲う前に、まず余白で仕分ける。",
+    term:"近接の原理",
+  },
+  {
+    id:"typeface",
+    cat:"text",
+    title:"文字も、図の一部",
+    claim:"大きさと太さの差が、読む順番を決める。",
+    why:"声に抑揚があるように、文字にも強弱があります。全部が同じ大きさの文章は、棒読みのアナウンスと同じで、どこが大事か伝わらない。大きさ・太さに差をつけることが、そのまま『先にここを読んで』という案内になります。",
+    visual:`<div class="py-2 leading-snug">
+      <p class="text-xs" style="color:var(--ink-soft)">差がない（棒読み）</p>
+      <div class="soft p-3 mt-1 mb-3" style="background:#fff;border:1px solid var(--line)">
+        <p class="text-sm">3月の予定 全体会議は15日です 資料は前日まで</p>
+      </div>
+      <p class="text-xs" style="color:var(--calm)">差がある（案内になる）</p>
+      <div class="soft p-3 mt-1" style="background:#fff;border:1px solid var(--line)">
+        <p class="text-[11px]" style="color:var(--ink-soft)">3月の予定</p>
+        <p class="maru font-bold text-lg leading-tight">全体会議 15日</p>
+        <p class="text-xs" style="color:var(--ink-soft)">資料は前日まで</p>
+      </div>
+    </div>`,
+    apply:"1枚の中で文字サイズは3段階まで。『見出し・本文・補足』に役割を割り振る。",
+    term:"視覚的階層",
+  },
+  {
+    id:"whitespace",
+    cat:"align",
+    title:"余白は、空白ではない",
+    claim:"何も置かない場所が、置いたものを引き立てる。",
+    why:"美術館で名画の周りに広く壁が空けてあるのは、作品に集中させるためです。余白は『埋め忘れ』ではなく、主役を呼吸させるための設計。詰め込むほど、一つひとつの価値は薄まります。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="詰め込んだ配置と余白をとった配置">
+      <rect x="14" y="16" width="120" height="88" rx="10" fill="#fff" stroke="var(--line)"/>
+      <g fill="var(--ink-soft)">
+        <rect x="22" y="24" width="104" height="10" rx="3"/><rect x="22" y="38" width="104" height="10" rx="3"/>
+        <rect x="22" y="52" width="104" height="10" rx="3"/><rect x="22" y="66" width="104" height="10" rx="3"/>
+        <rect x="22" y="80" width="104" height="10" rx="3"/><rect x="22" y="94" width="60" height="6" rx="3"/>
+      </g>
+      <rect x="186" y="16" width="120" height="88" rx="10" fill="#fff" stroke="var(--line)"/>
+      <rect x="206" y="46" width="80" height="14" rx="4" fill="var(--calm)"/>
+      <rect x="206" y="66" width="50" height="8" rx="3" fill="var(--calm-soft)"/>
+    </svg>`,
+    apply:"要素を足したくなったら、まず減らせないか考える。余白は最後に削る、最初に削らない。",
+    term:"",
+  },
+];
+/* =========================================================
+   ▲▲▲ たねは以上。以下は描画ロジック（基本さわらない） ▲▲▲
+   ========================================================= */
+
+let activeCat = "all";
+let keyword = "";
+const catLabel = id => (CATEGORIES.find(c=>c.id===id)||{}).label || "";
+const catIcon  = id => (CATEGORIES.find(c=>c.id===id)||{}).icon  || "tag";
+
+function renderCats(){
+  const wrap = document.getElementById("cats");
+  const mk = (id,label,icon,on)=>`
+    <button data-cat="${id}" class="chip focusable inline-flex items-center gap-1.5 px-3.5 py-2 soft text-sm border"
+      style="${on
+        ? 'background:var(--ink);color:#fff;border-color:var(--ink)'
+        : 'background:#fff;color:var(--ink);border-color:var(--line)'}">
+      <i data-lucide="${icon}" class="w-4 h-4"></i>${label}
+    </button>`;
+  wrap.innerHTML =
+    mk("all","すべて","layout-grid",activeCat==="all") +
+    CATEGORIES.map(c=>mk(c.id,c.label,c.icon,activeCat===c.id)).join("");
+  wrap.querySelectorAll("button").forEach(b=>{
+    b.onclick=()=>{activeCat=b.dataset.cat;renderCats();renderGrid();};
+  });
+  lucide.createIcons();
+}
+
+function match(t){
+  const okCat = activeCat==="all" || t.cat===activeCat;
+  const k = keyword.trim();
+  const okKey = !k || (t.title+t.claim+t.why+t.apply+t.term+catLabel(t.cat)).toLowerCase().includes(k.toLowerCase());
+  return okCat && okKey;
+}
+
+function card(t){
+  return `<article class="tipcard fade-in soft card-shadow overflow-hidden" style="background:var(--card)">
+    <div class="px-5 pt-4 flex items-center gap-1.5 text-xs" style="color:var(--ink-soft)">
+      <i data-lucide="${catIcon(t.cat)}" class="w-3.5 h-3.5"></i>${catLabel(t.cat)}
+    </div>
+    <h3 class="maru font-bold px-5 mt-1" style="font-size:1.25rem">${t.title}</h3>
+    <p class="px-5 mt-1 text-sm" style="color:var(--accent)">${t.claim}</p>
+    <div class="mx-5 my-3 p-3 soft" style="background:var(--paper)">${t.visual}</div>
+    <p class="px-5 text-sm leading-relaxed" style="color:var(--ink)">${t.why}</p>
+    <div class="px-5 mt-3 pb-1 flex items-start gap-2">
+      <i data-lucide="check" class="w-4 h-4 mt-1 shrink-0" style="color:var(--calm)"></i>
+      <p class="text-sm" style="color:var(--ink-soft)">${t.apply}</p>
+    </div>
+    ${t.term?`<p class="px-5 pb-4 pt-2 text-xs" style="color:#9aa0ab">用語：${t.term}</p>`:`<div class="pb-4"></div>`}
+  </article>`;
+}
+
+function renderGrid(){
+  const list = TIPS.filter(match);
+  const grid = document.getElementById("grid");
+  const empty = document.getElementById("empty");
+  const count = document.getElementById("count");
+  grid.innerHTML = list.map(card).join("");
+  empty.classList.toggle("hidden", list.length>0);
+  count.textContent = `${list.length} 件の覚え書き`;
+  lucide.createIcons();
+}
+
+document.getElementById("q").addEventListener("input",e=>{keyword=e.target.value;renderGrid();});
+renderCats();
+renderGrid();
+lucide.createIcons();
+</script>
+</body>
+</html>
