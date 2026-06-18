@@ -389,6 +389,58 @@ const TIPS_space = [
     apply:"一枚が四方へ広がり始めたら、分割の合図。1枚1メッセージに割り直す。",
     term:"",
   },
+  {
+    id:"no-lost-reader",
+    cat:"space",
+    tags:["hierarchy"],
+    title:"迷子を、作らない",
+    claim:"要素どうしの関係が、ひと目で見えるようにする。",
+    why:"知らない街で地図を渡されても、いま自分がどこにいて、どの道がどこへ続くのかが描かれていなければ、たちまち迷子になります。図も同じで、置かれた要素が上下なのか、どれがどれに属すのか、横並びなのかが見えないと、読み手は自分の居場所を見失う。並べる前にその関係を決めて、配置でそのまま示します。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="関係を決めずに並べると読み手は迷子になり、上下や従属を配置で示すと迷わない">
+      <g fill="var(--ink-soft)">
+        <rect x="24" y="28" width="70" height="13" rx="4"/>
+        <rect x="46" y="52" width="70" height="13" rx="4"/>
+        <rect x="30" y="76" width="70" height="13" rx="4"/>
+      </g>
+      <text x="70" y="110" text-anchor="middle" font-size="11" fill="var(--ink-soft)">関係が読めない</text>
+      <rect x="212" y="28" width="84" height="13" rx="4" fill="var(--calm)"/>
+      <g fill="var(--calm-soft)">
+        <rect x="224" y="52" width="72" height="11" rx="3"/>
+        <rect x="224" y="68" width="72" height="11" rx="3"/>
+      </g>
+      <text x="254" y="110" text-anchor="middle" font-size="11" fill="var(--calm)">上下と従属が見える</text>
+    </svg>`,
+    apply:"並べる前に、要素どうしが上下か・従属か・並列かを決め、その関係を配置で示す。",
+    term:"",
+  },
+  {
+    id:"annotation-target",
+    cat:"space",
+    tags:["text"],
+    title:"その注釈、どこの話？",
+    claim:"全体への補足でないなら、どこにかかるかを示す。",
+    why:"大勢の集合写真に『この人が優勝者』とだけ添えても、どの顔のことか分かりません。注釈も同じで、図の隅に置いただけでは、どの部分の話なのか伝わらない。全体にかかるものでなければ、対象のすぐそばに置くか、印でつないで『ここの話だ』とはっきり示します。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="注釈を隅に置くとどこの話か不明、対象のそばに印で結ぶとかかる先が伝わる">
+      <g fill="var(--ink-soft)">
+        <rect x="24" y="24" width="34" height="22" rx="4"/>
+        <rect x="66" y="24" width="34" height="22" rx="4"/>
+        <rect x="108" y="24" width="22" height="22" rx="4"/>
+      </g>
+      <text x="26" y="82" font-size="10" fill="var(--ink-soft)">※要確認</text>
+      <text x="78" y="108" text-anchor="middle" font-size="11" fill="var(--ink-soft)">どこの話?</text>
+      <g fill="var(--ink-soft)">
+        <rect x="190" y="24" width="34" height="22" rx="4"/>
+        <rect x="232" y="24" width="34" height="22" rx="4"/>
+        <rect x="274" y="24" width="22" height="22" rx="4"/>
+      </g>
+      <rect x="234" y="22" width="30" height="26" rx="6" fill="none" stroke="var(--calm)" stroke-width="1.5"/>
+      <line x1="249" y1="48" x2="249" y2="62" stroke="var(--calm)" stroke-width="1.5"/>
+      <text x="249" y="76" text-anchor="middle" font-size="10" fill="var(--calm)">※要確認</text>
+      <text x="242" y="108" text-anchor="middle" font-size="11" fill="var(--calm)">ここ、と示す</text>
+    </svg>`,
+    apply:"図全体にかからない注は、対象のすぐ近くに置くか、印や線でかかる先を結ぶ。",
+    term:"",
+  },
 ];
 
 const TIPS_hierarchy = [
@@ -651,6 +703,30 @@ const TIPS_hierarchy = [
     apply:"本文は字幅の変わる（プロポーショナル）書体にし、等幅はコードや数字の桁揃えだけに使う。",
     term:"",
   },
+  {
+    id:"means-not-end",
+    cat:"hierarchy",
+    tags:[],
+    title:"図は、手段でしかない",
+    claim:"凝る前に、誰に何を伝えたいかへ立ち返る。",
+    why:"道具を磨くことに夢中になると、その道具で何をしたかったのかを忘れてしまいます。図づくりも同じで、飾りや作り込みに時間をかけるうち、本来の目的が後ろへ追いやられる。『誰に・何を・いつまでに』を先に決めておけば、手を動かすたびにそこへ立ち返れます。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="作り込みに凝るより、誰に何を伝えるという目的を狙うほうが図は役に立つ">
+      <rect x="28" y="30" width="84" height="58" rx="10" fill="none" stroke="var(--ink-soft)"/>
+      <g fill="var(--ink-soft)" opacity=".7">
+        <path d="M44 44 l1.5 4 l4 1.5 l-4 1.5 l-1.5 4 l-1.5 -4 l-4 -1.5 l4 -1.5 Z"/>
+        <path d="M96 44 l1.5 4 l4 1.5 l-4 1.5 l-1.5 4 l-1.5 -4 l-4 -1.5 l4 -1.5 Z"/>
+        <circle cx="70" cy="64" r="6"/>
+        <rect x="42" y="76" width="56" height="5" rx="2"/>
+      </g>
+      <text x="70" y="108" text-anchor="middle" font-size="11" fill="var(--ink-soft)">凝るのが目的に</text>
+      <circle cx="242" cy="56" r="26" fill="none" stroke="var(--calm)" stroke-width="2"/>
+      <circle cx="242" cy="56" r="15" fill="none" stroke="var(--calm)" stroke-width="2"/>
+      <circle cx="242" cy="56" r="5" fill="var(--accent)"/>
+      <text x="242" y="108" text-anchor="middle" font-size="11" fill="var(--calm)">目的を狙う</text>
+    </svg>`,
+    apply:"作り始める前に、誰に・何を・いつまでに伝えるかを書き出し、迷ったらそこへ戻る。",
+    term:"",
+  },
 ];
 
 const TIPS_color = [
@@ -882,6 +958,28 @@ const TIPS_color = [
     apply:"囲みたくなったら、まず罫線をやめて背景にうっすら色を敷けないか試す。",
     term:"",
   },
+  {
+    id:"gradient-careful",
+    cat:"color",
+    tags:[],
+    title:"グラデーションは、慎重に",
+    claim:"むやみなグラデーションは、野暮ったくなる。",
+    why:"夕焼けの空がきれいなのは、色が自然になだらかに移っていくからです。けれど図の中で意味もなく色を混ぜると、境目が濁って、かえってもたついた印象になる。塗りはまず一色のベタで考え、グラデーションは奥行きや光を本当に出したいときだけ、控えめに使います。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="むやみなグラデーションは色が濁って野暮ったく、一色のベタはすっきり締まる">
+      <defs>
+        <linearGradient id="grad-yabo" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="var(--accent)"/>
+          <stop offset="1" stop-color="var(--calm)"/>
+        </linearGradient>
+      </defs>
+      <rect x="28" y="30" width="92" height="56" rx="12" fill="url(#grad-yabo)"/>
+      <text x="74" y="108" text-anchor="middle" font-size="11" fill="var(--ink-soft)">濁って野暮ったい</text>
+      <rect x="200" y="30" width="92" height="56" rx="12" fill="var(--calm)"/>
+      <text x="246" y="108" text-anchor="middle" font-size="11" fill="var(--calm)">一色で締まる</text>
+    </svg>`,
+    apply:"塗りはまず一色のベタで考える。グラデーションは奥行きや光が要るときだけ控えめに。",
+    term:"",
+  },
 ];
 
 const TIPS_text = [
@@ -1016,9 +1114,9 @@ const TIPS_text = [
     tags:[],
     title:"下線より、太字",
     claim:"下線で引くより、太字で立たせる。",
-    why:"下線は文字のすぐ足元を一本の線で横切ります。日本語には下へ伸びる画が多く、その線と重なって字の形が読みにくくなる。リンク以外で強調したいなら、足元を切らずに文字そのものを太くするほうが、すっきりと目に留まります。",
-    visual:`<div class="py-2" role="img" aria-label="下線は文字の足元を切って読みにくくする、強調は太字が無難">
-      <p class="text-xs" style="color:var(--ink-soft)">足元を切る下線</p>
+    why:"下線は文字を強調するために引くのに、線そのものが紙の上では強く目を引きます。すると、立たせたい言葉より、足元に増えた一本の線が先に目に飛び込んでしまう。線を一本も足さず、文字そのものを太くすれば、余計なノイズを増やさずに狙った一語だけがすっと立ちます。",
+    visual:`<div class="py-2" role="img" aria-label="下線は線そのものがノイズになる、線を足さず文字を太くするほうが狙った語が立つ">
+      <p class="text-xs" style="color:var(--ink-soft)">線が先に目立つ</p>
       <div class="soft p-3 mt-1 mb-3 text-sm" style="background:var(--card);border:1px solid var(--line);color:var(--ink)">
         会議は<span style="border-bottom:2px solid var(--ink-soft);padding-bottom:1px">必ず15日</span>に開きます
       </div>
@@ -1027,7 +1125,7 @@ const TIPS_text = [
         会議は<strong class="font-bold">必ず15日</strong>に開きます
       </div>
     </div>`,
-    apply:"リンク以外の強調には下線を使わず、太字で立たせる。",
+    apply:"リンク以外の強調では下線を引かず、線を足さずに文字を太くする。",
     term:"",
   },
   {
@@ -1073,6 +1171,88 @@ const TIPS_text = [
     apply:"繰り返し出る定型の概念は、誰もが知る形のアイコンに置き換える。",
     term:"",
   },
+  {
+    id:"same-word",
+    cat:"text",
+    tags:[],
+    title:"同じものは、同じ言葉で",
+    claim:"一つのものを指す言葉は、最後まで一つに統一する。",
+    why:"同じ人を、ある人は『田中さん』、別の人は『部長』と呼ぶと、聞き手は『それは同じ人?』と一瞬立ち止まります。図の中でも、同じものを『申込』『お申し込み』『エントリー』と書き分けると、読み手はそのたびに『さっきのと同じ?』と確かめることになる。言葉を一つに揃えれば、その手間がまるごと消えます。",
+    visual:`<div class="py-2" role="img" aria-label="同じものを違う言葉で書くと読み手が照合に迷う、言葉を一つに統一すると迷わない">
+      <p class="text-xs" style="color:var(--ink-soft)">言葉が揺れる</p>
+      <div class="soft p-3 mt-1 mb-3 flex items-center gap-2 text-sm" style="background:var(--card);border:1px solid var(--line);color:var(--ink-soft)">
+        <span>申込</span><span>→</span><span>お申し込み</span><span>→</span><span>エントリー</span>
+        <span class="text-xs maru font-bold shrink-0" style="color:var(--accent)">同じ?</span>
+      </div>
+      <p class="text-xs" style="color:var(--calm)">言葉を揃える</p>
+      <div class="soft p-3 mt-1 flex items-center gap-2 text-sm" style="background:var(--card);border:1px solid var(--line);color:var(--ink)">
+        <span>申込</span><span>→</span><span>申込</span><span>→</span><span>申込</span>
+      </div>
+    </div>`,
+    apply:"同じ対象を指す言葉は一つに決め、図全体で同じ表記を貫く。",
+    term:"表記ゆれ",
+  },
+  {
+    id:"different-word",
+    cat:"text",
+    tags:[],
+    title:"違うものは、違う言葉で",
+    claim:"別の意味のものに、同じ言葉を使い回さない。",
+    why:"分かれ道の右も左も同じ『こっち』という看板だったら、どちらへ進めばいいか分かりません。考え方も位置づけも違うものを同じ言葉で呼ぶと、読み手は二つを同じものだと取り違えます。違うものには違う言葉を当てれば、その違いが言葉の上でもくっきり立ちます。",
+    visual:`<div class="py-2" role="img" aria-label="違う意味のものを同じ言葉で呼ぶと取り違える、別の言葉を当てると違いが立つ">
+      <p class="text-xs" style="color:var(--ink-soft)">同じ言葉で別物</p>
+      <div class="soft p-3 mt-1 mb-3 flex items-center gap-2 text-sm" style="background:var(--card);border:1px solid var(--line);color:var(--ink-soft)">
+        <span>確認</span><span>→</span><span>確認</span>
+        <span class="text-xs maru font-bold shrink-0" style="color:var(--accent)">どっち?</span>
+      </div>
+      <p class="text-xs" style="color:var(--calm)">別の言葉を当てる</p>
+      <div class="soft p-3 mt-1 flex items-center gap-2 text-sm" style="background:var(--card);border:1px solid var(--line);color:var(--ink)">
+        <span>下書きチェック</span><span>→</span><span>最終承認</span>
+      </div>
+    </div>`,
+    apply:"考え方や位置づけが違うものには、それぞれ違う言葉を当てて区別する。",
+    term:"",
+  },
+  {
+    id:"plain-words",
+    cat:"text",
+    tags:[],
+    title:"やさしい言葉で、言う",
+    claim:"難しい言葉は、やさしい言葉に置き換える。",
+    why:"道を尋ねたのに聞き慣れない言葉ばかりで返されると、結局どう行けばいいのか分かりません。図に難しい言葉が並ぶと、読み手はまず意味を調べる手間で立ち止まる。日常の言葉に置き換えれば、立ち止まらずに中身がそのまま頭へ入ってきます。煙に巻きたいときだけは、別ですが。",
+    visual:`<div class="py-2" role="img" aria-label="難しい言葉は読み手を立ち止まらせる、やさしい言葉に置き換えると中身が届く">
+      <p class="text-xs" style="color:var(--ink-soft)">難しい言葉</p>
+      <div class="soft p-3 mt-1 mb-3 text-sm" style="background:var(--card);border:1px solid var(--line);color:var(--ink-soft)">
+        KPIを最大化すべくリソースをアロケートする
+      </div>
+      <p class="text-xs" style="color:var(--calm)">やさしい言葉</p>
+      <div class="soft p-3 mt-1 text-sm" style="background:var(--card);border:1px solid var(--line);color:var(--ink)">
+        成果を上げるために、人と時間を割り当てる
+      </div>
+    </div>`,
+    apply:"専門語や横文字は、日常のやさしい言葉に置き換えられないか一度試す。",
+    term:"",
+  },
+  {
+    id:"say-it-straight",
+    cat:"text",
+    tags:[],
+    title:"はっきり、言う",
+    claim:"遠回しにぼかさず、してほしいことを言い切る。",
+    why:"『みなさまにご遠慮いただいております』と書かれた札を見ても、結局やっていいのか駄目なのか、一瞬迷います。やわらげた言い回しは、肝心の用件をぼかしてしまう。まず『やめてください』とはっきり言い切り、やわらげる言葉はそのあとに添えれば、誤解なくまっすぐ届きます。",
+    visual:`<div class="py-2" role="img" aria-label="遠回しの言い回しは用件をぼかす、まずはっきり言い切るほうがまっすぐ届く">
+      <p class="text-xs" style="color:var(--ink-soft)">ぼかす</p>
+      <div class="soft p-3 mt-1 mb-3 text-sm" style="background:var(--card);border:1px solid var(--line);color:var(--ink-soft)">
+        ご遠慮いただいております
+      </div>
+      <p class="text-xs" style="color:var(--calm)">言い切る</p>
+      <div class="soft p-3 mt-1 text-sm" style="background:var(--card);border:1px solid var(--line);color:var(--ink)">
+        <strong class="font-bold">やめてください</strong><span style="color:var(--ink-soft)">（ご協力をお願いします）</span>
+      </div>
+    </div>`,
+    apply:"禁止やお願いは、やわらげる前にまず結論をはっきり言い切る。",
+    term:"",
+  },
 ];
 
 const TIPS_draw = [
@@ -1098,7 +1278,7 @@ const TIPS_draw = [
       <polygon points="208,40 286,56 208,72" fill="var(--calm)"/>
       <text x="242" y="108" text-anchor="middle" font-size="11" fill="var(--calm)">三角ひとつ</text>
     </svg>`,
-    apply:"矢印は三角ひとつで描く。距離や長さを示したいときだけ、五角形にする。",
+    apply:"矢印は三角ひとつで描く。距離や流れも示したいときだけ、軸を太らせた矢印（根元が四角いホームベース型）にする。",
     term:"",
   },
   {
@@ -1212,14 +1392,14 @@ const TIPS_draw = [
       <rect x="128" y="35" width="16" height="57" fill="#8a6db0"/>
       <text x="82" y="110" text-anchor="middle" font-size="11" fill="var(--ink-soft)">色を盛る</text>
       <line x1="184" y1="92" x2="300" y2="92" stroke="var(--line)" stroke-width="1.5"/>
-      <g fill="var(--calm)">
+      <g fill="var(--ink-soft)">
         <rect x="188" y="43" width="16" height="49"/>
         <rect x="212" y="58" width="16" height="34"/>
         <rect x="260" y="50" width="16" height="42"/>
         <rect x="284" y="35" width="16" height="57"/>
       </g>
-      <rect x="236" y="28" width="16" height="64" fill="var(--accent)"/>
-      <text x="242" y="110" text-anchor="middle" font-size="11" fill="var(--calm)">絞って一点を立てる</text>
+      <rect x="236" y="28" width="16" height="64" fill="var(--calm)"/>
+      <text x="242" y="110" text-anchor="middle" font-size="11" fill="var(--calm)">灰色に落として一本を立てる</text>
     </svg>`,
     apply:"グラフの色は一系統の濃淡でそろえ、強調したい系列だけ一色を立てる。",
     term:"",
@@ -1295,6 +1475,30 @@ const TIPS_draw = [
       <text x="242" y="108" text-anchor="middle" font-size="11" fill="var(--calm)">余白を活かす</text>
     </svg>`,
     apply:"隙間を埋めるためだけの挿絵は置かない。余白はそのまま主役のために残す。",
+    term:"",
+  },
+  {
+    id:"consistent-line-weight",
+    cat:"draw",
+    tags:[],
+    title:"線の太さに、意味を持たせる",
+    claim:"同じ意味の線は、同じ太さでそろえる。",
+    why:"同じ強さで握手したつもりでも、相手によって力加減が変わっていたら、受け取る側は『今のは何か意味が?』と勘ぐります。線も同じで、同じはずのつながりが場所によって太かったり細かったりすると、読み手はそこに違いを探してしまう。太さを変えるのは、意味を変えたいときだけにします。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="同じ意味の線の太さがばらつくと違いを勘ぐらせる、太さをそろえると迷いがない">
+      <g stroke="var(--ink-soft)" stroke-linecap="round">
+        <line x1="28" y1="34" x2="128" y2="34" stroke-width="1"/>
+        <line x1="28" y1="56" x2="128" y2="56" stroke-width="5"/>
+        <line x1="28" y1="78" x2="128" y2="78" stroke-width="2.5"/>
+      </g>
+      <text x="78" y="106" text-anchor="middle" font-size="11" fill="var(--ink-soft)">太さがバラバラ</text>
+      <g stroke="var(--calm)" stroke-linecap="round">
+        <line x1="192" y1="34" x2="292" y2="34" stroke-width="2.5"/>
+        <line x1="192" y1="56" x2="292" y2="56" stroke-width="2.5"/>
+        <line x1="192" y1="78" x2="292" y2="78" stroke-width="2.5"/>
+      </g>
+      <text x="242" y="106" text-anchor="middle" font-size="11" fill="var(--calm)">そろえる</text>
+    </svg>`,
+    apply:"同じ役割の線は同じ太さに統一する。太さを変えるのは、意味の違いを示すときだけ。",
     term:"",
   },
 ];
