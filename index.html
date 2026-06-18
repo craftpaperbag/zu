@@ -47,6 +47,7 @@
   ::selection{background:var(--accent-soft);}
   .focusable:focus-visible{outline:3px solid var(--accent);outline-offset:2px;}
   @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
+  .is-hidden{display:none!important;}
   .fade-in{animation:fade .5s ease both;}
   @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
   .tipcard{cursor:pointer;}
@@ -60,9 +61,16 @@
 <body>
 
 <!-- ヘッダー / ヒーロー -->
-<header class="px-6 pt-14 pb-10 md:pt-20 md:pb-14 max-w-5xl mx-auto">
+<header id="top" class="relative px-6 pt-14 pb-10 md:pt-20 md:pb-14 max-w-5xl mx-auto">
+  <div class="absolute right-6 top-5 md:top-7">
+    <button id="history-open" type="button"
+      class="focusable chip inline-flex items-center gap-1.5 text-sm soft px-3 py-1.5 border"
+      style="color:var(--ink-soft);background:var(--card);border-color:var(--line);cursor:pointer">
+      <i data-lucide="history" class="w-4 h-4"></i>更新履歴
+    </button>
+  </div>
   <div class="flex items-baseline gap-3">
-    <h1 class="maru font-bold leading-none" style="font-size:clamp(3.2rem,11vw,5.5rem);letter-spacing:-.02em">zu</h1>
+    <h1 id="hero-title" class="maru font-bold leading-none" style="font-size:clamp(3.2rem,11vw,5.5rem);letter-spacing:-.02em">zu</h1>
     <span class="inline-block w-2.5 h-2.5 rounded-full mb-2" style="background:var(--accent)"></span>
   </div>
 
@@ -86,12 +94,24 @@
 </header>
 
 <!-- 検索 + カテゴリ -->
-<div class="px-6 max-w-5xl mx-auto sticky top-0 z-20 pt-2 pb-4" style="background:linear-gradient(var(--paper) 70%,transparent)">
-  <div class="relative">
-    <i data-lucide="search" class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2" style="color:var(--ink-soft)"></i>
-    <input id="q" type="text" placeholder="キーワードで探す（例：余白、角丸、色）"
-      class="focusable w-full pl-12 pr-4 py-3.5 soft border bg-white text-base"
-      style="border-color:var(--line)">
+<div class="px-6 max-w-5xl mx-auto sticky top-0 z-20 pt-2 pb-4" style="background:linear-gradient(var(--paper) 78%,transparent)">
+  <div class="flex items-center gap-2.5">
+    <a id="mini-logo" href="#top" aria-label="ページの先頭へ戻る"
+      class="is-hidden focusable chip shrink-0 inline-flex items-baseline gap-1 maru font-bold leading-none"
+      style="font-size:1.6rem;color:var(--ink);text-decoration:none">
+      zu<span class="inline-block w-1.5 h-1.5 rounded-full" style="background:var(--accent)"></span>
+    </a>
+    <div class="relative flex-1">
+      <i data-lucide="search" class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2" style="color:var(--ink-soft)"></i>
+      <input id="q" type="text" placeholder="キーワードで探す（例：余白、角丸、色）"
+        class="focusable w-full pl-12 pr-11 py-3.5 soft border bg-white text-base"
+        style="border-color:var(--line)">
+      <button id="q-clear" type="button" aria-label="検索をクリア"
+        class="is-hidden focusable chip absolute right-3 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-7 h-7 soft"
+        style="background:var(--paper);color:var(--ink-soft);border:none;cursor:pointer">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+    </div>
   </div>
   <div id="cats" class="flex flex-wrap gap-2 mt-3"></div>
 </div>
@@ -144,10 +164,6 @@
   <div class="max-w-2xl mx-auto flex items-center justify-between gap-4">
     <p class="text-xs" style="color:#7c8492">craftpaperbag</p>
     <div class="flex items-center gap-5">
-      <button id="history-open" type="button"
-        class="focusable chip inline-flex items-center gap-2 text-sm" style="color:#cfd4dd;background:none;border:none;padding:0;cursor:pointer">
-        <i data-lucide="history" class="w-4 h-4"></i>更新履歴
-      </button>
       <a href="https://github.com/craftpaperbag/zu" target="_blank" rel="noopener"
         class="focusable inline-flex items-center gap-2 text-sm" style="color:#cfd4dd">
         <i data-lucide="github" class="w-4 h-4"></i>GitHub
@@ -155,6 +171,13 @@
     </div>
   </div>
 </footer>
+
+<!-- ページトップへ戻るボタン（スクロール中だけ表示） -->
+<button id="to-top" type="button" aria-label="ページの先頭へ戻る"
+  class="is-hidden focusable chip fixed right-5 bottom-5 z-40 inline-flex items-center justify-center w-12 h-12 softer card-shadow"
+  style="background:var(--ink);color:#fff;border:none;cursor:pointer">
+  <i data-lucide="arrow-up" class="w-5 h-5"></i>
+</button>
 
 <script>
 /* =========================================================
@@ -176,6 +199,16 @@ const HISTORY = [
   {
     date:"2026-06-18",
     items:[
+      "「更新履歴」を開くリンクを、フッターからヘッダー右上に移した。",
+      "スクロール中も、検索窓の左にサイト名「zu」（押すとページ先頭へ戻る）を表示するようにした。",
+      "検索窓に文字を入れると、ひと押しで消せるクリアボタンが出るようにした。",
+      "スクロール中に、ワンクリックでページ先頭へ戻れるボタンを右下に表示するようにした。",
+      "覚え書きを7つ追加し、「矢印は、三角で十分」と「主役は、誰？」の図の不自然な部分を直した。",
+    ],
+  },
+  {
+    date:"2026-06-18",
+    items:[
       "フッターから開ける「更新履歴」を追加した。",
       "「グラフの色は、絞る」の図の右側を、灰色をより淡くして見やすくした。",
       "「その注釈、どこの話？」の図の囲み枠を外し、印が対象と重ならないようにした。",
@@ -192,7 +225,7 @@ const HISTORY = [
   {
     date:"2026-06-17",
     items:[
-      "サイトを公開。5つのカテゴリ・44種の覚え書きを掲載した。",
+      "このサイトを公開した。5つのカテゴリ・44種の覚え書きから始めた。",
       "「紙の上に文字を置いた時点で、それはもう図だ」を軸に、見せて伝えるすべてを〈図〉として扱う形にした。",
     ],
   },
@@ -495,6 +528,63 @@ const TIPS_space = [
     apply:"図全体にかからない注は、対象のすぐ近くに置くか、印や線でかかる先を結ぶ。",
     term:"",
   },
+  {
+    id:"visual-weight",
+    cat:"space",
+    tags:["hierarchy"],
+    title:"重心を、意識する",
+    claim:"片側に詰まると、図は傾いて感じる。",
+    why:"片手にだけ荷物を提げて歩くと、体がそちらへ傾いて落ち着きません。見た目の混み具合にも、同じように重さがあります。要素が片側にばかり寄ると、図は重心がずれて傾いて感じられ、見る人は無意識に居心地の悪さを覚える。混み具合を左右・上下で釣り合わせると、図全体がすっと安定します。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="要素が片側に偏ると重く傾いて感じ、左右上下に散らして釣り合わせると図が安定する">
+      <rect x="20" y="16" width="116" height="80" rx="10" fill="none" stroke="var(--line)"/>
+      <g fill="var(--ink-soft)">
+        <rect x="28" y="24" width="46" height="28" rx="6"/>
+        <rect x="28" y="58" width="46" height="16" rx="5"/>
+        <rect x="28" y="78" width="30" height="9" rx="3"/>
+      </g>
+      <text x="78" y="112" text-anchor="middle" font-size="11" fill="var(--ink-soft)">重さが片寄る</text>
+      <rect x="184" y="16" width="116" height="80" rx="10" fill="none" stroke="var(--line)"/>
+      <g fill="var(--calm)">
+        <rect x="192" y="26" width="44" height="22" rx="6"/>
+        <rect x="248" y="40" width="44" height="22" rx="6"/>
+        <rect x="200" y="70" width="84" height="14" rx="5"/>
+      </g>
+      <circle cx="242" cy="56" r="4" fill="var(--accent)"/>
+      <text x="242" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">釣り合う</text>
+    </svg>`,
+    apply:"要素を置いたら、混み具合が片側に偏っていないか、左右・上下の釣り合いを確かめる。",
+    term:"視覚的重量",
+  },
+  {
+    id:"few-parallels",
+    cat:"space",
+    tags:["hierarchy"],
+    title:"並べるのは、2〜3まで",
+    claim:"横に並べるものは、2〜3に絞る。",
+    why:"一度に手で抱えられる物の数に限りがあるように、目で一度に捉えられる『並び』の数にも限りがあります。横に5つ6つ並ぶと、見る人はどれも拾いきれず、取りこぼしてしまう。どうしても多いときは、似たものをまとめて2〜3の組に分ければ、ひとまとまりずつ無理なく受け取れます。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="6つを横並びにすると拾いきれず、2〜3の組にまとめると受け取りやすい">
+      <g fill="var(--ink-soft)">
+        <rect x="24" y="42" width="14" height="34" rx="4"/>
+        <rect x="43" y="42" width="14" height="34" rx="4"/>
+        <rect x="62" y="42" width="14" height="34" rx="4"/>
+        <rect x="81" y="42" width="14" height="34" rx="4"/>
+        <rect x="100" y="42" width="14" height="34" rx="4"/>
+        <rect x="119" y="42" width="14" height="34" rx="4"/>
+      </g>
+      <text x="78" y="106" text-anchor="middle" font-size="11" fill="var(--ink-soft)">多い＝こぼれる</text>
+      <g fill="var(--calm)">
+        <rect x="190" y="42" width="14" height="34" rx="4"/>
+        <rect x="206" y="42" width="14" height="34" rx="4"/>
+        <rect x="232" y="42" width="14" height="34" rx="4"/>
+        <rect x="248" y="42" width="14" height="34" rx="4"/>
+        <rect x="274" y="42" width="14" height="34" rx="4"/>
+        <rect x="290" y="42" width="14" height="34" rx="4"/>
+      </g>
+      <text x="247" y="106" text-anchor="middle" font-size="11" fill="var(--calm)">2〜3の組に分ける</text>
+    </svg>`,
+    apply:"並べる要素は2〜3を目安にし、多いときは似たものをまとめて2〜3の組に分類する。",
+    term:"チャンク化",
+  },
 ];
 
 const TIPS_hierarchy = [
@@ -582,12 +672,12 @@ const TIPS_hierarchy = [
     why:"舞台で脇役が主役より大きな声を張り上げ続けたら、客はどこを見ていいか分からなくなります。図の中の矢印や囲み枠、飾りも同じ脇役です。それが主役より濃く太いと、視線はそちらに吸い寄せられて迷子になる。まず一番見てほしいものを決め、ほかはそれを支える側にそっと下がらせます。",
     visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="脇役の矢印や枠を弱め、主役が一番強く立つようにする">
       <rect x="24" y="30" width="104" height="58" rx="8" fill="none" stroke="var(--ink)" stroke-width="2.5"/>
-      <rect x="50" y="46" width="52" height="26" rx="5" fill="var(--line)"/>
-      <polygon points="30,16 42,24 30,32" fill="var(--ink)"/>
+      <polygon points="34,52 48,59 34,66" fill="var(--ink)"/>
+      <rect x="58" y="46" width="52" height="26" rx="5" fill="var(--line)"/>
       <text x="76" y="112" text-anchor="middle" font-size="11" fill="var(--ink-soft)">脇役が目立つ</text>
       <rect x="196" y="30" width="104" height="58" rx="8" fill="none" stroke="var(--line)" stroke-width="1"/>
-      <rect x="218" y="44" width="60" height="30" rx="6" fill="var(--accent)"/>
-      <polygon points="202,55 210,51 210,59" fill="var(--line)"/>
+      <polygon points="206,52 220,59 206,66" fill="var(--line)"/>
+      <rect x="228" y="44" width="60" height="30" rx="6" fill="var(--accent)"/>
       <text x="248" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">主役が立つ</text>
     </svg>`,
     apply:"矢印や囲み枠は最弱の色に下げ、主役より目立たないか必ず見比べる。",
@@ -779,6 +869,91 @@ const TIPS_hierarchy = [
       <text x="242" y="108" text-anchor="middle" font-size="11" fill="var(--calm)">目的を狙う</text>
     </svg>`,
     apply:"作り始める前に、誰に・何を・いつまでに伝えるかを書き出し、迷ったらそこへ戻る。",
+    term:"",
+  },
+  {
+    id:"show-early",
+    cat:"hierarchy",
+    tags:[],
+    title:"早めに、見せる",
+    claim:"完成を待たず、読む人に早く見せる。",
+    why:"自分では分かりやすく描けたつもりでも、初めて見る人がどこで引っかかるかは、自分では見えません。料理の味を自分の舌だけで決めず一口みてもらうように、図も読む人に早く見せると、独りでは気づけなかった『伝わらない箇所』が浮かび上がります。直しのきく早いうちに見せるほど、やり直しは小さくて済みます。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="完成してから見せると手戻りが大きく、早く見せるほど直しは小さく済む">
+      <rect x="22" y="26" width="40" height="54" rx="6" fill="none" stroke="var(--ink-soft)"/>
+      <g fill="var(--ink-soft)">
+        <rect x="28" y="33" width="28" height="6" rx="2"/>
+        <rect x="28" y="44" width="28" height="6" rx="2"/>
+        <rect x="28" y="55" width="28" height="6" rx="2"/>
+        <rect x="28" y="66" width="18" height="6" rx="2"/>
+      </g>
+      <line x1="68" y1="53" x2="100" y2="53" stroke="var(--ink-soft)" stroke-width="2"/>
+      <polygon points="100,47 114,53 100,59" fill="var(--ink-soft)"/>
+      <ellipse cx="124" cy="53" rx="9" ry="6" fill="none" stroke="var(--ink-soft)" stroke-width="1.5"/>
+      <circle cx="124" cy="53" r="2.5" fill="var(--ink-soft)"/>
+      <text x="78" y="104" text-anchor="middle" font-size="11" fill="var(--ink-soft)">見せるのが遅い</text>
+      <rect x="190" y="26" width="40" height="54" rx="6" fill="none" stroke="var(--calm)" stroke-dasharray="4 3"/>
+      <g fill="var(--calm)">
+        <rect x="196" y="35" width="28" height="6" rx="2"/>
+        <rect x="196" y="48" width="28" height="6" rx="2"/>
+        <rect x="196" y="61" width="18" height="6" rx="2"/>
+      </g>
+      <ellipse cx="248" cy="53" rx="9" ry="6" fill="none" stroke="var(--calm)" stroke-width="1.5"/>
+      <circle cx="248" cy="53" r="2.5" fill="var(--calm)"/>
+      <polygon points="266,48 278,53 266,58" fill="var(--accent)"/>
+      <text x="244" y="104" text-anchor="middle" font-size="11" fill="var(--calm)">早く見せる</text>
+    </svg>`,
+    apply:"完成を待たず、ラフのうちに読む人へ見せて、伝わらない箇所を早めにもらう。",
+    term:"",
+  },
+  {
+    id:"rough-first",
+    cat:"hierarchy",
+    tags:[],
+    title:"まず、下書きから",
+    claim:"いきなり作り込まず、骨組みから確かめる。",
+    why:"建物は、土台を据えてから壁を立てます。建ててしまってから基礎をずらすのは、とても大変だからです。図も同じで、色や飾りから手をつけると、あとで骨組みを直したくなったとき総崩れになる。まず大きな配置だけのラフで全体を確かめてから細部を詰めれば、やり直しが効きます。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="いきなり仕上げると骨組みの直しで総崩れ、配置だけのラフから確かめれば直しが効く">
+      <rect x="28" y="22" width="80" height="58" rx="8" fill="none" stroke="var(--ink-soft)"/>
+      <rect x="36" y="28" width="64" height="14" rx="4" fill="var(--ink-soft)"/>
+      <g fill="var(--line)">
+        <rect x="36" y="48" width="64" height="7" rx="3"/>
+        <rect x="36" y="59" width="64" height="7" rx="3"/>
+        <rect x="36" y="70" width="40" height="7" rx="3"/>
+      </g>
+      <text x="78" y="100" text-anchor="middle" font-size="11" fill="var(--ink-soft)">いきなり仕上げ</text>
+      <rect x="200" y="22" width="80" height="58" rx="8" fill="none" stroke="var(--calm)" stroke-dasharray="4 3"/>
+      <g fill="none" stroke="var(--calm)" stroke-width="1.5" stroke-dasharray="3 3">
+        <rect x="208" y="28" width="64" height="14" rx="4"/>
+        <rect x="208" y="48" width="64" height="12" rx="4"/>
+        <rect x="208" y="64" width="40" height="12" rx="4"/>
+      </g>
+      <text x="240" y="100" text-anchor="middle" font-size="11" fill="var(--calm)">骨組みから</text>
+    </svg>`,
+    apply:"色や飾りは後回しにして、まず配置だけのラフで全体の骨組みを確かめる。",
+    term:"",
+  },
+  {
+    id:"just-start",
+    cat:"hierarchy",
+    tags:[],
+    title:"とりあえず、作る",
+    claim:"良い案が出ないなら、悪い案でも形にする。",
+    why:"頭の中だけで完璧な案を待っていると、いつまでも一歩目が踏み出せません。料理も、ひと口作って味をみるから次の手が決まる。良い案が浮かばないときこそ、悪いと思う案でもラフにしてみると、『ここが違う』が見えて、進むべき方向が立ち上がってきます。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="頭の中で待つと手が止まり、悪い案でも一度形にすると進む方向が見えてくる">
+      <rect x="28" y="22" width="80" height="58" rx="8" fill="none" stroke="var(--ink-soft)"/>
+      <text x="68" y="62" text-anchor="middle" font-size="34" font-weight="700" fill="var(--line)">?</text>
+      <text x="78" y="104" text-anchor="middle" font-size="11" fill="var(--ink-soft)">手が止まる</text>
+      <rect x="190" y="22" width="70" height="58" rx="8" fill="none" stroke="var(--calm)" stroke-dasharray="4 3"/>
+      <g stroke="var(--calm)" stroke-width="2" stroke-linecap="round" fill="none">
+        <path d="M198 36 q10 -6 20 0 t20 0"/>
+        <path d="M198 50 q12 6 24 0"/>
+        <path d="M198 64 l28 0"/>
+      </g>
+      <line x1="270" y1="51" x2="288" y2="51" stroke="var(--accent)" stroke-width="2"/>
+      <polygon points="286,45 300,51 286,57" fill="var(--accent)"/>
+      <text x="240" y="104" text-anchor="middle" font-size="11" fill="var(--calm)">作れば見える</text>
+    </svg>`,
+    apply:"手が止まったら、悪い案でもいいので一度ラフを作り、そこから直していく。",
     term:"",
   },
 ];
@@ -1307,6 +1482,35 @@ const TIPS_text = [
     apply:"禁止やお願いは、やわらげる前にまず結論をはっきり言い切る。",
     term:"",
   },
+  {
+    id:"bullets-over-prose",
+    cat:"text",
+    tags:[],
+    title:"文章より、箇条書き",
+    claim:"続く文章より、箇条書きのほうが頭に入る。",
+    why:"話を聞くとき、要点を区切って言ってもらえると頭に残りますが、息継ぎなく長々と続けられると、どこが大事だったのか分からなくなります。そもそも人の頭は、びっしり続く長文をひと息で受け止めるようにはできていません。一つずつ行を分けて箇条書きにすると、要点が粒立って、ひと目で拾えます。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="続く文章は要点が埋もれ、箇条書きにすると要点が粒立ってひと目で拾える">
+      <g fill="var(--ink-soft)">
+        <rect x="24" y="28" width="104" height="8" rx="3"/>
+        <rect x="24" y="42" width="104" height="8" rx="3"/>
+        <rect x="24" y="56" width="104" height="8" rx="3"/>
+        <rect x="24" y="70" width="104" height="8" rx="3"/>
+        <rect x="24" y="84" width="72" height="8" rx="3"/>
+      </g>
+      <text x="78" y="110" text-anchor="middle" font-size="11" fill="var(--ink-soft)">続く文章</text>
+      <g fill="var(--calm)">
+        <circle cx="194" cy="34" r="3"/>
+        <rect x="204" y="30" width="88" height="8" rx="3"/>
+        <circle cx="194" cy="56" r="3"/>
+        <rect x="204" y="52" width="88" height="8" rx="3"/>
+        <circle cx="194" cy="78" r="3"/>
+        <rect x="204" y="74" width="68" height="8" rx="3"/>
+      </g>
+      <text x="246" y="110" text-anchor="middle" font-size="11" fill="var(--calm)">箇条書き</text>
+    </svg>`,
+    apply:"要点が複数あるなら、続く文章にせず、一つずつ行を分けて箇条書きにする。",
+    term:"",
+  },
 ];
 
 const TIPS_draw = [
@@ -1318,16 +1522,10 @@ const TIPS_draw = [
     claim:"矢印は三角ひとつで伝わる。",
     why:"道で誰かに方向を尋ねると、相手はたいてい指を一本さして「あっち」と示すだけです。それで十分に伝わります。矢印も同じで、向きを示したいなら三角がひとつあればいい。羽根や影や二重線を足すほど、肝心の「どっち」がかえって埋もれます。",
     visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="装飾を盛った矢印より、三角ひとつの矢印のほうが向きがまっすぐ伝わる">
-      <g stroke="var(--ink-soft)" stroke-width="2" fill="none" stroke-linejoin="round" stroke-linecap="round">
-        <line x1="34" y1="56" x2="104" y2="56"/>
-        <path d="M92 42 L112 56 L92 70"/>
-        <path d="M82 46 L98 56 L82 66"/>
-        <path d="M48 48 L36 56 L48 64"/>
-        <path d="M60 50 L50 56 L60 62"/>
-      </g>
-      <g fill="var(--ink-soft)">
-        <circle cx="40" cy="40" r="2"/><circle cx="40" cy="72" r="2"/>
-      </g>
+      <polygon points="38,54 88,54 88,46 116,60 88,74 88,66 38,66" fill="var(--line)"/>
+      <polygon points="34,50 84,50 84,42 112,56 84,70 84,62 34,62" fill="var(--paper)" stroke="var(--ink-soft)" stroke-width="2.5" stroke-linejoin="round"/>
+      <polygon points="39,53 81,53 81,48 104,56 81,64 81,59 39,59" fill="none" stroke="var(--ink-soft)" stroke-width="1" stroke-linejoin="round"/>
+      <line x1="41" y1="52" x2="78" y2="52" stroke="var(--card)" stroke-width="1.5" stroke-linecap="round"/>
       <text x="78" y="108" text-anchor="middle" font-size="11" fill="var(--ink-soft)">盛った矢印</text>
       <polygon points="208,40 286,56 208,72" fill="var(--calm)"/>
       <text x="242" y="108" text-anchor="middle" font-size="11" fill="var(--calm)">三角ひとつ</text>
@@ -1555,6 +1753,24 @@ const TIPS_draw = [
     apply:"同じ役割の線は同じ太さに統一する。太さを変えるのは、意味の違いを示すときだけ。",
     term:"",
   },
+  {
+    id:"area-over-number",
+    cat:"draw",
+    tags:[],
+    title:"数字より、面積で",
+    claim:"大小を比べるなら、数字より面積。",
+    why:"店の棚で品物を選ぶとき、書かれた内容量の数字より、箱の大きさそのものを見て『こっちが多い』と感じ取ります。数字は一度、頭の中で大小に変換する手間がかかるけれど、面積の差は見た瞬間に届く。量のちがいを示したいときは、数字を並べるより、大きさそのもので見せるほうが速く伝わります。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="同じ大きさの数字は読んで比べる手間がかかり、面積の差は見た瞬間に大小が伝わる">
+      <text x="50" y="64" text-anchor="middle" font-size="26" font-weight="700" fill="var(--ink-soft)">120</text>
+      <text x="106" y="64" text-anchor="middle" font-size="26" font-weight="700" fill="var(--ink-soft)">30</text>
+      <text x="78" y="104" text-anchor="middle" font-size="11" fill="var(--ink-soft)">数字で比べる</text>
+      <rect x="198" y="34" width="48" height="48" rx="6" fill="var(--calm)"/>
+      <rect x="262" y="58" width="24" height="24" rx="4" fill="var(--calm)" opacity="0.5"/>
+      <text x="244" y="104" text-anchor="middle" font-size="11" fill="var(--calm)">面積で比べる</text>
+    </svg>`,
+    apply:"量の大小は数字で書くより、面積や大きさのちがいそのもので見せる。",
+    term:"",
+  },
 ];
 
 /* 5カテゴリの配列を1本につなぐ。順序はカテゴリ体系の並びに合わせる。 */
@@ -1677,7 +1893,7 @@ function openModal(id){
   lucide.createIcons();
   // モーダル内のタグから絞り込みジャンプ
   modalBody.querySelectorAll("button[data-jump]").forEach(b=>{
-    b.onclick=()=>{activeCat=b.dataset.jump;keyword="";document.getElementById("q").value="";closeModal();renderCats();renderGrid();window.scrollTo({top:0,behavior:"smooth"});};
+    b.onclick=()=>{activeCat=b.dataset.jump;keyword="";document.getElementById("q").value="";document.getElementById("q-clear").classList.add("is-hidden");closeModal();renderCats();renderGrid();window.scrollTo({top:0,behavior:"smooth"});};
   });
   modalPanel.scrollTop=0;
   document.getElementById("modal-close").focus();
@@ -1736,7 +1952,27 @@ document.getElementById("history-backdrop").onclick=closeHistory;
 
 document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ closeModal(); closeHistory(); } });
 
-document.getElementById("q").addEventListener("input",e=>{keyword=e.target.value;renderGrid();});
+// 検索：入力中はクリアボタンを出す
+const qInput = document.getElementById("q");
+const qClear = document.getElementById("q-clear");
+function syncClear(){ qClear.classList.toggle("is-hidden", !qInput.value); }
+qInput.addEventListener("input",e=>{ keyword=e.target.value; syncClear(); renderGrid(); });
+qClear.onclick=()=>{ qInput.value=""; keyword=""; syncClear(); renderGrid(); qInput.focus(); };
+
+// スクロール中だけ：検索窓の左のロゴと、右下のトップへ戻るボタンを出す
+const miniLogo = document.getElementById("mini-logo");
+const toTop = document.getElementById("to-top");
+function syncScrollUI(){
+  const show = (window.scrollY || document.documentElement.scrollTop) > 180;
+  miniLogo.classList.toggle("is-hidden", !show);
+  toTop.classList.toggle("is-hidden", !show);
+}
+function gotoTop(){ window.scrollTo({top:0,behavior:"smooth"}); }
+miniLogo.onclick=e=>{ e.preventDefault(); gotoTop(); };
+toTop.onclick=gotoTop;
+window.addEventListener("scroll",syncScrollUI,{passive:true});
+syncScrollUI();
+
 renderCats();
 renderGrid();
 lucide.createIcons();
