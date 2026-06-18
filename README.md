@@ -8,6 +8,8 @@
 
 ## 公開
 
+**▶ 公開サイト： https://craftpaperbag.github.io/zu/**
+
 単一の `index.html` で完結します。GitHub Pages（リポジトリ直下の `index.html`）でそのまま配信できます。
 画像は使わず、図はすべて SVG / HTML 要素でコードから直接描いています。固定画像（PNG/JPG）はありません。
 
