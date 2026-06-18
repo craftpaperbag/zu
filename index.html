@@ -534,26 +534,29 @@ const TIPS_space = [
     cat:"space",
     tags:["hierarchy"],
     title:"重心を、意識する",
-    claim:"片側に詰まると、図は傾いて感じる。",
-    why:"片手にだけ荷物を提げて歩くと、体がそちらへ傾いて落ち着きません。見た目の混み具合にも、同じように重さがあります。要素が片側にばかり寄ると、図は重心がずれて傾いて感じられ、見る人は無意識に居心地の悪さを覚える。混み具合を左右・上下で釣り合わせると、図全体がすっと安定します。",
-    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="要素が片側に偏ると重く傾いて感じ、左右上下に散らして釣り合わせると図が安定する">
+    claim:"枠の中で、重さを上や片側に寄せない。",
+    why:"片手にだけ荷物を提げて歩くと、体がそちらへ傾いて落ち着きません。見た目の混み具合にも、同じように重さがあります。ひとつの枠やカードの中で中身が上や片側にばかり寄ると、その塊は重心がずれて傾いて見える。ただし、釣り合わせたいからと整列を崩しては本末転倒です。並びはそろえたまま、余白の取り方で重さの偏りをならします。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="枠の中で中身が上に寄ると重心が偏って傾いて見え、整列を保ったまま余白で上下を釣り合わせると安定する">
       <rect x="20" y="16" width="116" height="80" rx="10" fill="none" stroke="var(--line)"/>
+      <line x1="28" y1="56" x2="128" y2="56" stroke="var(--line)" stroke-dasharray="2 4"/>
       <g fill="var(--ink-soft)">
-        <rect x="28" y="24" width="46" height="28" rx="6"/>
-        <rect x="28" y="58" width="46" height="16" rx="5"/>
-        <rect x="28" y="78" width="30" height="9" rx="3"/>
+        <rect x="32" y="24" width="92" height="13" rx="4"/>
+        <rect x="32" y="41" width="92" height="8" rx="3"/>
+        <rect x="32" y="53" width="64" height="8" rx="3"/>
       </g>
-      <text x="78" y="112" text-anchor="middle" font-size="11" fill="var(--ink-soft)">重さが片寄る</text>
+      <circle cx="26" cy="42" r="3.5" fill="var(--ink-soft)"/>
+      <text x="78" y="112" text-anchor="middle" font-size="11" fill="var(--ink-soft)">重さが上に寄る</text>
       <rect x="184" y="16" width="116" height="80" rx="10" fill="none" stroke="var(--line)"/>
+      <line x1="192" y1="56" x2="292" y2="56" stroke="var(--line)" stroke-dasharray="2 4"/>
       <g fill="var(--calm)">
-        <rect x="192" y="26" width="44" height="22" rx="6"/>
-        <rect x="248" y="40" width="44" height="22" rx="6"/>
-        <rect x="200" y="70" width="84" height="14" rx="5"/>
+        <rect x="196" y="36" width="92" height="13" rx="4"/>
+        <rect x="196" y="53" width="92" height="8" rx="3"/>
+        <rect x="196" y="65" width="64" height="8" rx="3"/>
       </g>
-      <circle cx="242" cy="56" r="4" fill="var(--accent)"/>
-      <text x="242" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">釣り合う</text>
+      <circle cx="190" cy="56" r="3.5" fill="var(--accent)"/>
+      <text x="242" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">余白で釣り合う</text>
     </svg>`,
-    apply:"要素を置いたら、混み具合が片側に偏っていないか、左右・上下の釣り合いを確かめる。",
+    apply:"枠やカードごとに、中身が上や片側に寄っていないか、整列は保ったまま余白で釣り合いを整える。",
     term:"視覚的重量",
   },
   {
