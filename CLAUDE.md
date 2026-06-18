@@ -53,7 +53,7 @@
 
 ---
 
-## カテゴリ体系（新5枠）
+## カテゴリ体系（新6枠）
 
 1種 = **1主カテゴリ + 複数タグ**。複数カテゴリへの所属は許さず、横串はタグで張る。
 
@@ -64,6 +64,9 @@
 | `color` | 色と濃淡 | `palette` |
 | `text` | 文字を図として | `type` |
 | `draw` | 線・矢印・グラフ | `spline` |
+| `flow` | 進め方 | `route` |
+
+> `flow`（進め方）は、図そのものの作法ではなく、図を作る**過程・こころがけ**を扱う枠。「早めに見せる」「下書きから」など、視覚の話に収まらない工程系の種はここに置く。
 
 > 注意：プロトタイプの初期 HTML には旧5枠（align / shape / color / text / cut）が残っている可能性がある。見つけたらこの新5枠に更新し、既存 Tips の `cat` も新 ID に付け替える。
 
@@ -115,7 +118,7 @@
 ## 現在地と次の作業
 
 - 本番ファイルは **`index.html`**（単一HTML・GitHub Pages 直下配信）。`PROTOTYPE.html` はデザインの原型で、参照用に残してある（旧5枠のダミーが入っているので本番には使わない）。
-- SEEDS.md の種を 5カテゴリ・**計44種**の実 Tips に肉付け済み。データは `index.html` 内のカテゴリ別配列（`TIPS_space` / `TIPS_hierarchy` / `TIPS_color` / `TIPS_text` / `TIPS_draw`）で持ち、末尾で1本の `TIPS` に連結している。
+- SEEDS.md の種を 6カテゴリ・**計60種**の実 Tips に肉付け済み。データは `index.html` 内のカテゴリ別配列（`TIPS_space` / `TIPS_hierarchy` / `TIPS_color` / `TIPS_text` / `TIPS_draw` / `TIPS_flow`）で持ち、末尾で1本の `TIPS` に連結している。
 - SEEDS.md の統合候補は実装時に反映済み：typeface→`jump-rate`、kanizsa→`invisible-line`、「同じレイヤーは同じ見た目」→`repeat-form`、「濃い文字・薄い背景」＋「真っ白×真っ黒」→`soft-contrast`。
 - 種を増やすときは、該当カテゴリの配列に1ブロック足すだけ。横串はタグで張る。
 - 既知の許容例外：`color` / `draw` の「多色は散らかる」を示す **Before（悪い例）パネルに限り**、多色見本のため生hexを使っている（After とそれ以外の全図は CSS 変数のみ）。
