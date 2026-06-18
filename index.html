@@ -50,8 +50,10 @@
   .fade-in{animation:fade .5s ease both;}
   @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
   .tipcard{cursor:pointer;}
-  #modal:not(.hidden) #modal-backdrop{animation:fade .2s ease both;}
-  #modal:not(.hidden) #modal-panel{animation:pop .22s ease both;}
+  #modal:not(.hidden) #modal-backdrop,
+  #history-modal:not(.hidden) #history-backdrop{animation:fade .2s ease both;}
+  #modal:not(.hidden) #modal-panel,
+  #history-modal:not(.hidden) #history-panel{animation:pop .22s ease both;}
   @keyframes pop{from{opacity:0;transform:translateY(12px) scale(.985);}to{opacity:1;transform:none;}}
 </style>
 </head>
@@ -118,14 +120,39 @@
   </div>
 </div>
 
+<!-- 更新履歴モーダル（フッターから開く付加機能） -->
+<div id="history-modal" class="hidden fixed inset-0 z-50 flex items-start md:items-center justify-center p-4 md:p-6" aria-hidden="true">
+  <div id="history-backdrop" class="absolute inset-0" style="background:rgba(26,29,36,.45)"></div>
+  <div id="history-panel" role="dialog" aria-modal="true" aria-labelledby="history-title"
+    class="relative softer card-shadow overflow-y-auto w-full max-w-xl max-h-[90vh]" style="background:var(--card)">
+    <button id="history-close" aria-label="閉じる"
+      class="focusable chip absolute right-3 top-3 z-10 inline-flex items-center justify-center w-9 h-9 soft border"
+      style="background:#fff;border-color:var(--line);color:var(--ink-soft)">
+      <i data-lucide="x" class="w-5 h-5"></i>
+    </button>
+    <div class="px-6 pt-6 flex items-center gap-1.5 text-xs" style="color:var(--ink-soft)">
+      <i data-lucide="history" class="w-3.5 h-3.5"></i>更新履歴
+    </div>
+    <h3 id="history-title" class="maru font-bold px-6 mt-1" style="font-size:1.5rem">これまでの更新</h3>
+    <p class="px-6 mt-1 text-sm" style="color:var(--ink-soft)">このサイトに加えてきた手入れの記録です。</p>
+    <div id="history-body" class="px-6 pt-5 pb-7"></div>
+  </div>
+</div>
+
 <!-- フッター -->
 <footer class="px-6 py-14 mt-6" style="background:var(--ink);color:#cfd4dd">
   <div class="max-w-2xl mx-auto flex items-center justify-between gap-4">
     <p class="text-xs" style="color:#7c8492">craftpaperbag</p>
-    <a href="https://github.com/craftpaperbag/zu" target="_blank" rel="noopener"
-      class="focusable inline-flex items-center gap-2 text-sm" style="color:#cfd4dd">
-      <i data-lucide="github" class="w-4 h-4"></i>GitHub
-    </a>
+    <div class="flex items-center gap-5">
+      <button id="history-open" type="button"
+        class="focusable chip inline-flex items-center gap-2 text-sm" style="color:#cfd4dd;background:none;border:none;padding:0;cursor:pointer">
+        <i data-lucide="history" class="w-4 h-4"></i>更新履歴
+      </button>
+      <a href="https://github.com/craftpaperbag/zu" target="_blank" rel="noopener"
+        class="focusable inline-flex items-center gap-2 text-sm" style="color:#cfd4dd">
+        <i data-lucide="github" class="w-4 h-4"></i>GitHub
+      </a>
+    </div>
   </div>
 </footer>
 
@@ -142,6 +169,33 @@ const CATEGORIES = [
   { id:"color",     label:"色と濃淡",     icon:"palette" },
   { id:"text",      label:"文字を図として", icon:"type" },
   { id:"draw",      label:"線・矢印・グラフ", icon:"spline" },
+];
+
+/* 更新履歴：新しいものを上に。1回ぶんを1ブロック足すだけで増える。 */
+const HISTORY = [
+  {
+    date:"2026-06-18",
+    items:[
+      "フッターから開ける「更新履歴」を追加した。",
+      "「グラフの色は、絞る」の図の右側を、灰色をより淡くして見やすくした。",
+      "「その注釈、どこの話？」の図の囲み枠を外し、印が対象と重ならないようにした。",
+    ],
+  },
+  {
+    date:"2026-06-18",
+    items:[
+      "カードをクリックすると、詳しい解説をモーダルで読めるようにした。",
+      "公開サイト（GitHub Pages）へのリンクを README に追加した。",
+      "本文と一部の覚え書きの言い回しを整え、フッターを簡素にした。",
+    ],
+  },
+  {
+    date:"2026-06-17",
+    items:[
+      "サイトを公開。5つのカテゴリ・44種の覚え書きを掲載した。",
+      "「紙の上に文字を置いた時点で、それはもう図だ」を軸に、見せて伝えるすべてを〈図〉として扱う形にした。",
+    ],
+  },
 ];
 
 const TIPS_space = [
@@ -433,8 +487,8 @@ const TIPS_space = [
         <rect x="232" y="24" width="34" height="22" rx="4"/>
         <rect x="274" y="24" width="22" height="22" rx="4"/>
       </g>
-      <rect x="234" y="22" width="30" height="26" rx="6" fill="none" stroke="var(--calm)" stroke-width="1.5"/>
       <line x1="249" y1="48" x2="249" y2="62" stroke="var(--calm)" stroke-width="1.5"/>
+      <polygon points="245,50 253,50 249,44" fill="var(--calm)"/>
       <text x="249" y="76" text-anchor="middle" font-size="10" fill="var(--calm)">※要確認</text>
       <text x="242" y="108" text-anchor="middle" font-size="11" fill="var(--calm)">ここ、と示す</text>
     </svg>`,
@@ -1392,7 +1446,7 @@ const TIPS_draw = [
       <rect x="128" y="35" width="16" height="57" fill="#8a6db0"/>
       <text x="82" y="110" text-anchor="middle" font-size="11" fill="var(--ink-soft)">色を盛る</text>
       <line x1="184" y1="92" x2="300" y2="92" stroke="var(--line)" stroke-width="1.5"/>
-      <g fill="var(--ink-soft)">
+      <g fill="var(--ink-soft)" opacity=".35">
         <rect x="188" y="43" width="16" height="49"/>
         <rect x="212" y="58" width="16" height="34"/>
         <rect x="260" y="50" width="16" height="42"/>
@@ -1637,7 +1691,50 @@ function closeModal(){
 }
 document.getElementById("modal-close").onclick=closeModal;
 document.getElementById("modal-backdrop").onclick=closeModal;
-document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeModal(); });
+
+// 更新履歴モーダル
+const historyModal = document.getElementById("history-modal");
+const historyBody = document.getElementById("history-body");
+let lastFocusedHistory = null;
+
+function renderHistory(){
+  historyBody.innerHTML = HISTORY.map((h,i)=>{
+    const last = i===HISTORY.length-1;
+    return `
+    <div class="${last?'':'pb-5 mb-5'}" style="${last?'':'border-bottom:1px solid var(--line)'}">
+      <p class="maru font-bold text-sm tnum" style="color:var(--calm)">${h.date}</p>
+      <ul class="mt-2 space-y-2">
+        ${h.items.map(it=>`<li class="flex items-start gap-2.5 text-sm md:text-base leading-relaxed" style="color:var(--ink)">
+          <span class="inline-block w-1.5 h-1.5 rounded-full mt-2.5 shrink-0" style="background:var(--line)"></span>
+          <span>${it}</span>
+        </li>`).join("")}
+      </ul>
+    </div>`;
+  }).join("");
+}
+
+function openHistory(){
+  lastFocusedHistory = document.activeElement;
+  renderHistory();
+  historyModal.classList.remove("hidden");
+  historyModal.setAttribute("aria-hidden","false");
+  document.body.style.overflow="hidden";
+  lucide.createIcons();
+  document.getElementById("history-panel").scrollTop=0;
+  document.getElementById("history-close").focus();
+}
+function closeHistory(){
+  if(historyModal.classList.contains("hidden")) return;
+  historyModal.classList.add("hidden");
+  historyModal.setAttribute("aria-hidden","true");
+  document.body.style.overflow="";
+  if(lastFocusedHistory) lastFocusedHistory.focus();
+}
+document.getElementById("history-open").onclick=openHistory;
+document.getElementById("history-close").onclick=closeHistory;
+document.getElementById("history-backdrop").onclick=closeHistory;
+
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ closeModal(); closeHistory(); } });
 
 document.getElementById("q").addEventListener("input",e=>{keyword=e.target.value;renderGrid();});
 renderCats();
