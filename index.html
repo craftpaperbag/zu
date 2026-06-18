@@ -49,6 +49,10 @@
   @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
   .fade-in{animation:fade .5s ease both;}
   @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+  .tipcard{cursor:pointer;}
+  #modal:not(.hidden) #modal-backdrop{animation:fade .2s ease both;}
+  #modal:not(.hidden) #modal-panel{animation:pop .22s ease both;}
+  @keyframes pop{from{opacity:0;transform:translateY(12px) scale(.985);}to{opacity:1;transform:none;}}
 </style>
 </head>
 <body>
@@ -99,6 +103,20 @@
     <p>覚え書きが見つかりませんでした。別の言葉で探してみてください。</p>
   </div>
 </main>
+
+<!-- 詳細モーダル -->
+<div id="modal" class="hidden fixed inset-0 z-50 flex items-start md:items-center justify-center p-4 md:p-6" aria-hidden="true">
+  <div id="modal-backdrop" class="absolute inset-0" style="background:rgba(26,29,36,.45)"></div>
+  <div id="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title"
+    class="relative softer card-shadow overflow-y-auto w-full max-w-xl max-h-[90vh]" style="background:var(--card)">
+    <button id="modal-close" aria-label="閉じる"
+      class="focusable chip absolute right-3 top-3 z-10 inline-flex items-center justify-center w-9 h-9 soft border"
+      style="background:#fff;border-color:var(--line);color:var(--ink-soft)">
+      <i data-lucide="x" class="w-5 h-5"></i>
+    </button>
+    <div id="modal-body"></div>
+  </div>
+</div>
 
 <!-- フッター -->
 <footer class="px-6 py-14 mt-6" style="background:var(--ink);color:#cfd4dd">
@@ -1327,29 +1345,46 @@ function match(t){
 function tagChips(t){
   const tags = t.tags || [];
   if(!tags.length) return "";
-  return `<div class="px-5 pb-1 flex flex-wrap gap-1.5">` + tags.map(tg=>`
+  return `<div class="px-6 pb-1 flex flex-wrap gap-1.5">` + tags.map(tg=>`
     <button data-jump="${tg}" class="chip focusable inline-flex items-center gap-1 px-2 py-0.5 soft text-[11px] border"
       style="background:var(--paper);color:var(--ink-soft);border-color:var(--line)">
       <i data-lucide="${catIcon(tg)}" class="w-3 h-3"></i>${catLabel(tg)}
     </button>`).join("") + `</div>`;
 }
 
+// 一覧カード：図を主役に、詳細（why/apply/タグ/用語）は隠す
 function card(t){
-  return `<article class="tipcard fade-in soft card-shadow overflow-hidden" style="background:var(--card)">
+  return `<article data-id="${t.id}" role="button" tabindex="0" aria-label="${t.title} — 詳しく読む"
+    class="tipcard fade-in focusable soft card-shadow overflow-hidden" style="background:var(--card)">
     <div class="px-5 pt-4 flex items-center gap-1.5 text-xs" style="color:var(--ink-soft)">
       <i data-lucide="${catIcon(t.cat)}" class="w-3.5 h-3.5"></i>${catLabel(t.cat)}
     </div>
     <h3 class="maru font-bold px-5 mt-1" style="font-size:1.25rem">${t.title}</h3>
     <p class="px-5 mt-1 text-sm" style="color:var(--accent)">${t.claim}</p>
     <div class="mx-5 my-3 p-3 soft" style="background:var(--paper)">${t.visual}</div>
-    <p class="px-5 text-sm leading-relaxed" style="color:var(--ink)">${t.why}</p>
-    <div class="px-5 mt-3 pb-1 flex items-start gap-2">
+    <div class="px-5 pb-4 pt-1 flex items-center gap-1 text-xs" style="color:var(--ink-soft)">
+      <span>詳しく読む</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+    </div>
+  </article>`;
+}
+
+// 詳細（モーダル内）：全項目を表示
+function detail(t){
+  return `
+    <div class="px-6 pt-6 flex items-center gap-1.5 text-xs" style="color:var(--ink-soft)">
+      <i data-lucide="${catIcon(t.cat)}" class="w-3.5 h-3.5"></i>${catLabel(t.cat)}
+    </div>
+    <h3 id="modal-title" class="maru font-bold px-6 mt-1" style="font-size:1.5rem">${t.title}</h3>
+    <p class="px-6 mt-1 text-base" style="color:var(--accent)">${t.claim}</p>
+    <div class="mx-6 my-4 p-4 soft" style="background:var(--paper)">${t.visual}</div>
+    <p class="px-6 text-sm md:text-base leading-relaxed" style="color:var(--ink)">${t.why}</p>
+    <div class="px-6 mt-4 pb-1 flex items-start gap-2">
       <i data-lucide="check" class="w-4 h-4 mt-1 shrink-0" style="color:var(--calm)"></i>
-      <p class="text-sm" style="color:var(--ink-soft)">${t.apply}</p>
+      <p class="text-sm md:text-base" style="color:var(--ink-soft)">${t.apply}</p>
     </div>
     ${tagChips(t)}
-    ${t.term?`<p class="px-5 pb-4 pt-2 text-xs" style="color:#9aa0ab">用語：${t.term}</p>`:`<div class="pb-4"></div>`}
-  </article>`;
+    ${t.term?`<p class="px-6 pb-6 pt-2 text-xs" style="color:#9aa0ab">用語：${t.term}</p>`:`<div class="pb-6"></div>`}
+  `;
 }
 
 function renderGrid(){
@@ -1360,11 +1395,45 @@ function renderGrid(){
   grid.innerHTML = list.map(card).join("");
   empty.classList.toggle("hidden", list.length>0);
   count.textContent = `${list.length} 件の覚え書き`;
-  grid.querySelectorAll("button[data-jump]").forEach(b=>{
-    b.onclick=()=>{activeCat=b.dataset.jump;keyword="";document.getElementById("q").value="";renderCats();renderGrid();window.scrollTo({top:0,behavior:"smooth"});};
+  grid.querySelectorAll("article[data-id]").forEach(c=>{
+    c.onclick=()=>openModal(c.dataset.id);
+    c.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openModal(c.dataset.id); } };
   });
   lucide.createIcons();
 }
+
+// 詳細モーダル
+const modal = document.getElementById("modal");
+const modalBody = document.getElementById("modal-body");
+const modalPanel = document.getElementById("modal-panel");
+let lastFocused = null;
+
+function openModal(id){
+  const t = TIPS.find(x=>x.id===id);
+  if(!t) return;
+  lastFocused = document.activeElement;
+  modalBody.innerHTML = detail(t);
+  modal.classList.remove("hidden");
+  modal.setAttribute("aria-hidden","false");
+  document.body.style.overflow="hidden";
+  lucide.createIcons();
+  // モーダル内のタグから絞り込みジャンプ
+  modalBody.querySelectorAll("button[data-jump]").forEach(b=>{
+    b.onclick=()=>{activeCat=b.dataset.jump;keyword="";document.getElementById("q").value="";closeModal();renderCats();renderGrid();window.scrollTo({top:0,behavior:"smooth"});};
+  });
+  modalPanel.scrollTop=0;
+  document.getElementById("modal-close").focus();
+}
+function closeModal(){
+  if(modal.classList.contains("hidden")) return;
+  modal.classList.add("hidden");
+  modal.setAttribute("aria-hidden","true");
+  document.body.style.overflow="";
+  if(lastFocused) lastFocused.focus();
+}
+document.getElementById("modal-close").onclick=closeModal;
+document.getElementById("modal-backdrop").onclick=closeModal;
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeModal(); });
 
 document.getElementById("q").addEventListener("input",e=>{keyword=e.target.value;renderGrid();});
 renderCats();
