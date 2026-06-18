@@ -192,6 +192,7 @@ const CATEGORIES = [
   { id:"color",     label:"色と濃淡",     icon:"palette" },
   { id:"text",      label:"文字を図として", icon:"type" },
   { id:"draw",      label:"線・矢印・グラフ", icon:"spline" },
+  { id:"flow",      label:"進め方",         icon:"route" },
 ];
 
 /* 更新履歴：新しいものを上に。1回ぶんを1ブロック足すだけで増える。 */
@@ -847,9 +848,13 @@ const TIPS_hierarchy = [
     apply:"本文は字幅の変わる（プロポーショナル）書体にし、等幅はコードや数字の桁揃えだけに使う。",
     term:"",
   },
+];
+
+/* 進め方：図そのものの作法ではなく、作る過程・こころがけ。 */
+const TIPS_flow = [
   {
     id:"means-not-end",
-    cat:"hierarchy",
+    cat:"flow",
     tags:[],
     title:"図は、手段でしかない",
     claim:"凝る前に、誰に何を伝えたいかへ立ち返る。",
@@ -873,7 +878,7 @@ const TIPS_hierarchy = [
   },
   {
     id:"show-early",
-    cat:"hierarchy",
+    cat:"flow",
     tags:[],
     title:"早めに、見せる",
     claim:"完成を待たず、読む人に早く見せる。",
@@ -907,7 +912,7 @@ const TIPS_hierarchy = [
   },
   {
     id:"rough-first",
-    cat:"hierarchy",
+    cat:"flow",
     tags:[],
     title:"まず、下書きから",
     claim:"いきなり作り込まず、骨組みから確かめる。",
@@ -934,7 +939,7 @@ const TIPS_hierarchy = [
   },
   {
     id:"just-start",
-    cat:"hierarchy",
+    cat:"flow",
     tags:[],
     title:"とりあえず、作る",
     claim:"良い案が出ないなら、悪い案でも形にする。",
@@ -1773,13 +1778,14 @@ const TIPS_draw = [
   },
 ];
 
-/* 5カテゴリの配列を1本につなぐ。順序はカテゴリ体系の並びに合わせる。 */
+/* 6カテゴリの配列を1本につなぐ。順序はカテゴリ体系の並びに合わせる。 */
 const TIPS = [].concat(
   typeof TIPS_space     !== "undefined" ? TIPS_space     : [],
   typeof TIPS_hierarchy !== "undefined" ? TIPS_hierarchy : [],
   typeof TIPS_color     !== "undefined" ? TIPS_color     : [],
   typeof TIPS_text      !== "undefined" ? TIPS_text      : [],
-  typeof TIPS_draw      !== "undefined" ? TIPS_draw      : []
+  typeof TIPS_draw      !== "undefined" ? TIPS_draw      : [],
+  typeof TIPS_flow      !== "undefined" ? TIPS_flow      : []
 );
 /* =========================================================
    ▲▲▲ たねは以上。以下は描画ロジック（基本さわらない） ▲▲▲
