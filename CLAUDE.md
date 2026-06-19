@@ -48,9 +48,13 @@ node tools/screenshot.cjs --eval "openHistory()" --scroll "#history-scroll=150" 
 # 例：特定要素だけ／ページ全体
 node tools/screenshot.cjs --selector "#history-panel" --out panel.png
 node tools/screenshot.cjs --full --out full.png
+
+# 例：スマホ表示の確認は viewport 幅を指定する（既定は 1000×800＝PC相当）
+node tools/screenshot.cjs --width 375 --height 700 --out mobile.png
 ```
 
 - クラウド環境はネットワーク遮断で CDN（Tailwind / lucide / フォント）が読めない。ツールがこれを検知して `tools/tw-shim.css`（Tailwind の見た目を最小再現）を自動で当てる。**未対応のクラスを使う箇所を撮るときは、その分だけ `tw-shim.css` に追記**する。
+- **スクショで正しく出したいレスポンシブ挙動は、Tailwind の `md:` 等の接頭辞ではなく `<style>` の `@media` で書く。** shim は「サイトで実際に使う `md:` クラスの分だけ」しか実装しないため、新しい responsive 接頭辞はオフラインでは効かない（本番の CDN では効く）。
 - ネットワークが通る環境で実行すれば本物の CDN が読まれ、shim 抜きで本番同一の見た目になる。
 - 詳しいオプションは `node tools/screenshot.cjs --help`、経緯はファイル先頭のコメント参照。
 

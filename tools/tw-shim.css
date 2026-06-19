@@ -14,7 +14,10 @@
 *{box-sizing:border-box}
 
 /* display / position */
-.hidden{display:none}
+/* hidden は後勝ちの .flex / .grid 等に負けないよう !important で固定する。
+   （本物の Tailwind では hidden が勝つ。class="hidden ... flex" のモーダルが
+     スクショで開いて見える事故を防ぐ） */
+.hidden{display:none !important}
 .block{display:block}.inline-block{display:inline-block}
 .flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}
 .relative{position:relative}.absolute{position:absolute}.fixed{position:fixed}
