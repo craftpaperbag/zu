@@ -161,31 +161,30 @@
 <!-- 詳細モーダル -->
 <div id="modal" class="hidden fixed inset-0 z-50 flex items-start md:items-center justify-center p-4 md:p-6" aria-hidden="true">
   <div id="modal-backdrop" class="absolute inset-0" style="background:rgba(26,29,36,.45)"></div>
+  <!-- max-h は、下に浮かぶ操作バーと重ならない高さに抑える（本文側に余白を足さない） -->
   <div id="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title"
-    class="relative softer card-shadow overflow-hidden flex flex-col w-full max-w-xl max-h-[90vh]" style="background:var(--card)">
+    class="relative softer card-shadow overflow-y-auto overflow-x-hidden w-full max-w-xl max-h-[82vh]" style="background:var(--card)">
     <button id="modal-close" aria-label="閉じる"
       class="focusable chip absolute right-3 top-3 z-10 inline-flex items-center justify-center w-9 h-9 soft border"
       style="background:#fff;border-color:var(--line);color:var(--ink-soft)">
       <i data-lucide="x" class="w-5 h-5"></i>
     </button>
-    <div id="modal-scroll" class="overflow-y-auto overflow-x-hidden flex-1 min-h-0">
-      <div id="modal-body"></div>
-    </div>
-    <!-- 前後送り：一覧を読み物として流して読めるように、下部に固定する -->
-    <div id="modal-nav" class="shrink-0 flex items-center justify-between gap-2 px-4 py-3"
-      style="background:var(--card);border-top:1px solid var(--line)">
-      <button id="modal-prev" type="button" aria-label="前の覚え書き"
-        class="focusable chip inline-flex items-center gap-1 px-3 py-1.5 soft text-sm border"
-        style="background:#fff;border-color:var(--line);color:var(--ink);cursor:pointer">
-        <i data-lucide="chevron-left" class="w-4 h-4"></i>前へ
-      </button>
-      <span id="modal-pos" class="text-xs tnum" style="color:var(--ink-soft)"></span>
-      <button id="modal-next" type="button" aria-label="次の覚え書き"
-        class="focusable chip inline-flex items-center gap-1 px-3 py-1.5 soft text-sm border"
-        style="background:#fff;border-color:var(--line);color:var(--ink);cursor:pointer">
-        次へ<i data-lucide="chevron-right" class="w-4 h-4"></i>
-      </button>
-    </div>
+    <div id="modal-body"></div>
+  </div>
+  <!-- 前後送り：本文の長さに依存しないよう、画面下中央に固定で浮かせる -->
+  <div id="modal-nav" class="fixed left-1/2 -translate-x-1/2 bottom-5 z-[60] flex items-center gap-1 p-1.5 rounded-full card-shadow border"
+    style="background:var(--card);border-color:var(--line)">
+    <button id="modal-prev" type="button" aria-label="前の覚え書き"
+      class="focusable chip inline-flex items-center gap-1 pl-2.5 pr-3.5 py-1.5 rounded-full text-sm"
+      style="color:var(--ink);cursor:pointer">
+      <i data-lucide="chevron-left" class="w-4 h-4"></i>前へ
+    </button>
+    <span id="modal-pos" class="text-xs tnum px-1" style="color:var(--ink-soft)"></span>
+    <button id="modal-next" type="button" aria-label="次の覚え書き"
+      class="focusable chip inline-flex items-center gap-1 pl-3.5 pr-2.5 py-1.5 rounded-full text-sm"
+      style="color:var(--ink);cursor:pointer">
+      次へ<i data-lucide="chevron-right" class="w-4 h-4"></i>
+    </button>
   </div>
 </div>
 
@@ -359,7 +358,6 @@ function renderGrid(){
 const modal = document.getElementById("modal");
 const modalBody = document.getElementById("modal-body");
 const modalPanel = document.getElementById("modal-panel");
-const modalScroll = document.getElementById("modal-scroll");
 const modalPrev = document.getElementById("modal-prev");
 const modalNext = document.getElementById("modal-next");
 const modalPos  = document.getElementById("modal-pos");
@@ -412,7 +410,7 @@ function showModal(id, dir=0){
   modalPrev.disabled = !has || idx<=0;
   modalNext.disabled = !has || idx>=currentList.length-1;
   modalPos.textContent = has ? `${idx+1} / ${currentList.length}` : "";
-  modalScroll.scrollTop=0;
+  modalPanel.scrollTop=0;
   document.getElementById("modal-close").focus();
 }
 function hideModal(){
