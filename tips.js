@@ -370,10 +370,13 @@ const TIPS_space = [
     claim:"重ねた角丸は、中心がそろうと落ち着く。",
     why:"スマホをケースに入れると、ケースの角はスマホの角より厚みのぶんだけ大きくふくらんで、二つの丸みがぴたりと平行に走ります。隙間が端まで一定だから、ケースが吸いついて見える。角丸を入れ子にするときも同じで、外側の丸みを余白のぶんだけ大きくとると、内と外の弧が同じ中心を持ち、間の余白がどこも均一になります。年輪や水の波紋が落ち着いて見えるのも、輪が中心をそろえているからです。",
     visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="内と外を同じ半径で重ねると角でずれ、外を内＋余白の半径にすると中心がそろい同心円になる">
-      <!-- 悪い例: 内も外も同じ半径 → 角で弧がずれる -->
+      <!-- 悪い例: 内も外も同じ半径 → 角の中心が内と外でずれる -->
       <rect x="20" y="24" width="116" height="72" rx="20" fill="none" stroke="var(--ink-soft)" stroke-width="2"/>
       <rect x="32" y="36" width="92" height="48" rx="20" fill="none" stroke="var(--ink)" stroke-width="2"/>
-      <text x="78" y="112" text-anchor="middle" font-size="11" fill="var(--ink-soft)">同じ半径 → ずれる</text>
+      <line x1="116" y1="44" x2="104" y2="56" stroke="var(--ink-soft)" stroke-width="1" stroke-dasharray="2 2"/>
+      <circle cx="116" cy="44" r="2.4" fill="none" stroke="var(--ink-soft)" stroke-width="1.4"/>
+      <circle cx="104" cy="56" r="2.4" fill="var(--ink-soft)"/>
+      <text x="78" y="112" text-anchor="middle" font-size="11" fill="var(--ink-soft)">中心がずれる</text>
       <!-- 良い例: 外＝内＋余白 → 同心円。共有する角の中心を朱で示す -->
       <rect x="184" y="24" width="116" height="72" rx="20" fill="none" stroke="var(--ink-soft)" stroke-width="2"/>
       <rect x="196" y="36" width="92" height="48" rx="8" fill="none" stroke="var(--calm)" stroke-width="2"/>
@@ -1368,10 +1371,8 @@ const TIPS_draw = [
     claim:"矢印は三角ひとつで伝わる。",
     why:"道で誰かに方向を尋ねると、相手はたいてい指を一本さして「あっち」と示すだけです。それで十分に伝わります。矢印も同じで、向きを示したいなら三角がひとつあればいい。羽根や影や二重線を足すほど、肝心の「どっち」がかえって埋もれます。",
     visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="装飾を盛った矢印より、三角ひとつの矢印のほうが向きがまっすぐ伝わる">
-      <polygon points="38,54 88,54 88,46 116,60 88,74 88,66 38,66" fill="var(--line)"/>
-      <polygon points="34,50 84,50 84,42 112,56 84,70 84,62 34,62" fill="var(--paper)" stroke="var(--ink-soft)" stroke-width="2.5" stroke-linejoin="round"/>
-      <polygon points="39,53 81,53 81,48 104,56 81,64 81,59 39,59" fill="none" stroke="var(--ink-soft)" stroke-width="1" stroke-linejoin="round"/>
-      <line x1="41" y1="52" x2="78" y2="52" stroke="var(--card)" stroke-width="1.5" stroke-linecap="round"/>
+      <polygon points="38,48 84,48 84,40 114,60 84,80 84,72 38,72" fill="var(--paper)" stroke="var(--ink-soft)" stroke-width="1.5" stroke-linejoin="round"/>
+      <polygon points="42,52 88,52 88,47.5 106.8,60 88,72.5 88,68 42,68" fill="none" stroke="var(--ink-soft)" stroke-width="1.5" stroke-linejoin="round"/>
       <text x="78" y="108" text-anchor="middle" font-size="11" fill="var(--ink-soft)">盛った矢印</text>
       <polygon points="208,40 286,56 208,72" fill="var(--calm)"/>
       <text x="242" y="108" text-anchor="middle" font-size="11" fill="var(--calm)">三角ひとつ</text>
