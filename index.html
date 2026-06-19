@@ -77,6 +77,14 @@
   #modal:not(.hidden) #modal-panel,
   #history-modal:not(.hidden) #history-panel{animation:pop .22s ease both;}
   @keyframes pop{from{opacity:0;transform:translateY(12px) scale(.985);}to{opacity:1;transform:none;}}
+  /* 前後送りの中身は、進む向きに合わせてすっと滑り込ませる */
+  .slide-next{animation:slideNext .26s cubic-bezier(.22,.61,.36,1) both;}
+  .slide-prev{animation:slidePrev .26s cubic-bezier(.22,.61,.36,1) both;}
+  @keyframes slideNext{from{opacity:0;transform:translateX(26px);}to{opacity:1;transform:none;}}
+  @keyframes slidePrev{from{opacity:0;transform:translateX(-26px);}to{opacity:1;transform:none;}}
+  @media (prefers-reduced-motion:reduce){
+    .slide-next,.slide-prev,.fade-in{animation:none!important;}
+  }
   /* 更新履歴：ピル型のミニマルなスクロールバー（角丸の内側に収める） */
   #history-scroll{scrollbar-width:thin;scrollbar-color:var(--line) transparent;}
   #history-scroll::-webkit-scrollbar{width:10px;}
@@ -154,15 +162,17 @@
 <div id="modal" class="hidden fixed inset-0 z-50 flex items-start md:items-center justify-center p-4 md:p-6" aria-hidden="true">
   <div id="modal-backdrop" class="absolute inset-0" style="background:rgba(26,29,36,.45)"></div>
   <div id="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title"
-    class="relative softer card-shadow overflow-y-auto w-full max-w-xl max-h-[90vh]" style="background:var(--card)">
+    class="relative softer card-shadow overflow-hidden flex flex-col w-full max-w-xl max-h-[90vh]" style="background:var(--card)">
     <button id="modal-close" aria-label="閉じる"
       class="focusable chip absolute right-3 top-3 z-10 inline-flex items-center justify-center w-9 h-9 soft border"
       style="background:#fff;border-color:var(--line);color:var(--ink-soft)">
       <i data-lucide="x" class="w-5 h-5"></i>
     </button>
-    <div id="modal-body"></div>
-    <!-- 前後送り：一覧を読み物として流して読めるように -->
-    <div id="modal-nav" class="sticky bottom-0 flex items-center justify-between gap-2 px-4 py-3"
+    <div id="modal-scroll" class="overflow-y-auto overflow-x-hidden flex-1">
+      <div id="modal-body"></div>
+    </div>
+    <!-- 前後送り：一覧を読み物として流して読めるように、下部に固定する -->
+    <div id="modal-nav" class="shrink-0 flex items-center justify-between gap-2 px-4 py-3"
       style="background:var(--card);border-top:1px solid var(--line)">
       <button id="modal-prev" type="button" aria-label="前の覚え書き"
         class="focusable chip inline-flex items-center gap-1 px-3 py-1.5 soft text-sm border"
@@ -349,6 +359,7 @@ function renderGrid(){
 const modal = document.getElementById("modal");
 const modalBody = document.getElementById("modal-body");
 const modalPanel = document.getElementById("modal-panel");
+const modalScroll = document.getElementById("modal-scroll");
 const modalPrev = document.getElementById("modal-prev");
 const modalNext = document.getElementById("modal-next");
 const modalPos  = document.getElementById("modal-pos");
@@ -371,12 +382,15 @@ function writeFilterToURL(){
 }
 function baseURL(){ return location.pathname + location.search; }
 
-// 詳細を実際に描いて見せる（履歴操作はしない）
-function showModal(id){
+// 詳細を実際に描いて見せる（履歴操作はしない）。dir>0=次へ / dir<0=前へ / 0=新規に開く
+function showModal(id, dir=0){
   const t = TIPS.find(x=>x.id===id);
   if(!t) return;
   currentId = id;
   modalBody.innerHTML = detail(t);
+  // 進む向きに合わせて中身を滑り込ませる（新規に開くときはパネルの pop に任せる）
+  modalBody.classList.remove("slide-next","slide-prev");
+  if(dir){ void modalBody.offsetWidth; modalBody.classList.add(dir>0?"slide-next":"slide-prev"); }
   modal.classList.remove("hidden");
   modal.setAttribute("aria-hidden","false");
   document.body.style.overflow="hidden";
@@ -398,7 +412,7 @@ function showModal(id){
   modalPrev.disabled = !has || idx<=0;
   modalNext.disabled = !has || idx>=currentList.length-1;
   modalPos.textContent = has ? `${idx+1} / ${currentList.length}` : "";
-  modalPanel.scrollTop=0;
+  modalScroll.scrollTop=0;
   document.getElementById("modal-close").focus();
 }
 function hideModal(){
@@ -418,10 +432,10 @@ function openTip(id){
   showModal(id);
 }
 // 前後送り：同じ詳細表示のなかでの移動なので履歴は積み替えるだけ（pushed の素性は保つ）
-function navTip(id){
+function navTip(id, dir){
   const pushed = !!(history.state && history.state.pushed);
   history.replaceState({tip:id,pushed}, "", baseURL().replace(/#.*$/,"") + "#tip=" + id);
-  showModal(id);
+  showModal(id, dir);
 }
 // 閉じる：自分で積んだ履歴があるときだけ戻す。共有リンク直開きでは自前で閉じる（サイトから出てしまわない）
 function closeModal(){
@@ -434,7 +448,7 @@ function stepTip(dir){
   if(idx<0) return;
   const next = idx + dir;
   if(next<0 || next>=currentList.length) return;
-  navTip(currentList[next].id);
+  navTip(currentList[next].id, dir);
 }
 modalPrev.onclick=()=>stepTip(-1);
 modalNext.onclick=()=>stepTip(1);
