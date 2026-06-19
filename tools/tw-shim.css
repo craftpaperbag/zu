@@ -1,0 +1,85 @@
+/* =============================================================================
+ * tools/tw-shim.css  —  Claude Code on the web（クラウド版）専用のオフライン用シム
+ *
+ * クラウド環境はネットワーク遮断のため Tailwind CDN が読めず、ユーティリティクラスが
+ * 全て無効化されます。tools/screenshot.cjs は「Tailwind 未読込」を検知したときだけ
+ * このCSSを当て、スクショの見た目を本番に近づけます。本番配信には一切使われません。
+ *
+ * 方針:
+ *   - ここは「サイトで実際に使っている Tailwind クラス」の最小再現です（完全網羅では
+ *     ない）。撮りたい箇所で未対応のクラスがあれば、その分だけ追記してください。
+ *   - 値は Tailwind 既定（1rem=16px、spacing: 1=4px 刻み）に合わせています。
+ * ============================================================================= */
+
+*{box-sizing:border-box}
+
+/* display / position */
+.hidden{display:none}
+.block{display:block}.inline-block{display:inline-block}
+.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}
+.relative{position:relative}.absolute{position:absolute}.fixed{position:fixed}
+.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}
+.items-start{align-items:flex-start}.items-center{align-items:center}
+.justify-center{justify-content:center}.justify-between{justify-content:space-between}
+.shrink-0{flex-shrink:0}
+
+/* inset / z */
+.inset-0{inset:0}
+.right-3{right:12px}.right-5{right:20px}.right-6{right:24px}
+.top-3{top:12px}.top-5{top:20px}.top-7{top:28px}
+.bottom-5{bottom:20px}
+.z-10{z-index:10}.z-40{z-index:40}.z-50{z-index:50}
+
+/* sizing */
+.w-full{width:100%}.max-w-xl{max-width:36rem}.max-w-2xl{max-width:42rem}.max-w-5xl{max-width:64rem}
+.max-h-\[90vh\]{max-height:90vh}
+.mx-auto{margin-left:auto;margin-right:auto}
+.w-1{width:4px}.h-1{height:4px}
+.w-1\.5{width:6px}.h-1\.5{height:6px}
+.w-3\.5{width:14px}.h-3\.5{height:14px}
+.w-4{width:16px}.h-4{height:16px}
+.w-5{width:20px}.h-5{height:20px}
+.w-9{width:36px}.h-9{height:36px}
+.w-12{width:48px}.h-12{height:48px}
+
+/* overflow */
+.overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}
+
+/* padding / margin */
+.p-4{padding:16px}.p-6{padding:24px}
+.px-3{padding-left:12px;padding-right:12px}.px-6{padding-left:24px;padding-right:24px}
+.py-1\.5{padding-top:6px;padding-bottom:6px}.py-14{padding-top:56px;padding-bottom:56px}
+.pt-5{padding-top:20px}.pt-6{padding-top:24px}.pt-14{padding-top:56px}
+.pb-5{padding-bottom:20px}.pb-7{padding-bottom:28px}.pb-10{padding-bottom:40px}
+.mt-1{margin-top:4px}.mt-2{margin-top:8px}.mt-6{margin-top:24px}
+.mb-5{margin-bottom:20px}
+
+/* gap / space */
+.gap-1\.5{gap:6px}.gap-2{gap:8px}.gap-2\.5{gap:10px}.gap-4{gap:16px}.gap-5{gap:20px}
+.space-y-1\.5>*+*{margin-top:6px}.space-y-2>*+*{margin-top:8px}
+
+/* typography */
+.text-xs{font-size:.75rem;line-height:1rem}
+.text-sm{font-size:.875rem;line-height:1.25rem}
+.text-base{font-size:1rem;line-height:1.5rem}
+.leading-relaxed{line-height:1.625}
+.font-bold{font-weight:700}
+.text-center{text-align:center}
+
+/* borders */
+.rounded-full{border-radius:9999px}
+.border{border-width:1px;border-style:solid}
+
+/* list reset（履歴の箇条書き用） */
+ul{margin:0;padding:0}li{list-style:none}
+
+/* レスポンシブ（md=768px）。サイトで使う md: の分だけ */
+@media(min-width:768px){
+  .md\:items-center{align-items:center}
+  .md\:p-6{padding:24px}
+  .md\:pt-20{padding-top:80px}
+  .md\:pb-14{padding-bottom:56px}
+  .md\:top-7{top:28px}
+  .md\:text-sm{font-size:.875rem;line-height:1.25rem}
+  .md\:text-base{font-size:1rem;line-height:1.5rem}
+}
