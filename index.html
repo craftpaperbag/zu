@@ -56,6 +56,17 @@
   #modal:not(.hidden) #modal-panel,
   #history-modal:not(.hidden) #history-panel{animation:pop .22s ease both;}
   @keyframes pop{from{opacity:0;transform:translateY(12px) scale(.985);}to{opacity:1;transform:none;}}
+  /* 更新履歴：ピル型のミニマルなスクロールバー（角丸の内側に収める） */
+  #history-scroll{scrollbar-width:thin;scrollbar-color:var(--line) transparent;}
+  #history-scroll::-webkit-scrollbar{width:10px;}
+  #history-scroll::-webkit-scrollbar-track{background:transparent;}
+  #history-scroll::-webkit-scrollbar-thumb{
+    background-color:var(--line);
+    border-radius:999px;
+    border:3px solid transparent;
+    background-clip:padding-box;
+  }
+  #history-scroll::-webkit-scrollbar-thumb:hover{background-color:var(--ink-soft);}
 </style>
 </head>
 <body>
@@ -144,18 +155,20 @@
 <div id="history-modal" class="hidden fixed inset-0 z-50 flex items-start md:items-center justify-center p-4 md:p-6" aria-hidden="true">
   <div id="history-backdrop" class="absolute inset-0" style="background:rgba(26,29,36,.45)"></div>
   <div id="history-panel" role="dialog" aria-modal="true" aria-labelledby="history-title"
-    class="relative softer card-shadow overflow-y-auto w-full max-w-xl max-h-[90vh]" style="background:var(--card)">
+    class="relative softer card-shadow overflow-hidden w-full max-w-xl max-h-[90vh]" style="background:var(--card)">
     <button id="history-close" aria-label="閉じる"
       class="focusable chip absolute right-3 top-3 z-10 inline-flex items-center justify-center w-9 h-9 soft border"
       style="background:#fff;border-color:var(--line);color:var(--ink-soft)">
       <i data-lucide="x" class="w-5 h-5"></i>
     </button>
-    <div class="px-6 pt-6 flex items-center gap-1.5 text-xs" style="color:var(--ink-soft)">
-      <i data-lucide="history" class="w-3.5 h-3.5"></i>更新履歴
+    <div id="history-scroll" class="overflow-y-auto max-h-[90vh]">
+      <div class="px-6 pt-6 flex items-center gap-1.5 text-xs" style="color:var(--ink-soft)">
+        <i data-lucide="history" class="w-3.5 h-3.5"></i>更新履歴
+      </div>
+      <h3 id="history-title" class="maru font-bold px-6 mt-1" style="font-size:1.35rem">これまでの更新</h3>
+      <p class="px-6 mt-1 text-xs" style="color:var(--ink-soft)">このサイトに加えてきた手入れの記録です。</p>
+      <div id="history-body" class="px-6 pt-5 pb-7"></div>
     </div>
-    <h3 id="history-title" class="maru font-bold px-6 mt-1" style="font-size:1.5rem">これまでの更新</h3>
-    <p class="px-6 mt-1 text-sm" style="color:var(--ink-soft)">このサイトに加えてきた手入れの記録です。</p>
-    <div id="history-body" class="px-6 pt-5 pb-7"></div>
   </div>
 </div>
 
@@ -1927,10 +1940,10 @@ function renderHistory(){
     const last = i===HISTORY.length-1;
     return `
     <div class="${last?'':'pb-5 mb-5'}" style="${last?'':'border-bottom:1px solid var(--line)'}">
-      <p class="maru font-bold text-sm tnum" style="color:var(--calm)">${h.date}</p>
-      <ul class="mt-2 space-y-2">
-        ${h.items.map(it=>`<li class="flex items-start gap-2.5 text-sm md:text-base leading-relaxed" style="color:var(--ink)">
-          <span class="inline-block w-1.5 h-1.5 rounded-full mt-2.5 shrink-0" style="background:var(--line)"></span>
+      <p class="maru font-bold text-xs tnum" style="color:var(--calm)">${h.date}</p>
+      <ul class="mt-2 space-y-1.5">
+        ${h.items.map(it=>`<li class="flex items-start gap-2 text-xs md:text-sm leading-relaxed" style="color:var(--ink)">
+          <span class="inline-block w-1 h-1 rounded-full mt-2 shrink-0" style="background:var(--line)"></span>
           <span>${it}</span>
         </li>`).join("")}
       </ul>
@@ -1945,7 +1958,7 @@ function openHistory(){
   historyModal.setAttribute("aria-hidden","false");
   document.body.style.overflow="hidden";
   lucide.createIcons();
-  document.getElementById("history-panel").scrollTop=0;
+  document.getElementById("history-scroll").scrollTop=0;
   document.getElementById("history-close").focus();
 }
 function closeHistory(){
