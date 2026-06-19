@@ -48,6 +48,13 @@
   .focusable:focus-visible{outline:3px solid var(--accent);outline-offset:2px;}
   @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
   .is-hidden{display:none!important;}
+  /* 一覧カードの why は2行で抑え、図を主役に保ったまま「命」を覗かせる */
+  .clamp2{
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  /* モーダルの前後送り：端では押せないことを見た目でも伝える */
+  #modal-prev[disabled],#modal-next[disabled]{opacity:.35;cursor:default;pointer-events:none;}
   /* スマホ：カテゴリを折り返さず横1列スクロールにし、占有する高さを抑える */
   @media (max-width:767px){
     #cats{
@@ -154,6 +161,21 @@
       <i data-lucide="x" class="w-5 h-5"></i>
     </button>
     <div id="modal-body"></div>
+    <!-- 前後送り：一覧を読み物として流して読めるように -->
+    <div id="modal-nav" class="sticky bottom-0 flex items-center justify-between gap-2 px-4 py-3"
+      style="background:var(--card);border-top:1px solid var(--line)">
+      <button id="modal-prev" type="button" aria-label="前の覚え書き"
+        class="focusable chip inline-flex items-center gap-1 px-3 py-1.5 soft text-sm border"
+        style="background:#fff;border-color:var(--line);color:var(--ink);cursor:pointer">
+        <i data-lucide="chevron-left" class="w-4 h-4"></i>前へ
+      </button>
+      <span id="modal-pos" class="text-xs tnum" style="color:var(--ink-soft)"></span>
+      <button id="modal-next" type="button" aria-label="次の覚え書き"
+        class="focusable chip inline-flex items-center gap-1 px-3 py-1.5 soft text-sm border"
+        style="background:#fff;border-color:var(--line);color:var(--ink);cursor:pointer">
+        次へ<i data-lucide="chevron-right" class="w-4 h-4"></i>
+      </button>
+    </div>
   </div>
 </div>
 
@@ -276,9 +298,10 @@ function card(t){
       <i data-lucide="${catIcon(t.cat)}" class="w-3.5 h-3.5"></i>${catLabel(t.cat)}
     </div>
     <h3 class="maru font-bold px-5 mt-1" style="font-size:1.25rem">${t.title}</h3>
-    <p class="px-5 mt-1 text-sm" style="color:var(--accent)">${t.claim}</p>
+    <p class="px-5 mt-1 text-sm" style="color:var(--ink)">${t.claim}</p>
     <div class="mx-5 my-3 p-3 soft" style="background:var(--paper)">${t.visual}</div>
-    <div class="px-5 pb-4 pt-1 flex items-center gap-1 text-xs" style="color:var(--ink-soft)">
+    <p class="px-5 text-sm leading-relaxed clamp2" style="color:var(--ink-soft)">${t.why}</p>
+    <div class="px-5 pb-4 pt-2 flex items-center gap-1 text-xs" style="color:var(--ink-soft)">
       <span>詳しく読む</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
     </div>
   </article>`;
@@ -291,7 +314,7 @@ function detail(t){
       <i data-lucide="${catIcon(t.cat)}" class="w-3.5 h-3.5"></i>${catLabel(t.cat)}
     </div>
     <h3 id="modal-title" class="maru font-bold px-6 mt-1" style="font-size:1.5rem">${t.title}</h3>
-    <p class="px-6 mt-1 text-base" style="color:var(--accent)">${t.claim}</p>
+    <p class="px-6 mt-1 text-base" style="color:var(--ink)">${t.claim}</p>
     <div class="mx-6 my-4 p-4 soft" style="background:var(--paper)">${t.visual}</div>
     <p class="px-6 text-sm md:text-base leading-relaxed" style="color:var(--ink)">${t.why}</p>
     <div class="px-6 mt-4 pb-1 flex items-start gap-2">
@@ -303,18 +326,22 @@ function detail(t){
   `;
 }
 
+// いま絞り込まれている一覧。モーダルの前後送りはこの並びをたどる。
+let currentList = [];
+
 function renderGrid(){
-  const list = TIPS.filter(match);
+  currentList = TIPS.filter(match);
   const grid = document.getElementById("grid");
   const empty = document.getElementById("empty");
   const count = document.getElementById("count");
-  grid.innerHTML = list.map(card).join("");
-  empty.classList.toggle("hidden", list.length>0);
-  count.textContent = `${list.length} 件の覚え書き`;
+  grid.innerHTML = currentList.map(card).join("");
+  empty.classList.toggle("hidden", currentList.length>0);
+  count.textContent = `${currentList.length} 件の覚え書き`;
   grid.querySelectorAll("article[data-id]").forEach(c=>{
-    c.onclick=()=>openModal(c.dataset.id);
-    c.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openModal(c.dataset.id); } };
+    c.onclick=()=>openTip(c.dataset.id);
+    c.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openTip(c.dataset.id); } };
   });
+  writeFilterToURL();
   lucide.createIcons();
 }
 
@@ -322,12 +349,33 @@ function renderGrid(){
 const modal = document.getElementById("modal");
 const modalBody = document.getElementById("modal-body");
 const modalPanel = document.getElementById("modal-panel");
+const modalPrev = document.getElementById("modal-prev");
+const modalNext = document.getElementById("modal-next");
+const modalPos  = document.getElementById("modal-pos");
 let lastFocused = null;
+let currentId = null;   // いま開いている覚え書き
 
-function openModal(id){
+/* ---- URL（共有リンク）まわり ----
+   絞り込みは ?cat=&q= に、開いている詳細は #tip=id に残す。
+   リロード・ブックマーク・共有で、その状態を復元できるようにする。 */
+function tipIdFromHash(){
+  const m = location.hash.match(/tip=([\w-]+)/);
+  return m ? m[1] : null;
+}
+function writeFilterToURL(){
+  const p = new URLSearchParams();
+  if(activeCat!=="all") p.set("cat", activeCat);
+  if(keyword.trim())    p.set("q", keyword.trim());
+  const qs = p.toString();
+  history.replaceState(history.state, "", location.pathname + (qs?("?"+qs):"") + location.hash);
+}
+function baseURL(){ return location.pathname + location.search; }
+
+// 詳細を実際に描いて見せる（履歴操作はしない）
+function showModal(id){
   const t = TIPS.find(x=>x.id===id);
   if(!t) return;
-  lastFocused = document.activeElement;
+  currentId = id;
   modalBody.innerHTML = detail(t);
   modal.classList.remove("hidden");
   modal.setAttribute("aria-hidden","false");
@@ -335,18 +383,69 @@ function openModal(id){
   lucide.createIcons();
   // モーダル内のタグから絞り込みジャンプ
   modalBody.querySelectorAll("button[data-jump]").forEach(b=>{
-    b.onclick=()=>{activeCat=b.dataset.jump;keyword="";document.getElementById("q").value="";document.getElementById("q-clear").classList.add("is-hidden");closeModal();renderCats();renderGrid();window.scrollTo({top:0,behavior:"smooth"});};
+    b.onclick=()=>{
+      activeCat=b.dataset.jump; keyword="";
+      qInput.value=""; syncClear();
+      hideModal();
+      history.replaceState(null,"",location.pathname);  // 詳細#tip と旧クエリを消す（renderGridが?cat=を書き直す）
+      renderCats(); renderGrid();
+      window.scrollTo({top:0,behavior:"smooth"});
+    };
   });
+  // 前後送りの状態を更新
+  const idx = currentList.findIndex(x=>x.id===id);
+  const has = idx>=0;
+  modalPrev.disabled = !has || idx<=0;
+  modalNext.disabled = !has || idx>=currentList.length-1;
+  modalPos.textContent = has ? `${idx+1} / ${currentList.length}` : "";
   modalPanel.scrollTop=0;
   document.getElementById("modal-close").focus();
 }
-function closeModal(){
+function hideModal(){
   if(modal.classList.contains("hidden")) return;
   modal.classList.add("hidden");
   modal.setAttribute("aria-hidden","true");
   document.body.style.overflow="";
+  currentId = null;
   if(lastFocused) lastFocused.focus();
 }
+
+// 一覧から開く（履歴を1つ積むので、ブラウザの「戻る」で閉じられる）
+function openTip(id){
+  if(!TIPS.some(x=>x.id===id)) return;
+  lastFocused = document.activeElement;
+  history.pushState({tip:id,pushed:true}, "", baseURL().replace(/#.*$/,"") + "#tip=" + id);
+  showModal(id);
+}
+// 前後送り：同じ詳細表示のなかでの移動なので履歴は積み替えるだけ（pushed の素性は保つ）
+function navTip(id){
+  const pushed = !!(history.state && history.state.pushed);
+  history.replaceState({tip:id,pushed}, "", baseURL().replace(/#.*$/,"") + "#tip=" + id);
+  showModal(id);
+}
+// 閉じる：自分で積んだ履歴があるときだけ戻す。共有リンク直開きでは自前で閉じる（サイトから出てしまわない）
+function closeModal(){
+  if(modal.classList.contains("hidden")) return;
+  if(history.state && history.state.pushed){ history.back(); }
+  else { hideModal(); history.replaceState(null,"",baseURL().replace(/#.*$/,"")); }
+}
+function stepTip(dir){
+  const idx = currentList.findIndex(x=>x.id===currentId);
+  if(idx<0) return;
+  const next = idx + dir;
+  if(next<0 || next>=currentList.length) return;
+  navTip(currentList[next].id);
+}
+modalPrev.onclick=()=>stepTip(-1);
+modalNext.onclick=()=>stepTip(1);
+
+// ブラウザの戻る/進むで URL の #tip に追従する
+window.addEventListener("popstate", ()=>{
+  const id = tipIdFromHash();
+  if(id && TIPS.some(x=>x.id===id)) showModal(id);
+  else hideModal();
+});
+
 document.getElementById("modal-close").onclick=closeModal;
 document.getElementById("modal-backdrop").onclick=closeModal;
 
@@ -392,7 +491,14 @@ document.getElementById("history-open").onclick=openHistory;
 document.getElementById("history-close").onclick=closeHistory;
 document.getElementById("history-backdrop").onclick=closeHistory;
 
-document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ closeModal(); closeHistory(); } });
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){ closeModal(); closeHistory(); return; }
+  // 詳細を開いている間は ← → で前後の覚え書きへ
+  if(!modal.classList.contains("hidden")){
+    if(e.key==="ArrowLeft"){ e.preventDefault(); stepTip(-1); }
+    else if(e.key==="ArrowRight"){ e.preventDefault(); stepTip(1); }
+  }
+});
 
 // 検索：入力中はクリアボタンを出す
 const qInput = document.getElementById("q");
@@ -415,8 +521,28 @@ toTop.onclick=gotoTop;
 window.addEventListener("scroll",syncScrollUI,{passive:true});
 syncScrollUI();
 
+// 起動時：URL から絞り込みと開いている詳細を復元する（共有リンク・リロード対応）
+(function restoreFromURL(){
+  const p = new URLSearchParams(location.search);
+  const cat = p.get("cat");
+  if(cat && (cat==="all" || CATEGORIES.some(c=>c.id===cat))) activeCat = cat;
+  const q = p.get("q");
+  if(q){ keyword = q; qInput.value = q; syncClear(); }
+})();
+
 renderCats();
 renderGrid();
+
+// URL に #tip=id があれば、その詳細を開いた状態で始める
+(function openTipFromURL(){
+  const id = tipIdFromHash();
+  if(id && TIPS.some(x=>x.id===id)){
+    lastFocused = document.body;
+    if(!(history.state && history.state.tip)) history.replaceState({tip:id},"",location.href);
+    showModal(id);
+  }
+})();
+
 lucide.createIcons();
 </script>
 </body>
