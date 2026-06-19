@@ -37,6 +37,25 @@
 
 ---
 
+## スクリーンショットの撮り方（クラウド版 Claude Code 用）
+
+見た目の変更を画像で報告したいときは `tools/screenshot.cjs` を使う。撮影専用のヘルパーで、サイト本体（`index.html`）には影響しない。
+
+```bash
+# 例：更新履歴モーダルを開いて少しスクロールした状態を撮る
+node tools/screenshot.cjs --eval "openHistory()" --scroll "#history-scroll=150" --out shot.png
+
+# 例：特定要素だけ／ページ全体
+node tools/screenshot.cjs --selector "#history-panel" --out panel.png
+node tools/screenshot.cjs --full --out full.png
+```
+
+- クラウド環境はネットワーク遮断で CDN（Tailwind / lucide / フォント）が読めない。ツールがこれを検知して `tools/tw-shim.css`（Tailwind の見た目を最小再現）を自動で当てる。**未対応のクラスを使う箇所を撮るときは、その分だけ `tw-shim.css` に追記**する。
+- ネットワークが通る環境で実行すれば本物の CDN が読まれ、shim 抜きで本番同一の見た目になる。
+- 詳しいオプションは `node tools/screenshot.cjs --help`、経緯はファイル先頭のコメント参照。
+
+---
+
 ## デザイントークン（CSS変数・実装済み）
 
 ```
