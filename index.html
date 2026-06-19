@@ -48,6 +48,20 @@
   .focusable:focus-visible{outline:3px solid var(--accent);outline-offset:2px;}
   @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
   .is-hidden{display:none!important;}
+  /* スマホ：カテゴリを折り返さず横1列スクロールにし、占有する高さを抑える */
+  @media (max-width:767px){
+    #cats{
+      flex-wrap:nowrap;
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;            /* スクロールバーは隠す（chip だけ見せる） */
+      /* px-6(1.5rem) ぶん外へ広げて端まで気持ちよくスクロールさせる */
+      margin-left:-1.5rem; margin-right:-1.5rem;
+      padding-left:1.5rem; padding-right:1.5rem;
+    }
+    #cats::-webkit-scrollbar{display:none;}
+    #cats>button{flex:0 0 auto;}      /* chip を縮めず横に流す */
+  }
   .fade-in{animation:fade .5s ease both;}
   @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
   .tipcard{cursor:pointer;}
@@ -105,7 +119,7 @@
 </header>
 
 <!-- 検索 + カテゴリ -->
-<div class="px-6 max-w-5xl mx-auto sticky top-0 z-20 pt-2 pb-4" style="background:linear-gradient(var(--paper) 78%,transparent)">
+<div class="px-6 max-w-5xl mx-auto sticky top-0 z-20 pt-2 pb-3 md:pb-4" style="background:linear-gradient(var(--paper) 78%,transparent)">
   <div class="flex items-center gap-2.5">
     <a id="mini-logo" href="#top" aria-label="ページの先頭へ戻る"
       class="is-hidden focusable chip shrink-0 inline-flex items-baseline gap-1 maru font-bold leading-none"
@@ -115,7 +129,7 @@
     <div class="relative flex-1">
       <i data-lucide="search" class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2" style="color:var(--ink-soft)"></i>
       <input id="q" type="text" placeholder="キーワードで探す（例：余白、角丸、色）"
-        class="focusable w-full pl-12 pr-11 py-3.5 soft border bg-white text-base"
+        class="focusable w-full pl-12 pr-11 py-3 md:py-3.5 soft border bg-white text-base"
         style="border-color:var(--line)">
       <button id="q-clear" type="button" aria-label="検索をクリア"
         class="is-hidden focusable chip absolute right-3 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-7 h-7 soft"
@@ -124,7 +138,7 @@
       </button>
     </div>
   </div>
-  <div id="cats" class="flex flex-wrap gap-2 mt-3"></div>
+  <div id="cats" class="flex flex-wrap gap-2 mt-2.5 md:mt-3"></div>
 </div>
 
 <!-- Tips一覧 -->
@@ -210,6 +224,12 @@ const CATEGORIES = [
 
 /* 更新履歴：新しいものを上に。1回ぶんを1ブロック足すだけで増える。 */
 const HISTORY = [
+  {
+    date:"2026-06-19",
+    items:[
+      "スマホで、検索窓の下のカテゴリを折り返さず横1列で横スクロールできるようにし、上部が画面を占有しないようにした。",
+    ],
+  },
   {
     date:"2026-06-18",
     items:[
@@ -1815,7 +1835,7 @@ const catIcon  = id => (CATEGORIES.find(c=>c.id===id)||{}).icon  || "tag";
 function renderCats(){
   const wrap = document.getElementById("cats");
   const mk = (id,label,icon,on)=>`
-    <button data-cat="${id}" class="chip focusable inline-flex items-center gap-1.5 px-3.5 py-2 soft text-sm border"
+    <button data-cat="${id}" class="chip focusable shrink-0 whitespace-nowrap inline-flex items-center gap-1.5 px-3.5 py-2 soft text-sm border"
       style="${on
         ? 'background:var(--ink);color:#fff;border-color:var(--ink)'
         : 'background:#fff;color:var(--ink);border-color:var(--line)'}">
