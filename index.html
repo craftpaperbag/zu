@@ -614,6 +614,49 @@ const TIPS_space = [
     apply:"並べる要素は2〜3を目安にし、多いときは似たものをまとめて2〜3の組に分類する。",
     term:"チャンク化",
   },
+  {
+    id:"concentric-radius",
+    cat:"space",
+    tags:[],
+    title:"角丸は、同心円で重ねる",
+    claim:"重ねた角丸は、中心がそろうと落ち着く。",
+    why:"スマホをケースに入れると、ケースの角はスマホの角より厚みのぶんだけ大きくふくらんで、二つの丸みがぴたりと平行に走ります。隙間が端まで一定だから、ケースが吸いついて見える。角丸を入れ子にするときも同じで、外側の丸みを余白のぶんだけ大きくとると、内と外の弧が同じ中心を持ち、間の余白がどこも均一になります。年輪や水の波紋が落ち着いて見えるのも、輪が中心をそろえているからです。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="内と外を同じ半径で重ねると角でずれ、外を内＋余白の半径にすると中心がそろい同心円になる">
+      <!-- 悪い例: 内も外も同じ半径 → 角で弧がずれる -->
+      <rect x="20" y="24" width="116" height="72" rx="20" fill="none" stroke="var(--ink-soft)" stroke-width="2"/>
+      <rect x="32" y="36" width="92" height="48" rx="20" fill="none" stroke="var(--ink)" stroke-width="2"/>
+      <text x="78" y="112" text-anchor="middle" font-size="11" fill="var(--ink-soft)">同じ半径 → ずれる</text>
+      <!-- 良い例: 外＝内＋余白 → 同心円。共有する角の中心を朱で示す -->
+      <rect x="184" y="24" width="116" height="72" rx="20" fill="none" stroke="var(--ink-soft)" stroke-width="2"/>
+      <rect x="196" y="36" width="92" height="48" rx="8" fill="none" stroke="var(--calm)" stroke-width="2"/>
+      <circle cx="280" cy="44" r="2.6" fill="var(--accent)"/>
+      <text x="242" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">外＝内＋余白 → そろう</text>
+    </svg>`,
+    apply:"外箱の角丸＝内箱の角丸＋間の余白で重ねる。曲率がなめらかに変わる『スーパー角丸（スーパー楕円）』が使えるなら、入れ子の角はいっそう自然になじむ。",
+    term:"同心円／スーパー楕円",
+  },
+  {
+    id:"z-pattern",
+    cat:"space",
+    tags:["hierarchy"],
+    title:"目は、Zの字に流れる",
+    claim:"目は左上から流れ出す。見せたいものは、その入口に。",
+    why:"横書きの文章は、左上から右へ、行が尽きれば次の段の左へと読みます。その癖は文章を離れても残っていて、チラシやスライドを開いた目も、まず左上に降り、右へ下へとZの字を描いて流れます。だから最初に見せたいものを左上に置くと、見る人はいちばん集中力のあるその一瞬で、それを受け取れます。左上は、目がいちばん最初に立ち寄る場所です。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="見せたいものを左上以外に置くと出会いが遅れ、左上の入口に置くと最初の一瞬で目に入る">
+      <!-- 悪い例: 見せたいものが入口(左上)にない -->
+      <rect x="20" y="18" width="116" height="78" rx="12" fill="none" stroke="var(--line)"/>
+      <polyline points="32,32 124,32 32,72 116,72" fill="none" stroke="var(--ink-soft)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="74" y="80" width="50" height="11" rx="3" fill="var(--ink-soft)"/>
+      <text x="78" y="112" text-anchor="middle" font-size="11" fill="var(--ink-soft)">入口にない → 後回し</text>
+      <!-- 良い例: 見せたいものを左上の入口に -->
+      <rect x="184" y="18" width="116" height="78" rx="12" fill="none" stroke="var(--line)"/>
+      <polyline points="196,32 288,32 196,72 280,72" fill="none" stroke="var(--ink-soft)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="196" y="25" width="56" height="13" rx="3" fill="var(--accent)"/>
+      <text x="242" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">左上に置く → すぐ目に入る</text>
+    </svg>`,
+    apply:"最初に見せたいものを、画面の左上に置く。タイトルや要点は、目が最初に降りる入口から始める。",
+    term:"Z型の視線移動",
+  },
 ];
 
 const TIPS_hierarchy = [
@@ -1241,6 +1284,28 @@ const TIPS_color = [
     </svg>`,
     apply:"塗りはまず一色のベタで考える。グラデーションは奥行きや光が要るときだけ控えめに。",
     term:"",
+  },
+  {
+    id:"semantic-color",
+    cat:"color",
+    tags:["text"],
+    title:"色の意味には、逆らわない",
+    claim:"色がもとから持つ意味に、逆らわない。",
+    why:"信号の赤を見れば、誰でも足を止めます。止まれ・危ないは赤、進んでいいのは緑——子どもの頃から、体でそう覚えてきたからです。人があなたの図を見ている時間より、図の外の世界で過ごしてきた時間のほうが、ずっと長い。だから見る人が連れてくる色の意味は、こちらの都合よりも強い。その意味に沿わせると、説明する前から正しく伝わります。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="危険を緑で示すと迷い、危険を赤で示すなど意味どおりにすると即わかる">
+      <!-- 悪い例: 危険を緑で示し、意味に逆らう（正三角・角丸の警告マーク） -->
+      <polygon points="78,31 105,78 51,78" fill="var(--calm)" stroke="var(--calm)" stroke-width="6" stroke-linejoin="round"/>
+      <rect x="75" y="46" width="6" height="18" rx="3" fill="var(--card)"/>
+      <circle cx="78" cy="72" r="3" fill="var(--card)"/>
+      <text x="78" y="100" text-anchor="middle" font-size="11" fill="var(--ink-soft)">緑で危険 → 迷う</text>
+      <!-- 良い例: 危険を赤で示し、意味どおり（正三角・角丸の警告マーク） -->
+      <polygon points="242,31 269,78 215,78" fill="var(--accent)" stroke="var(--accent)" stroke-width="6" stroke-linejoin="round"/>
+      <rect x="239" y="46" width="6" height="18" rx="3" fill="var(--card)"/>
+      <circle cx="242" cy="72" r="3" fill="var(--card)"/>
+      <text x="242" y="100" text-anchor="middle" font-size="11" fill="var(--calm)">赤で危険 → 即わかる</text>
+    </svg>`,
+    apply:"危険・エラーは赤、成功・安全は緑、安定・冷静は青。色に役割を持たせるときは、世間の意味に合わせる。",
+    term:"シグナルカラー",
   },
 ];
 
