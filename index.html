@@ -8,6 +8,20 @@
 <meta property="og:title" content="zu — 伝わりやすい形について">
 <meta property="og:description" content="紙の上に文字を置いた時点で、それはもう図だ。見せて伝えるすべてを少し伝わりやすくするための、視覚の覚え書き。">
 <meta property="og:type" content="website">
+<meta name="theme-color" content="#f7f6f2">
+<!-- テーマの初期決定：描画前に data-theme を確定させ、一瞬ライトで光る（FOUC）のを防ぐ -->
+<script>
+  (function(){
+    try{
+      var saved = localStorage.getItem('zu-theme');
+      var dark = saved ? saved === 'dark'
+        : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    }catch(e){
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  })();
+</script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231a1d24'/%3E%3Ctext x='30' y='45' font-family='sans-serif' font-size='34' font-weight='700' fill='%23ffffff' text-anchor='middle'%3Ezu%3C/text%3E%3Ccircle cx='49' cy='19' r='5' fill='%23e0533d'/%3E%3C/svg%3E">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/lucide@latest"></script>
@@ -25,6 +39,24 @@
     --accent-soft:#fbeae6;
     --calm:#3f7d6e;       /* 図の補助色（落ち着いた緑） */
     --calm-soft:#e6f0ec;
+    /* 「濃い面に明るい字」を反転して使う要素（選択中チップ・トップへ戻る） */
+    --strong:#1a1d24; --on-strong:#ffffff;
+    /* フッターは両モードで落ち着いた濃い帯に保つ */
+    --footer-bg:#1a1d24; --footer-ink:#cfd4dd; --footer-ink-soft:#7c8492;
+  }
+  /* ダークモード：紙を暗く、墨を明るく。図はCSS変数参照なので一緒に反転する。 */
+  :root[data-theme="dark"]{
+    --ink:#e7e9ee;
+    --ink-soft:#a0a6b2;
+    --line:#2c303a;
+    --paper:#15171c;
+    --card:#1e2128;
+    --accent:#f06a52;     /* 朱：暗所ではやや明るめに */
+    --accent-soft:#3a221d;
+    --calm:#5fa594;
+    --calm-soft:#1d2e2a;
+    --strong:#e7e9ee; --on-strong:#15171c;  /* 反転：明るいピルでアクティブ感を保つ */
+    --footer-bg:#1e2128; --footer-ink:#cfd4dd; --footer-ink-soft:#7c8492;
   }
   *{box-sizing:border-box;}
   body{
@@ -33,6 +65,7 @@
     background:var(--paper);
     -webkit-font-smoothing:antialiased;
     margin:0; line-height:1.8;
+    transition:background-color .3s ease, color .3s ease;
   }
   .maru{font-family:'Zen Maru Gothic',sans-serif;}
   .tnum{font-feature-settings:"tnum";}
@@ -108,7 +141,12 @@
 
 <!-- ヘッダー / ヒーロー -->
 <header id="top" class="relative px-6 pt-14 pb-10 md:pt-20 md:pb-14 max-w-5xl xl:max-w-7xl mx-auto">
-  <div class="absolute right-6 top-5 md:top-7">
+  <div class="absolute right-6 top-5 md:top-7 flex items-center gap-2">
+    <button id="theme-toggle" type="button" aria-label="表示テーマを切り替える" aria-pressed="false"
+      class="focusable chip inline-flex items-center justify-center soft p-2 border"
+      style="color:var(--ink-soft);background:var(--card);border-color:var(--line);cursor:pointer">
+      <i data-lucide="moon" class="w-4 h-4"></i>
+    </button>
     <button id="history-open" type="button"
       class="focusable chip inline-flex items-center gap-1.5 text-sm soft px-3 py-1.5 border"
       style="color:var(--ink-soft);background:var(--card);border-color:var(--line);cursor:pointer">
@@ -179,7 +217,7 @@
     class="relative softer card-shadow overflow-y-auto overflow-x-hidden w-full max-w-xl max-h-[82vh]" style="background:var(--card)">
     <button id="modal-close" aria-label="閉じる"
       class="focusable chip absolute right-3 top-3 z-10 inline-flex items-center justify-center w-9 h-9 soft border"
-      style="background:#fff;border-color:var(--line);color:var(--ink-soft)">
+      style="background:var(--card);border-color:var(--line);color:var(--ink-soft)">
       <i data-lucide="x" class="w-5 h-5"></i>
     </button>
     <div id="modal-body"></div>
@@ -208,7 +246,7 @@
     class="relative softer card-shadow overflow-hidden w-full max-w-xl max-h-[90vh]" style="background:var(--card)">
     <button id="history-close" aria-label="閉じる"
       class="focusable chip absolute right-3 top-3 z-10 inline-flex items-center justify-center w-9 h-9 soft border"
-      style="background:#fff;border-color:var(--line);color:var(--ink-soft)">
+      style="background:var(--card);border-color:var(--line);color:var(--ink-soft)">
       <i data-lucide="x" class="w-5 h-5"></i>
     </button>
     <div id="history-scroll" class="overflow-y-auto max-h-[90vh]">
@@ -223,12 +261,12 @@
 </div>
 
 <!-- フッター -->
-<footer class="px-6 py-14 mt-6" style="background:var(--ink);color:#cfd4dd">
+<footer class="px-6 py-14 mt-6" style="background:var(--footer-bg);color:var(--footer-ink)">
   <div class="max-w-2xl mx-auto flex items-center justify-between gap-4">
-    <p class="text-xs" style="color:#7c8492">craftpaperbag</p>
+    <p class="text-xs" style="color:var(--footer-ink-soft)">craftpaperbag</p>
     <div class="flex items-center gap-5">
       <a href="https://github.com/craftpaperbag/zu" target="_blank" rel="noopener"
-        class="focusable inline-flex items-center gap-2 text-sm" style="color:#cfd4dd">
+        class="focusable inline-flex items-center gap-2 text-sm" style="color:var(--footer-ink)">
         <i data-lucide="github" class="w-4 h-4"></i>GitHub
       </a>
     </div>
@@ -238,7 +276,7 @@
 <!-- ページトップへ戻るボタン（スクロール中だけ表示） -->
 <button id="to-top" type="button" aria-label="ページの先頭へ戻る"
   class="is-hidden focusable chip fixed right-5 bottom-5 z-40 inline-flex items-center justify-center w-12 h-12 softer card-shadow"
-  style="background:var(--ink);color:#fff;border:none;cursor:pointer">
+  style="background:var(--strong);color:var(--on-strong);border:none;cursor:pointer">
   <i data-lucide="arrow-up" class="w-5 h-5"></i>
 </button>
 
@@ -299,8 +337,8 @@ function renderCats(){
   const mk = (id,label,icon,on)=>`
     <button data-cat="${id}" class="chip focusable shrink-0 whitespace-nowrap inline-flex items-center gap-1.5 px-3.5 py-2 soft text-sm border"
       style="${on
-        ? 'background:var(--ink);color:#fff;border-color:var(--ink)'
-        : 'background:#fff;color:var(--ink);border-color:var(--line)'}">
+        ? 'background:var(--strong);color:var(--on-strong);border-color:var(--strong)'
+        : 'background:var(--card);color:var(--ink);border-color:var(--line)'}">
       <i data-lucide="${icon}" class="w-4 h-4"></i>${label}<span class="tnum text-xs" style="opacity:.6">${countOf(id)}</span>
     </button>`;
   wrap.innerHTML =
@@ -617,6 +655,30 @@ renderGrid();
     if(!(history.state && history.state.tip)) history.replaceState({tip:id},"",location.href);
     showModal(id);
   }
+})();
+
+// テーマ切り替え：右上のボタンで data-theme を反転し、選択を localStorage に保存する。
+// 初期値は <head> のインラインスクリプトが描画前に決めている（FOUC防止）。
+(function setupTheme(){
+  const root = document.documentElement;
+  const btn = document.getElementById("theme-toggle");
+  const meta = document.querySelector('meta[name="theme-color"]');
+  function paint(){
+    const dark = root.getAttribute("data-theme") === "dark";
+    // ダーク時は「明るくする」太陽、ライト時は「暗くする」月を見せる
+    btn.querySelector("i").setAttribute("data-lucide", dark ? "sun" : "moon");
+    btn.setAttribute("aria-pressed", String(dark));
+    btn.setAttribute("aria-label", dark ? "ライトモードに切り替える" : "ダークモードに切り替える");
+    if(meta) meta.setAttribute("content", dark ? "#15171c" : "#f7f6f2");
+    lucide.createIcons();
+  }
+  btn.addEventListener("click", ()=>{
+    const dark = root.getAttribute("data-theme") !== "dark";
+    root.setAttribute("data-theme", dark ? "dark" : "light");
+    try{ localStorage.setItem("zu-theme", dark ? "dark" : "light"); }catch(e){}
+    paint();
+  });
+  paint();
 })();
 
 lucide.createIcons();
