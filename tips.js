@@ -822,6 +822,35 @@ const TIPS_flow = [
     apply:"手が止まったら、悪い案でもいいので一度ラフを作り、そこから直していく。",
     term:"",
   },
+  {
+    id:"squint-test",
+    cat:"flow",
+    tags:["hierarchy"],
+    title:"目を細めて、見る",
+    claim:"目を細めると、効いている強弱だけが残る。",
+    why:"遠くの街明かりを目を細めて見ると、一つひとつの粒が溶けて、明るいかたまりだけが浮かびます。細部が落ちて、強さの差だけが残るからです。作った図も、目を細めてわざと細部をぼかすと、いちばん濃い塊が主役として立っているかが一目でわかる。くっきり見えているうちは気づけない強弱の崩れが、ぼかすと見えてきます。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="目を細めて細部をぼかすと、強弱の効いていない図は塊が埋もれ、効いた図は主役だけが残る">
+      <!-- 悪い例: ぼかすとどれも同じ濃さで主役が埋もれる -->
+      <g fill="var(--ink-soft)" opacity="0.55">
+        <rect x="26" y="28" width="64" height="18" rx="9"/>
+        <rect x="98" y="30" width="34" height="14" rx="7"/>
+        <rect x="26" y="56" width="44" height="16" rx="8"/>
+        <rect x="78" y="56" width="54" height="16" rx="8"/>
+        <rect x="40" y="80" width="80" height="14" rx="7"/>
+      </g>
+      <text x="78" y="112" text-anchor="middle" font-size="11" fill="var(--ink-soft)">ぼかすと埋もれる</text>
+      <!-- 良い例: ぼかしても主役の塊だけが濃く残る -->
+      <rect x="196" y="26" width="92" height="26" rx="13" fill="var(--accent)"/>
+      <g fill="var(--calm)" opacity="0.4">
+        <rect x="196" y="62" width="50" height="14" rx="7"/>
+        <rect x="254" y="62" width="34" height="14" rx="7"/>
+        <rect x="208" y="84" width="68" height="12" rx="6"/>
+      </g>
+      <text x="242" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">主役が残る</text>
+    </svg>`,
+    apply:"作り終えたら、目を細めて画面を眺める。最初に目に入る塊が主役なら成功。ぼやけて主役が立たないなら、強弱を付け直す。",
+    term:"",
+  },
 ];
 
 const TIPS_color = [
