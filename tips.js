@@ -670,6 +670,45 @@ const TIPS_hierarchy = [
     apply:"本文は字幅の変わる（プロポーショナル）書体にし、等幅はコードや数字の桁揃えだけに使う。",
     term:"",
   },
+  {
+    id:"show-count",
+    cat:"hierarchy",
+    tags:["text"],
+    title:"いくつあるか、先に言う",
+    claim:"3つ以上あるなら、まず「3つ」と数を告げる。",
+    why:"山道で『頂上まであと3つ目の休憩所』と言われると、ペースを配れて足取りが軽くなります。終わりの見えない上りは、同じ距離でも倍つらい。話も図も同じで、先に『これから3つ』と総数を告げると、聞く人は心の準備ができて、最後まで落ち着いて付き合えます。いつ終わるか分からない話を、集中して聞き通せる人はいません。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="総数を告げないと何個続くか分からず、先に『3つ』と数を示すと終わりが見えて落ち着いて読める">
+      <g fill="var(--ink-soft)">
+        <circle cx="28" cy="28" r="3"/>
+        <rect x="38" y="24" width="80" height="9" rx="3"/>
+        <circle cx="28" cy="46" r="3"/>
+        <rect x="38" y="42" width="80" height="9" rx="3"/>
+        <circle cx="28" cy="64" r="3"/>
+        <rect x="38" y="60" width="80" height="9" rx="3"/>
+      </g>
+      <g fill="var(--line)">
+        <circle cx="28" cy="82" r="3"/>
+        <rect x="38" y="78" width="62" height="9" rx="3"/>
+        <circle cx="60" cy="94" r="2"/>
+        <circle cx="70" cy="94" r="2"/>
+        <circle cx="80" cy="94" r="2"/>
+      </g>
+      <text x="72" y="112" text-anchor="middle" font-size="11" fill="var(--ink-soft)">何個続く?</text>
+      <rect x="192" y="20" width="34" height="16" rx="8" fill="var(--accent)"/>
+      <text x="209" y="32" text-anchor="middle" font-size="11" fill="var(--card)">3つ</text>
+      <g fill="var(--calm)">
+        <circle cx="196" cy="52" r="3"/>
+        <rect x="206" y="48" width="80" height="9" rx="3"/>
+        <circle cx="196" cy="70" r="3"/>
+        <rect x="206" y="66" width="80" height="9" rx="3"/>
+        <circle cx="196" cy="88" r="3"/>
+        <rect x="206" y="84" width="80" height="9" rx="3"/>
+      </g>
+      <text x="246" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">終わりが見える</text>
+    </svg>`,
+    apply:"箇条書きや手順が3つ以上になったら、頭に「3つ」と総数を置く。番号を「1/3・2/3」と振るのも同じ効き目。",
+    term:"",
+  },
 ];
 
 /* 進め方：図そのものの作法ではなく、作る過程・こころがけ。 */
