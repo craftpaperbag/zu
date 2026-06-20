@@ -65,10 +65,16 @@
       /* px-6(1.5rem) ぶん外へ広げて端まで気持ちよくスクロールさせる */
       margin-left:-1.5rem; margin-right:-1.5rem;
       padding-left:1.5rem; padding-right:1.5rem;
+      /* 右端をふっと薄めて「まだ続く」と気づかせる（末尾まで送ると .at-end で消える） */
+      -webkit-mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent);
+      mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent);
     }
+    #cats.at-end{-webkit-mask-image:none;mask-image:none;}
     #cats::-webkit-scrollbar{display:none;}
     #cats>button{flex:0 0 auto;}      /* chip を縮めず横に流す */
   }
+  /* 検索ヒット語のハイライト：朱の「点」ではなく、ごく薄い検索補助の地色 */
+  mark.hl{background:var(--accent-soft);color:inherit;border-radius:3px;padding:0 .1em;}
   .fade-in{animation:fade .5s ease both;}
   @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
   .tipcard{cursor:pointer;}
@@ -150,7 +156,14 @@
 
 <!-- Tips一覧 -->
 <main class="px-6 max-w-5xl xl:max-w-7xl mx-auto pb-8">
-  <div id="count" class="text-sm mb-4" style="color:var(--ink-soft)"></div>
+  <div class="flex items-center justify-between gap-3 mb-4">
+    <div id="count" class="text-sm" style="color:var(--ink-soft)"></div>
+    <button id="random" type="button"
+      class="focusable chip shrink-0 inline-flex items-center gap-1.5 text-sm soft px-3 py-1.5 border"
+      style="color:var(--ink-soft);background:var(--card);border-color:var(--line);cursor:pointer">
+      <i data-lucide="shuffle" class="w-4 h-4"></i>ランダムに一枚
+    </button>
+  </div>
   <div id="grid" class="grid gap-5 md:grid-cols-2 xl:grid-cols-3"></div>
   <div id="empty" class="hidden text-center py-16" style="color:var(--ink-soft)">
     <i data-lucide="telescope" class="w-8 h-8 mx-auto mb-3"></i>
@@ -263,14 +276,32 @@ let keyword = "";
 const catLabel = id => (CATEGORIES.find(c=>c.id===id)||{}).label || "";
 const catIcon  = id => (CATEGORIES.find(c=>c.id===id)||{}).icon  || "tag";
 
+// 検索語（keyword）の一致を <mark> で包む。プレーン文字列にだけ使う（SVGには使わない）。
+const reEsc = s => s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+function hl(text){
+  const k = keyword.trim();
+  if(!k) return text;
+  return text.replace(new RegExp("("+reEsc(k)+")","gi"),'<mark class="hl">$1</mark>');
+}
+
+// キーワードだけで一致するか（カテゴリは見ない）。chip の件数表示に使う。
+function matchKeyword(t){
+  const k = keyword.trim();
+  if(!k) return true;
+  const hay = (t.title+t.claim+t.why+t.apply+t.term+catLabel(t.cat)+(t.tags||[]).map(catLabel).join("")+(t.tags||[]).join("")).toLowerCase();
+  return hay.includes(k.toLowerCase());
+}
+
 function renderCats(){
   const wrap = document.getElementById("cats");
+  const pool = TIPS.filter(matchKeyword);
+  const countOf = id => id==="all" ? pool.length : pool.filter(t=>t.cat===id).length;
   const mk = (id,label,icon,on)=>`
     <button data-cat="${id}" class="chip focusable shrink-0 whitespace-nowrap inline-flex items-center gap-1.5 px-3.5 py-2 soft text-sm border"
       style="${on
         ? 'background:var(--ink);color:#fff;border-color:var(--ink)'
         : 'background:#fff;color:var(--ink);border-color:var(--line)'}">
-      <i data-lucide="${icon}" class="w-4 h-4"></i>${label}
+      <i data-lucide="${icon}" class="w-4 h-4"></i>${label}<span class="tnum text-xs" style="opacity:.6">${countOf(id)}</span>
     </button>`;
   wrap.innerHTML =
     mk("all","すべて","layout-grid",activeCat==="all") +
@@ -278,6 +309,7 @@ function renderCats(){
   wrap.querySelectorAll("button").forEach(b=>{
     b.onclick=()=>{activeCat=b.dataset.cat;renderCats();renderGrid();};
   });
+  syncCatsEnd();
   lucide.createIcons();
 }
 
@@ -306,10 +338,10 @@ function card(t){
     <div class="px-5 pt-4 flex items-center gap-1.5 text-xs" style="color:var(--ink-soft)">
       <i data-lucide="${catIcon(t.cat)}" class="w-3.5 h-3.5"></i>${catLabel(t.cat)}
     </div>
-    <h3 class="maru font-bold px-5 mt-1" style="font-size:1.25rem">${t.title}</h3>
-    <p class="px-5 mt-1 text-sm" style="color:var(--ink)">${t.claim}</p>
+    <h3 class="maru font-bold px-5 mt-1" style="font-size:1.25rem">${hl(t.title)}</h3>
+    <p class="px-5 mt-1 text-sm" style="color:var(--ink)">${hl(t.claim)}</p>
     <div class="mx-5 my-3 p-3 soft" style="background:var(--paper)">${t.visual}</div>
-    <p class="px-5 text-sm leading-relaxed clamp2" style="color:var(--ink-soft)">${t.why}</p>
+    <p class="px-5 text-sm leading-relaxed clamp2" style="color:var(--ink-soft)">${hl(t.why)}</p>
     <div class="px-5 pb-4 pt-2 flex items-center gap-1 text-xs" style="color:var(--ink-soft)">
       <span>詳しく読む</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
     </div>
@@ -322,16 +354,16 @@ function detail(t){
     <div class="px-6 pt-6 flex items-center gap-1.5 text-xs" style="color:var(--ink-soft)">
       <i data-lucide="${catIcon(t.cat)}" class="w-3.5 h-3.5"></i>${catLabel(t.cat)}
     </div>
-    <h3 id="modal-title" class="maru font-bold px-6 mt-1" style="font-size:1.5rem">${t.title}</h3>
-    <p class="px-6 mt-1 text-base" style="color:var(--ink)">${t.claim}</p>
+    <h3 id="modal-title" class="maru font-bold px-6 mt-1" style="font-size:1.5rem">${hl(t.title)}</h3>
+    <p class="px-6 mt-1 text-base" style="color:var(--ink)">${hl(t.claim)}</p>
     <div class="mx-6 my-4 p-4 soft" style="background:var(--paper)">${t.visual}</div>
-    <p class="px-6 text-sm md:text-base leading-relaxed" style="color:var(--ink)">${t.why}</p>
+    <p class="px-6 text-sm md:text-base leading-relaxed" style="color:var(--ink)">${hl(t.why)}</p>
     <div class="px-6 mt-4 pb-1 flex items-start gap-2">
       <i data-lucide="check" class="w-4 h-4 mt-1 shrink-0" style="color:var(--calm)"></i>
-      <p class="text-sm md:text-base" style="color:var(--ink-soft)">${t.apply}</p>
+      <p class="text-sm md:text-base" style="color:var(--ink-soft)">${hl(t.apply)}</p>
     </div>
     ${tagChips(t)}
-    ${t.term?`<p class="px-6 pb-6 pt-2 text-xs" style="color:#9aa0ab">用語：${t.term}</p>`:`<div class="pb-6"></div>`}
+    ${t.term?`<p class="px-6 pb-6 pt-2 text-xs" style="color:var(--ink-soft)">用語：${t.term}</p>`:`<div class="pb-6"></div>`}
   `;
 }
 
@@ -346,6 +378,8 @@ function renderGrid(){
   grid.innerHTML = currentList.map(card).join("");
   empty.classList.toggle("hidden", currentList.length>0);
   count.textContent = `${currentList.length} 件の覚え書き`;
+  // ランダムに一枚：選べる候補があるときだけ出す
+  document.getElementById("random").classList.toggle("is-hidden", currentList.length===0);
   grid.querySelectorAll("article[data-id]").forEach(c=>{
     c.onclick=()=>openTip(c.dataset.id);
     c.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openTip(c.dataset.id); } };
@@ -503,12 +537,26 @@ document.getElementById("history-open").onclick=openHistory;
 document.getElementById("history-close").onclick=closeHistory;
 document.getElementById("history-backdrop").onclick=closeHistory;
 
+// モーダルが開いている間、Tab を中だけで巡回させる（背後に抜けさせない）
+function trapTab(e, container){
+  if(e.key!=="Tab") return;
+  const sel = 'a[href],button:not([disabled]),input,[tabindex]:not([tabindex="-1"])';
+  const list = Array.from(container.querySelectorAll(sel)).filter(el=>el.offsetParent!==null);
+  if(!list.length) return;
+  const first = list[0], last = list[list.length-1];
+  if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+  else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+}
+
 document.addEventListener("keydown",e=>{
   if(e.key==="Escape"){ closeModal(); closeHistory(); return; }
   // 詳細を開いている間は ← → で前後の覚え書きへ
   if(!modal.classList.contains("hidden")){
     if(e.key==="ArrowLeft"){ e.preventDefault(); stepTip(-1); }
     else if(e.key==="ArrowRight"){ e.preventDefault(); stepTip(1); }
+    trapTab(e, modal);
+  } else if(!historyModal.classList.contains("hidden")){
+    trapTab(e, historyModal);
   }
 });
 
@@ -516,8 +564,24 @@ document.addEventListener("keydown",e=>{
 const qInput = document.getElementById("q");
 const qClear = document.getElementById("q-clear");
 function syncClear(){ qClear.classList.toggle("is-hidden", !qInput.value); }
-qInput.addEventListener("input",e=>{ keyword=e.target.value; syncClear(); renderGrid(); });
-qClear.onclick=()=>{ qInput.value=""; keyword=""; syncClear(); renderGrid(); qInput.focus(); };
+// 入力のたびにカテゴリchipの件数も更新する
+qInput.addEventListener("input",e=>{ keyword=e.target.value; syncClear(); renderCats(); renderGrid(); });
+qClear.onclick=()=>{ qInput.value=""; keyword=""; syncClear(); renderCats(); renderGrid(); qInput.focus(); };
+
+// ランダムに一枚：いま絞り込まれている並びから無作為に開く
+document.getElementById("random").onclick=()=>{
+  if(!currentList.length) return;
+  openTip(currentList[Math.floor(Math.random()*currentList.length)].id);
+};
+
+// カテゴリ帯：末尾まで送ったら右端フェードを消す（.at-end）
+const catsEl = document.getElementById("cats");
+function syncCatsEnd(){
+  const atEnd = catsEl.scrollLeft + catsEl.clientWidth >= catsEl.scrollWidth - 2;
+  catsEl.classList.toggle("at-end", atEnd);
+}
+catsEl.addEventListener("scroll", syncCatsEnd, {passive:true});
+window.addEventListener("resize", syncCatsEnd, {passive:true});
 
 // スクロール中だけ：検索窓の左のロゴと、右下のトップへ戻るボタンを出す
 const miniLogo = document.getElementById("mini-logo");
