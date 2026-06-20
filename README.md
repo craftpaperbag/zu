@@ -10,7 +10,12 @@
 
 **▶ 公開サイト： https://craftpaperbag.github.io/zu/**
 
-単一の `index.html` で完結します。GitHub Pages（リポジトリ直下の `index.html`）でそのまま配信できます。
+ビルドなしで、GitHub Pages（リポジトリ直下の `index.html`）からそのまま配信します。
+構造・スタイル・描画ロジックは `index.html` に置き、編集の主戦場になるデータだけを外部 JS に分けています。`index.html` が `<script src>` でこの2つを先に読み込みます。
+
+- `tips.js` — Tips のたね（`TIPS_space` などカテゴリ別の `TIPS_*` 配列）。`index.html` 側で1本の `TIPS` に連結します。
+- `history.js` — 更新履歴（`HISTORY` 配列）。
+
 画像は使わず、図はすべて SVG / HTML 要素でコードから直接描いています。固定画像（PNG/JPG）はありません。
 
 - Tailwind（CDN）＋ lucide アイコン（CDN）
@@ -18,15 +23,15 @@
 
 ## 中身の増やし方
 
-データとビューを分離しています。Tips は `index.html` 内の **カテゴリ別の配列**（`TIPS_space` / `TIPS_hierarchy` / `TIPS_color` / `TIPS_text` / `TIPS_draw`）として持ち、描画ロジックが展開します。
-**種を増やすときは、該当カテゴリの配列に1ブロック足すだけ**です。
+データとビューを分離しています。Tips は `tips.js` 内の **カテゴリ別の配列**（`TIPS_space` / `TIPS_hierarchy` / `TIPS_color` / `TIPS_text` / `TIPS_draw` / `TIPS_flow`）として持ち、`index.html` 側の描画ロジックが1本に連結して展開します。
+**種を増やすときは、該当カテゴリの配列に1ブロック足すだけ**です。見える変更を加えたら `history.js` の `HISTORY` 配列の先頭にも1項目足します。
 
 1エントリのスキーマ：
 
 ```js
 {
   id,      // 一意の識別子（kebab-case）
-  cat,     // 主カテゴリID（space / hierarchy / color / text / draw）
+  cat,     // 主カテゴリID（space / hierarchy / color / text / draw / flow）
   tags,    // 横串タグの配列（他カテゴリIDで関連を張る）
   title,   // 短い言い切り
   claim,   // 一文の主張（カードでは朱色で表示）
