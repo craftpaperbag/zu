@@ -16,11 +16,11 @@ const TIPS_space = [
     visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="外周を空けた図のほうが、ひとつのまとまった世界として読みやすい">
       <rect x="20" y="16" width="116" height="80" rx="10" fill="none" stroke="var(--line)"/>
       <g fill="var(--ink-soft)">
-        <rect x="24" y="20" width="108" height="14" rx="3"/>
-        <rect x="24" y="38" width="108" height="10" rx="3"/>
-        <rect x="24" y="52" width="108" height="10" rx="3"/>
-        <rect x="24" y="66" width="108" height="10" rx="3"/>
-        <rect x="24" y="80" width="108" height="12" rx="3"/>
+        <rect x="27" y="23" width="102" height="12" rx="3"/>
+        <rect x="27" y="39" width="102" height="9" rx="3"/>
+        <rect x="27" y="52" width="102" height="9" rx="3"/>
+        <rect x="27" y="65" width="102" height="9" rx="3"/>
+        <rect x="27" y="78" width="102" height="11" rx="3"/>
       </g>
       <text x="78" y="112" text-anchor="middle" font-size="11" fill="var(--ink-soft)">端まで詰める</text>
       <rect x="184" y="16" width="116" height="80" rx="10" fill="none" stroke="var(--line)"/>
