@@ -780,7 +780,7 @@ const TIPS_flow = [
     why:"建物は、土台を据えてから壁を立てます。建ててしまってから基礎をずらすのは、とても大変だからです。図も同じで、色や飾りから手をつけると、あとで骨組みを直したくなったとき総崩れになる。まず大きな配置だけのラフで全体を確かめてから細部を詰めれば、やり直しが効きます。",
     visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="いきなり仕上げると骨組みの直しで総崩れ、配置だけのラフから確かめれば直しが効く">
       <rect x="28" y="22" width="80" height="58" rx="8" fill="none" stroke="var(--ink-soft)"/>
-      <rect x="36" y="28" width="64" height="14" rx="4" fill="var(--ink-soft)"/>
+      <rect x="36" y="28" width="64" height="14" rx="2" fill="var(--ink-soft)"/>
       <g fill="var(--line)">
         <rect x="36" y="48" width="64" height="7" rx="3"/>
         <rect x="36" y="59" width="64" height="7" rx="3"/>
@@ -789,7 +789,7 @@ const TIPS_flow = [
       <text x="78" y="100" text-anchor="middle" font-size="11" fill="var(--ink-soft)">いきなり仕上げ</text>
       <rect x="200" y="22" width="80" height="58" rx="8" fill="none" stroke="var(--calm)" stroke-dasharray="4 3"/>
       <g fill="none" stroke="var(--calm)" stroke-width="1.5" stroke-dasharray="3 3">
-        <rect x="208" y="28" width="64" height="14" rx="4"/>
+        <rect x="208" y="28" width="64" height="14" rx="2"/>
         <rect x="208" y="48" width="64" height="12" rx="4"/>
         <rect x="208" y="64" width="40" height="12" rx="4"/>
       </g>
@@ -952,13 +952,13 @@ const TIPS_color = [
     visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="脇役にも色を使うと競合し、脇役を灰色に引かせると主役が立つ">
       <rect x="20" y="16" width="116" height="84" rx="10" fill="none" stroke="var(--line)"/>
       <!-- 悪い例: 脇役にまで色を使う多色サンプル(生hex) -->
-      <rect x="28" y="26" width="100" height="20" rx="5" fill="#4a6fb0"/>
+      <rect x="28" y="26" width="100" height="20" rx="2" fill="#4a6fb0"/>
       <rect x="28" y="54" width="100" height="8" rx="3" fill="#d9a23c"/>
       <rect x="28" y="66" width="100" height="8" rx="3" fill="#5a9e54"/>
       <rect x="28" y="78" width="100" height="8" rx="3" fill="#c1583f"/>
       <text x="78" y="113" text-anchor="middle" font-size="11" fill="var(--ink-soft)">脇も色 → 競合</text>
       <rect x="184" y="16" width="116" height="84" rx="10" fill="none" stroke="var(--line)"/>
-      <rect x="192" y="26" width="100" height="20" rx="5" fill="var(--accent)"/>
+      <rect x="192" y="26" width="100" height="20" rx="2" fill="var(--accent)"/>
       <g fill="var(--line)">
         <rect x="192" y="54" width="100" height="8" rx="3"/>
         <rect x="192" y="66" width="100" height="8" rx="3"/>
