@@ -213,17 +213,17 @@
   <!-- 高さは覚え書きの量によらず一定にし、中身だけがスクロールする。
        前後送りで開き直しても大きさが変わらず、量が増えても読みやすい。 -->
   <div id="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title"
-    class="relative softer card-shadow overflow-hidden flex flex-col w-full max-w-xl h-[85vh] md:h-[82vh]" style="background:var(--card)">
+    class="relative softer card-shadow overflow-hidden flex flex-col w-full max-w-xl h-[85dvh] md:h-[82vh]" style="background:var(--card)">
     <button id="modal-close" aria-label="閉じる"
       class="focusable chip absolute right-3 top-3 z-10 inline-flex items-center justify-center w-9 h-9 soft border"
       style="background:var(--card);border-color:var(--line);color:var(--ink-soft)">
       <i data-lucide="x" class="w-5 h-5"></i>
     </button>
-    <div id="modal-body" class="flex-1 overflow-y-auto overflow-x-hidden"></div>
+    <div id="modal-body" class="flex-1 overflow-y-auto overflow-x-hidden" style="padding-bottom:calc(env(safe-area-inset-bottom, 0px) + 4rem)"></div>
   </div>
   <!-- 前後送り：本文の長さに依存しないよう、画面下中央に固定で浮かせる -->
-  <div id="modal-nav" class="fixed left-1/2 -translate-x-1/2 bottom-5 z-[60] flex items-center gap-1 p-1.5 rounded-full card-shadow border"
-    style="background:var(--card);border-color:var(--line)">
+  <div id="modal-nav" class="fixed left-1/2 -translate-x-1/2 z-[60] flex items-center gap-1 p-1.5 rounded-full card-shadow border"
+    style="bottom:calc(env(safe-area-inset-bottom, 0px) + 1.25rem);background:var(--card);border-color:var(--line)">
     <button id="modal-prev" type="button" aria-label="前の覚え書き"
       class="focusable chip shrink-0 whitespace-nowrap inline-flex items-center gap-1 pl-2.5 pr-3.5 py-1.5 rounded-full text-sm"
       style="color:var(--ink);cursor:pointer">
