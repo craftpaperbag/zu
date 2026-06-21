@@ -645,30 +645,40 @@ const TIPS_hierarchy = [
     tags:["text"],
     title:"等幅フォントは、避ける",
     claim:"等幅フォントは、本文には読みにくい。",
-    why:"一文字ずつ等しい幅で並んだ文章は、字と字の間が一様に空いて、どこまでが一つの語なのか掴みにくくなります。ふだん読む文章は、文字ごとに幅が変わり、語のまとまりが自然に固まって見える。だから本文には、字幅の変わる書体のほうが目で追うのが楽になります。",
-    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="等幅は字間が一様で語が掴みにくく、字幅可変は語のまとまりが見える">
+    why:"等幅フォントは、太い文字も細い文字も同じ幅の枠に押し込みます。すると細い文字のまわりだけ余白がぽっかり空いて、字間がでこぼこに見える。文章を読むのは一定のリズムで目を滑らせる作業なので、間隔がそろわないと一字ごとに引っかかります。字幅の変わる書体は、文字の形に合わせて間隔を詰めるので、字間がそろって目が滑らかに進みます。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="等幅は同じ幅の枠に押し込むため字間がでこぼこになり、字幅可変は字間がそろって読みやすい">
+      <g fill="none" stroke="var(--line)">
+        <rect x="24" y="42" width="15" height="24" rx="2"/>
+        <rect x="39" y="42" width="15" height="24" rx="2"/>
+        <rect x="54" y="42" width="15" height="24" rx="2"/>
+        <rect x="69" y="42" width="15" height="24" rx="2"/>
+        <rect x="84" y="42" width="15" height="24" rx="2"/>
+        <rect x="99" y="42" width="15" height="24" rx="2"/>
+        <rect x="114" y="42" width="15" height="24" rx="2"/>
+      </g>
       <g fill="var(--ink-soft)">
-        <rect x="24" y="44" width="10" height="20" rx="2"/>
-        <rect x="39" y="44" width="10" height="20" rx="2"/>
-        <rect x="54" y="44" width="10" height="20" rx="2"/>
-        <rect x="69" y="44" width="10" height="20" rx="2"/>
-        <rect x="84" y="44" width="10" height="20" rx="2"/>
-        <rect x="99" y="44" width="10" height="20" rx="2"/>
-        <rect x="114" y="44" width="10" height="20" rx="2"/>
+        <rect x="29.5" y="46" width="4" height="16" rx="1"/>
+        <rect x="40" y="46" width="13" height="16" rx="1"/>
+        <rect x="59" y="46" width="5" height="16" rx="1"/>
+        <rect x="70" y="46" width="13" height="16" rx="1"/>
+        <rect x="89.5" y="46" width="4" height="16" rx="1"/>
+        <rect x="100" y="46" width="13" height="16" rx="1"/>
+        <rect x="119" y="46" width="5" height="16" rx="1"/>
       </g>
-      <text x="72" y="112" text-anchor="middle" font-size="11" fill="var(--ink-soft)">等幅＝間延び</text>
+      <text x="72" y="112" text-anchor="middle" font-size="11" fill="var(--ink-soft)">等幅＝字間がでこぼこ</text>
       <g fill="var(--calm)">
-        <rect x="200" y="44" width="10" height="20" rx="2"/>
-        <rect x="213" y="44" width="10" height="20" rx="2"/>
-        <rect x="226" y="44" width="10" height="20" rx="2"/>
-        <rect x="256" y="44" width="10" height="20" rx="2"/>
-        <rect x="269" y="44" width="10" height="20" rx="2"/>
-        <rect x="282" y="44" width="10" height="20" rx="2"/>
+        <rect x="196" y="46" width="4" height="16" rx="1"/>
+        <rect x="206" y="46" width="13" height="16" rx="1"/>
+        <rect x="225" y="46" width="5" height="16" rx="1"/>
+        <rect x="236" y="46" width="13" height="16" rx="1"/>
+        <rect x="255" y="46" width="4" height="16" rx="1"/>
+        <rect x="265" y="46" width="13" height="16" rx="1"/>
+        <rect x="284" y="46" width="5" height="16" rx="1"/>
       </g>
-      <text x="248" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">可変＝語がまとまる</text>
+      <text x="244" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">可変＝字間がそろう</text>
     </svg>`,
     apply:"本文は字幅の変わる（プロポーショナル）書体にし、等幅はコードや数字の桁揃えだけに使う。",
-    term:"",
+    term:"カーニング",
   },
   {
     id:"show-count",
