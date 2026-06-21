@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>zu — 種の工房（図とネタを設計してプロンプトを吐く）</title>
+<meta name="robots" content="noindex">
+<style>
+  /* index.html と同じデザイントークン（ライト値）。プレビューの図はこの変数で色を解決する。 */
+  :root{
+    --ink:#1a1d24; --ink-soft:#5b6270; --line:#cdd3dc;
+    --paper:#f7f6f2; --card:#ffffff;
+    --accent:#e0533d; --accent-soft:#fbeae6;
+    --calm:#3f7d6e; --calm-soft:#e6f0ec;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI","Helvetica Neue",sans-serif;
+    line-height:1.7; font-size:14px;
+  }
+  .wrap{max-width:1080px; margin:0 auto; padding:24px 16px 80px;}
+  h1{font-size:1.5rem; margin:0 0 2px;}
+  h2{font-size:1.05rem; margin:28px 0 10px; padding-bottom:6px; border-bottom:1px solid var(--line);}
+  .sub{color:var(--ink-soft); font-size:.85rem; margin:0 0 8px;}
+  .grid{display:grid; gap:20px;}
+  @media(min-width:860px){ .cols{grid-template-columns:1fr 1fr;} }
+  label{display:block; font-size:.8rem; color:var(--ink-soft); margin:10px 0 3px;}
+  input[type=text], textarea, select{
+    width:100%; padding:8px 10px; border:1px solid var(--line); border-radius:8px;
+    background:var(--card); color:var(--ink); font:inherit; resize:vertical;
+  }
+  textarea{min-height:64px;}
+  .hint{font-size:.72rem; color:var(--ink-soft); margin:3px 0 0;}
+  .row{display:flex; flex-wrap:wrap; gap:6px 14px; align-items:center;}
+  .tagbox{display:flex; flex-wrap:wrap; gap:4px 12px;}
+  .tagbox label{display:inline-flex; align-items:center; gap:5px; margin:0; color:var(--ink); font-size:.82rem; cursor:pointer;}
+  button{
+    font:inherit; cursor:pointer; border:1px solid var(--line); background:var(--card);
+    color:var(--ink); padding:7px 12px; border-radius:8px;
+  }
+  button:hover{border-color:var(--ink-soft);}
+  button.primary{background:var(--ink); color:#fff; border-color:var(--ink);}
+  button.primary:hover{opacity:.9;}
+  .toolbar{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px;}
+  /* 作図キャンバス */
+  #stage-wrap{background:var(--card); border:1px solid var(--line); border-radius:10px; padding:10px;}
+  #stage{width:100%; height:auto; display:block; touch-action:none; user-select:none; background:var(--paper); border-radius:8px;}
+  .el-sel{outline:2px dashed var(--accent); outline-offset:2px;}
+  .handle{fill:var(--card); stroke:var(--ink); stroke-width:1; cursor:nwse-resize;}
+  /* インスペクタ */
+  #inspector{margin-top:10px; padding:10px; border:1px dashed var(--line); border-radius:8px; background:var(--card);}
+  #inspector.empty{color:var(--ink-soft); font-size:.8rem; text-align:center; padding:14px;}
+  .roleopts{display:flex; flex-wrap:wrap; gap:3px 10px; margin-top:4px;}
+  .roleopts label{display:inline-flex; align-items:center; gap:4px; margin:0; color:var(--ink); font-size:.78rem; cursor:pointer;}
+  .swatch{width:12px; height:12px; border-radius:3px; border:1px solid var(--line); display:inline-block;}
+  .warn{background:var(--accent-soft); color:var(--accent); border:1px solid var(--accent);
+        border-radius:8px; padding:6px 10px; font-size:.78rem; margin-top:8px; display:none;}
+  .warn.show{display:block;}
+  /* 出力 */
+  #out{width:100%; min-height:280px; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.78rem; line-height:1.55;}
+  #preview-card{border:1px solid var(--line); border-radius:14px; background:var(--card); overflow:hidden; max-width:380px;}
+  #preview-card .cat{font-size:.72rem; color:var(--ink-soft); padding:12px 16px 0;}
+  #preview-card .title{font-weight:700; font-size:1.15rem; padding:2px 16px 0;}
+  #preview-card .claim{font-size:.85rem; padding:2px 16px 0;}
+  #preview-card .fig{margin:12px 16px; padding:10px; background:var(--paper); border-radius:10px;}
+  #preview-card .fig svg{width:100%; height:auto; display:block;}
+  #preview-card .why{font-size:.82rem; color:var(--ink-soft); padding:0 16px 14px;}
+  .note{font-size:.72rem; color:var(--ink-soft);}
+  .copied{color:var(--calm); font-size:.78rem; margin-left:8px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>種の工房</h1>
+  <p class="sub">図のラフとネタを直感的に置いて、Claude Code に渡せる作図プロンプトに変換します。最終的な規約準拠の SVG は、受け取った Claude Code が清書します。</p>
+
+  <div class="grid cols">
+    <!-- ============ 左：ネタ入力 ============ -->
+    <section>
+      <h2>1. ネタ（言葉）</h2>
+
+      <label for="f-cat">主カテゴリ</label>
+      <select id="f-cat"></select>
+
+      <label>横串タグ（複数可・主カテゴリ以外を選ぶ）</label>
+      <div class="tagbox" id="f-tags"></div>
+
+      <label for="f-id">id（任意・空なら title から自動提案）</label>
+      <input type="text" id="f-id" placeholder="例：outer-margin">
+
+      <label for="f-title">title（短い言い切り）</label>
+      <input type="text" id="f-title" placeholder="例：角丸は、安心する">
+
+      <label for="f-claim">claim（一文の主張）</label>
+      <textarea id="f-claim" placeholder="例：端まで詰めたスライドは、誰にも読まれない。"></textarea>
+
+      <label for="f-why">why（現実世界の観察・例え＝このサイトの命）</label>
+      <textarea id="f-why" placeholder="日常の身体感覚に接続して書く。"></textarea>
+      <p class="hint">作法：身体感覚・日常の場面に接続する／値段・権威・経済格差に逃げない／良い側を言い切り、対比は図に任せる。</p>
+
+      <label for="f-apply">apply（明日から使える具体）</label>
+      <textarea id="f-apply" placeholder="例：内容を置く前に外周をひと回り空けてから始める。"></textarea>
+
+      <label for="f-term">term（任意・末尾に小さく添える専門用語）</label>
+      <input type="text" id="f-term" placeholder="なければ空のまま">
+    </section>
+
+    <!-- ============ 右：ラフ作図 ============ -->
+    <section>
+      <h2>2. ラフ作図（直感的に置く）</h2>
+      <p class="sub">320×120 のキャンバス。要素を足してドラッグで配置。角の白い四角でリサイズ。精度は不要、意図が伝わればよい。</p>
+      <div class="toolbar">
+        <button data-add="block">＋ブロック</button>
+        <button data-add="text">＋文字ラベル</button>
+        <button data-add="arrow">＋矢印(三角)</button>
+        <button data-add="bar">＋棒</button>
+        <button data-add="circle">＋丸</button>
+        <button id="btn-clear">全消去</button>
+      </div>
+      <div id="stage-wrap">
+        <svg id="stage" viewBox="0 0 320 120" xmlns="http://www.w3.org/2000/svg">
+          <!-- 外周16の余白ガイド -->
+          <rect x="16" y="16" width="288" height="88" fill="none" stroke="var(--line)" stroke-dasharray="3 3"/>
+          <g id="layer"></g>
+        </svg>
+      </div>
+
+      <div id="inspector" class="empty">要素を選ぶと、ここで色・文字・意図メモを編集できます。</div>
+      <div class="warn" id="accent-warn">⚠ accent（朱）が2つ以上あります。規約では「accentは1図に1箇所まで」。1つに絞ってください。</div>
+    </section>
+  </div>
+
+  <h2>3. プロンプトを作る</h2>
+  <div class="toolbar">
+    <button class="primary" id="btn-gen">プロンプトを生成</button>
+    <button id="btn-copy">コピー</button>
+    <span class="copied" id="copied" style="display:none">コピーしました</span>
+  </div>
+  <textarea id="out" placeholder="ここに生成されたプロンプトが入ります。"></textarea>
+
+  <h2>参考：組み上がるカードのミニプレビュー</h2>
+  <div id="preview-card">
+    <div class="cat" id="pv-cat"></div>
+    <div class="title" id="pv-title"></div>
+    <div class="claim" id="pv-claim"></div>
+    <div class="fig" id="pv-fig"></div>
+    <div class="why" id="pv-why"></div>
+  </div>
+  <p class="note" style="margin-top:8px">このページはサイトには載せず、作者の作図支援として使う想定です（index.html からはリンクしていません）。</p>
+</div>
+
+<script>
+/* ---- index.html と同じカテゴリ体系 ---- */
+const CATEGORIES = [
+  { id:"space",     label:"余白と配置" },
+  { id:"hierarchy", label:"強弱をつける" },
+  { id:"color",     label:"色と濃淡" },
+  { id:"text",      label:"文字を図として" },
+  { id:"draw",      label:"線・矢印・グラフ" },
+  { id:"flow",      label:"進め方" },
+];
+const catLabel = id => (CATEGORIES.find(c=>c.id===id)||{}).label || id;
+
+/* 役割色：意味を固定（zu 作図ルールの色表に対応） */
+const ROLES = [
+  { v:"--ink",        label:"骨格（主線・文字）" },
+  { v:"--ink-soft",   label:"ふつう・Before" },
+  { v:"--line",       label:"脇役・弱い線" },
+  { v:"--calm",       label:"良い例・After" },
+  { v:"--calm-soft",  label:"良い例の面" },
+  { v:"--accent",     label:"ここぞ（1箇所）" },
+  { v:"--accent-soft",label:"強調の面" },
+];
+
+/* ---- フォーム初期化 ---- */
+const elCat = document.getElementById("f-cat");
+CATEGORIES.forEach(c=>{
+  const o=document.createElement("option"); o.value=c.id; o.textContent=`${c.label}（${c.id}）`; elCat.appendChild(o);
+});
+const elTags = document.getElementById("f-tags");
+function renderTagBox(){
+  elTags.innerHTML="";
+  CATEGORIES.filter(c=>c.id!==elCat.value).forEach(c=>{
+    const id="tag-"+c.id;
+    const l=document.createElement("label");
+    l.innerHTML=`<input type="checkbox" value="${c.id}" id="${id}">${c.label}`;
+    elTags.appendChild(l);
+  });
+}
+elCat.addEventListener("change", ()=>{ renderTagBox(); updatePreview(); });
+renderTagBox();
+
+function selectedTags(){
+  return Array.from(elTags.querySelectorAll("input:checked")).map(i=>i.value);
+}
+
+/* title から kebab-case の id 候補（日本語はローマ字化しないので英数のみ拾う） */
+function slugFrom(s){
+  const ascii = s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+  return ascii || "tip-id";
+}
+
+/* =========================================================
+   作図キャンバス
+   ========================================================= */
+const SVGNS="http://www.w3.org/2000/svg";
+const layer = document.getElementById("layer");
+const stage = document.getElementById("stage");
+let elements = [];   // {id,type,x,y,w,h,role,text,note,node}
+let selId = null;
+let uid = 0;
+
+function defaultsFor(type){
+  switch(type){
+    case "block":  return {x:30,  y:34, w:90, h:52, role:"--ink-soft", text:"", note:""};
+    case "text":   return {x:40,  y:60, w:0,  h:0,  role:"--ink-soft", text:"ラベル", note:""};
+    case "arrow":  return {x:140, y:50, w:40, h:24, role:"--ink-soft", text:"", note:""};
+    case "bar":    return {x:50,  y:40, w:24, h:48, role:"--calm",     text:"", note:""};
+    case "circle": return {x:160, y:60, w:36, h:36, role:"--calm",     text:"", note:""};
+  }
+}
+function addElement(type){
+  const d=defaultsFor(type);
+  const el={ id:"e"+(++uid), type, ...d, node:null };
+  elements.push(el);
+  draw();
+  selectEl(el.id);
+}
+
+function makeNode(el){
+  let n;
+  if(el.type==="text"){
+    n=document.createElementNS(SVGNS,"text");
+    n.setAttribute("font-size","13");
+    n.setAttribute("text-anchor","middle");
+    n.textContent=el.text||"ラベル";
+  }else if(el.type==="circle"){
+    n=document.createElementNS(SVGNS,"circle");
+  }else if(el.type==="arrow"){
+    n=document.createElementNS(SVGNS,"polygon");
+  }else{ // block / bar
+    n=document.createElementNS(SVGNS,"rect");
+    n.setAttribute("rx", el.type==="bar" ? "3" : "10");
+  }
+  n.style.cursor="move";
+  n.dataset.id=el.id;
+  return n;
+}
+function applyGeom(el){
+  const n=el.node;
+  const color=`var(${el.role})`;
+  if(el.type==="text"){
+    n.setAttribute("x", el.x); n.setAttribute("y", el.y);
+    n.setAttribute("fill", color); n.textContent=el.text||"ラベル";
+  }else if(el.type==="circle"){
+    const r=Math.max(6, Math.min(el.w,el.h)/2);
+    el.w=el.h=r*2;
+    n.setAttribute("cx", el.x+r); n.setAttribute("cy", el.y+r); n.setAttribute("r", r);
+    n.setAttribute("fill", color);
+  }else if(el.type==="arrow"){
+    // 右向き三角。x,y は外接矩形の左上、w/h が大きさ。
+    const x=el.x, y=el.y, w=el.w, h=el.h;
+    n.setAttribute("points", `${x},${y} ${x+w},${y+h/2} ${x},${y+h}`);
+    n.setAttribute("fill", color);
+  }else{
+    n.setAttribute("x", el.x); n.setAttribute("y", el.y);
+    n.setAttribute("width", el.w); n.setAttribute("height", el.h);
+    n.setAttribute("fill", color);
+  }
+}
+function draw(){
+  layer.innerHTML="";
+  elements.forEach(el=>{
+    el.node=makeNode(el);
+    applyGeom(el);
+    layer.appendChild(el.node);
+  });
+  // 選択枠＋ハンドル
+  const sel=elements.find(e=>e.id===selId);
+  if(sel){
+    sel.node.classList.add("el-sel");
+    if(sel.type!=="text"){
+      const hx=sel.x+sel.w, hy=sel.y+sel.h;
+      const h=document.createElementNS(SVGNS,"rect");
+      h.setAttribute("x",hx-4); h.setAttribute("y",hy-4);
+      h.setAttribute("width",8); h.setAttribute("height",8);
+      h.setAttribute("class","handle"); h.dataset.handle=sel.id;
+      layer.appendChild(h);
+    }
+  }
+  updateAccentWarn();
+  updatePreview();
+}
+
+/* ---- ドラッグ移動 / リサイズ ---- */
+let drag=null; // {id, mode:'move'|'resize', startX,startY, ox,oy,ow,oh}
+function pt(evt){
+  const r=stage.getBoundingClientRect();
+  const sx=320/r.width, sy=120/r.height;
+  const cx=(evt.touches?evt.touches[0].clientX:evt.clientX);
+  const cy=(evt.touches?evt.touches[0].clientY:evt.clientY);
+  return { x:(cx-r.left)*sx, y:(cy-r.top)*sy };
+}
+stage.addEventListener("pointerdown", e=>{
+  const hid=e.target.dataset.handle;
+  const eid=e.target.dataset.id;
+  if(hid){
+    const el=elements.find(x=>x.id===hid);
+    const p=pt(e);
+    drag={id:hid,mode:"resize",sx:p.x,sy:p.y,ox:el.x,oy:el.y,ow:el.w,oh:el.h};
+    stage.setPointerCapture(e.pointerId);
+  }else if(eid){
+    selectEl(eid);
+    const el=elements.find(x=>x.id===eid);
+    const p=pt(e);
+    drag={id:eid,mode:"move",sx:p.x,sy:p.y,ox:el.x,oy:el.y};
+    stage.setPointerCapture(e.pointerId);
+  }else{
+    selectEl(null);
+  }
+});
+stage.addEventListener("pointermove", e=>{
+  if(!drag) return;
+  const el=elements.find(x=>x.id===drag.id);
+  const p=pt(e);
+  if(drag.mode==="move"){
+    el.x=Math.round(drag.ox+(p.x-drag.sx));
+    el.y=Math.round(drag.oy+(p.y-drag.sy));
+  }else{
+    el.w=Math.max(8, Math.round(drag.ow+(p.x-drag.sx)));
+    el.h=Math.max(8, Math.round(drag.oh+(p.y-drag.sy)));
+  }
+  draw();
+});
+stage.addEventListener("pointerup", ()=>{ drag=null; });
+stage.addEventListener("pointercancel", ()=>{ drag=null; });
+
+/* =========================================================
+   インスペクタ
+   ========================================================= */
+const inspector=document.getElementById("inspector");
+function selectEl(id){ selId=id; draw(); renderInspector(); }
+function renderInspector(){
+  const el=elements.find(e=>e.id===selId);
+  if(!el){ inspector.className="empty"; inspector.textContent="要素を選ぶと、ここで色・文字・意図メモを編集できます。"; return; }
+  inspector.className="";
+  const typeLabel={block:"ブロック",text:"文字ラベル",arrow:"矢印",bar:"棒",circle:"丸"}[el.type];
+  inspector.innerHTML=`
+    <div class="row" style="justify-content:space-between">
+      <strong style="font-size:.85rem">${typeLabel}</strong>
+      <button id="ins-del">この要素を削除</button>
+    </div>
+    <label style="margin-top:8px">役割色（意味で選ぶ）</label>
+    <div class="roleopts" id="ins-roles"></div>
+    ${el.type==="text" ? `<label>表示する文字</label><input type="text" id="ins-text" value="${escAttr(el.text)}">` : ""}
+    <label>意図メモ（この要素は何を表す？）</label>
+    <input type="text" id="ins-note" value="${escAttr(el.note)}" placeholder="例：Before の詰まった本文">
+  `;
+  const roles=document.getElementById("ins-roles");
+  ROLES.forEach(r=>{
+    const l=document.createElement("label");
+    l.innerHTML=`<input type="radio" name="role" value="${r.v}" ${el.role===r.v?"checked":""}>
+      <span class="swatch" style="background:var(${r.v})"></span>${r.label}`;
+    roles.appendChild(l);
+  });
+  roles.querySelectorAll("input").forEach(i=>i.addEventListener("change",()=>{ el.role=i.value; draw(); }));
+  const t=document.getElementById("ins-text");
+  if(t) t.addEventListener("input",()=>{ el.text=t.value; draw(); });
+  document.getElementById("ins-note").addEventListener("input",e=>{ el.note=e.target.value; });
+  document.getElementById("ins-del").addEventListener("click",()=>{
+    elements=elements.filter(x=>x.id!==el.id); selId=null; draw(); renderInspector();
+  });
+}
+function escAttr(s){ return (s||"").replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;"); }
+
+function updateAccentWarn(){
+  const n=elements.filter(e=>e.role==="--accent").length;
+  document.getElementById("accent-warn").classList.toggle("show", n>=2);
+}
+
+document.querySelectorAll("[data-add]").forEach(b=>b.addEventListener("click",()=>addElement(b.dataset.add)));
+document.getElementById("btn-clear").addEventListener("click",()=>{
+  if(elements.length && !confirm("キャンバスを全消去しますか？")) return;
+  elements=[]; selId=null; draw(); renderInspector();
+});
+
+/* =========================================================
+   シリアライズ：ラフSVG文字列
+   ========================================================= */
+function ariaLabel(){
+  return (document.getElementById("f-claim").value.trim() || "（claim を一文で）");
+}
+function buildSVG(){
+  const lines=[];
+  lines.push(`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="${escAttr(ariaLabel())}">`);
+  elements.forEach(el=>{
+    const c=`var(${el.role})`;
+    if(el.type==="text"){
+      lines.push(`  <text x="${el.x}" y="${el.y}" font-size="13" text-anchor="middle" fill="${c}">${escAttr(el.text||"ラベル")}</text>`);
+    }else if(el.type==="circle"){
+      const r=Math.round(el.w/2);
+      lines.push(`  <circle cx="${el.x+r}" cy="${el.y+r}" r="${r}" fill="${c}"/>`);
+    }else if(el.type==="arrow"){
+      lines.push(`  <polygon points="${el.x},${el.y} ${el.x+el.w},${el.y+Math.round(el.h/2)} ${el.x},${el.y+el.h}" fill="${c}"/>`);
+    }else{
+      const rx=el.type==="bar"?3:10;
+      lines.push(`  <rect x="${el.x}" y="${el.y}" width="${el.w}" height="${el.h}" rx="${rx}" fill="${c}"/>`);
+    }
+  });
+  lines.push(`</svg>`);
+  return lines.join("\n");
+}
+
+/* 意図の説明文（箇条書き） */
+function buildIntent(){
+  const roleName=v=>(ROLES.find(r=>r.v===v)||{}).label||v;
+  const typeName=t=>({block:"ブロック",text:"文字ラベル",arrow:"矢印(三角)",bar:"棒",circle:"丸"}[t]);
+  if(!elements.length) return "（ラフ要素なし。claim と why からふさわしい図を判断して描いてください。）";
+  return elements.map((el,i)=>{
+    const pos=`位置(${el.x},${el.y})${el.type==="text"?"":` 大きさ(${el.w}×${el.h})`}`;
+    const txt=el.type==="text"?` 文字「${el.text||"ラベル"}」`:"";
+    const note=el.note?` — 意図：${el.note}`:"";
+    return `- ${typeName(el.type)} / 色：${roleName(el.role)} / ${pos}${txt}${note}`;
+  }).join("\n");
+}
+
+/* =========================================================
+   プレビュー
+   ========================================================= */
+function updatePreview(){
+  document.getElementById("pv-cat").textContent="◴ "+catLabel(elCat.value);
+  document.getElementById("pv-title").textContent=document.getElementById("f-title").value||"（title）";
+  document.getElementById("pv-claim").textContent=document.getElementById("f-claim").value||"（claim）";
+  document.getElementById("pv-why").textContent=document.getElementById("f-why").value||"（why）";
+  document.getElementById("pv-fig").innerHTML=buildSVG();
+}
+["f-title","f-claim","f-why"].forEach(id=>document.getElementById(id).addEventListener("input",updatePreview));
+
+/* =========================================================
+   プロンプト生成
+   ========================================================= */
+function buildPrompt(){
+  const cat=elCat.value;
+  const id=document.getElementById("f-id").value.trim() || slugFrom(document.getElementById("f-title").value);
+  const tags=selectedTags();
+  const get=k=>document.getElementById(k).value.trim();
+  const today=new Date().toISOString().slice(0,10);
+
+  const draft =
+`{
+  id:"${id}",
+  cat:"${cat}",
+  tags:[${tags.map(t=>`"${t}"`).join(", ")}],
+  title:"${get("f-title")}",
+  claim:"${get("f-claim")}",
+  why:"${get("f-why")}",
+  visual:\`（下記ラフSVGを zu-drawing-rules-prompt.md に従って清書）\`,
+  apply:"${get("f-apply")}",
+  term:"${get("f-term")}",
+}`;
+
+  return `# 依頼：zu に新しい Tip を1件追加する
+
+リポジトリ \`zu\` の作法に従って、下のネタとラフ図をもとに Tip を1件実装してください。
+作図は **\`zu-drawing-rules-prompt.md\` の規約を厳守**し、CLAUDE.md の「図を作るときの最小チェックリスト」で自己検算すること。
+
+## ネタ（下書きオブジェクト）
+主カテゴリ：${catLabel(cat)}（${cat}）
+横串タグ：${tags.length?tags.map(catLabel).join("、"):"（なし）"}
+
+\`\`\`js
+${draft}
+\`\`\`
+
+## 図のラフSVG（たたき台。これを規約準拠に清書する）
+\`\`\`html
+${buildSVG()}
+\`\`\`
+
+## 図の意図（全体の主張＝claim を一目で腑に落とす）
+${buildIntent()}
+
+## 実装手順
+1. 上のラフを \`visual\` の規約準拠 SVG に清書する：
+   - \`viewBox="0 0 320 120"\`（縦積みのみ160まで）／外周16の余白／色は **CSS変数のみ・生hex禁止**
+   - accent は1図に1箇所まで／Before/After は左=問題(くすませる)・右=解決(calm、注目点だけaccent)
+   - 矢印は三角／棒グラフはゼロ始点／\`role="img"\` と一文の \`aria-label\` を必ず付ける／1図1主張
+2. \`tips.js\` の \`TIPS_${cat}\` 配列に上のオブジェクトを1ブロック追記する（id は一意の kebab-case。重複時は調整）。
+3. \`history.js\` の \`HISTORY\` 先頭に ${today} 付で1項目追記する（追加した title「${get("f-title")}」を利用者向けの言葉で）。
+4. 最小チェックリストで自己検算してから完了とする。`;
+}
+
+document.getElementById("btn-gen").addEventListener("click",()=>{
+  if(!document.getElementById("f-title").value.trim() || !document.getElementById("f-claim").value.trim()){
+    if(!confirm("title か claim が空です。このまま生成しますか？")) return;
+  }
+  document.getElementById("out").value=buildPrompt();
+});
+
+document.getElementById("btn-copy").addEventListener("click",async()=>{
+  const out=document.getElementById("out");
+  if(!out.value){ out.value=buildPrompt(); }
+  const text=out.value;
+  let ok=false;
+  try{ await navigator.clipboard.writeText(text); ok=true; }
+  catch(e){ out.focus(); out.select(); try{ ok=document.execCommand("copy"); }catch(_){} }
+  if(ok){
+    const c=document.getElementById("copied"); c.style.display="inline";
+    setTimeout(()=>c.style.display="none",1600);
+  }
+});
+
+/* 初期描画 */
+draw();
+updatePreview();
+</script>
+</body>
+</html>

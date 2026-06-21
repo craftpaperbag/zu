@@ -44,6 +44,14 @@
 
 図を作る・直すときは `zu-drawing-rules.md`（人間用・解説版）と `zu-drawing-rules-prompt.md`（AI 用・規約版）に従います。
 
+### 種の工房（作図支援ツール）
+
+図のラフとネタ（claim / why / apply など）を直感的に置いて設計し、それを **Claude Code に渡せば実装される作図プロンプト**に変換するページです。最終的な規約準拠の SVG は、受け取った Claude Code が清書します。
+
+**▶ 種の工房： https://craftpaperbag.github.io/zu/tane.html**
+
+`tane.html` 単体で動きます（ビルド不要）。サイト本体（`index.html`）からはリンクしておらず、作者向けの工房としてここからだけ辿れます。
+
 ## ライセンス
 
 All Rights Reserved（留保）。
