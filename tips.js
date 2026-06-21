@@ -9,6 +9,7 @@ const TIPS_space = [
   {
     id:"outer-margin",
     cat:"space",
+    links:[{to:"line-height",rel:"akin"},{to:"title-space",rel:"akin"}],
     tags:[],
     title:"外周は、空けておく",
     claim:"端まで詰めたスライドは、誰にも読まれない。",
@@ -37,6 +38,7 @@ const TIPS_space = [
   {
     id:"line-length",
     cat:"space",
+    links:[{to:"line-height",rel:"akin"},{to:"thirteen-chars",rel:"akin"}],
     tags:[],
     title:"一行は、短く折る",
     claim:"横に長い一行は、目が戻る場所を見失う。",
@@ -123,6 +125,7 @@ const TIPS_space = [
   {
     id:"title-space",
     cat:"space",
+    links:[{to:"proximity",rel:"echo"}],
     tags:[],
     title:"タイトルは、余白がつくる",
     claim:"タイトルをタイトルに見せるのは、大きさより周りの余白。",
@@ -153,6 +156,7 @@ const TIPS_space = [
   {
     id:"invisible-line",
     cat:"space",
+    links:[{to:"belonging",rel:"akin"}],
     tags:["draw"],
     title:"揃えると、線が見えてくる",
     claim:"余白と整列だけで、引いていない線が見えてくる。",
@@ -208,6 +212,7 @@ const TIPS_space = [
   {
     id:"less-stands-out",
     cat:"space",
+    links:[{to:"one-color",rel:"echo"},{to:"few-parallels",rel:"akin"}],
     tags:["hierarchy"],
     title:"少ないほど、目立つ",
     claim:"要素を減らすほど、残ったものが際立つ。",
@@ -228,6 +233,7 @@ const TIPS_space = [
   {
     id:"one-message",
     cat:"space",
+    links:[{to:"less-stands-out",rel:"akin"},{to:"no-lost-reader",rel:"akin"}],
     tags:["hierarchy"],
     title:"1枚に詰め込みすぎない",
     claim:"縦横無尽に置かれた1枚は、容量オーバーのサイン。",
@@ -254,6 +260,7 @@ const TIPS_space = [
   {
     id:"no-lost-reader",
     cat:"space",
+    links:[{to:"proximity",rel:"akin"}],
     tags:["hierarchy"],
     title:"迷子を、作らない",
     claim:"要素どうしの関係が、ひと目で見えるようにする。",
@@ -278,6 +285,7 @@ const TIPS_space = [
   {
     id:"annotation-target",
     cat:"space",
+    links:[{to:"belonging",rel:"akin"},{to:"invisible-line",rel:"akin"}],
     tags:["text"],
     title:"その注釈、どこの話？",
     claim:"全体への補足でないなら、どこにかかるかを示す。",
@@ -306,6 +314,7 @@ const TIPS_space = [
   {
     id:"visual-weight",
     cat:"space",
+    links:[{to:"concentric-radius",rel:"akin"},{to:"z-pattern",rel:"akin"}],
     tags:["hierarchy"],
     title:"重心を、意識する",
     claim:"枠の中で、重さを上や片側に寄せない。",
@@ -366,6 +375,7 @@ const TIPS_space = [
   {
     id:"concentric-radius",
     cat:"space",
+    links:[{to:"invisible-line",rel:"echo"}],
     tags:[],
     title:"角丸は、同心円で重ねる",
     claim:"重ねた角丸は、中心がそろうと落ち着く。",
@@ -390,6 +400,7 @@ const TIPS_space = [
   {
     id:"z-pattern",
     cat:"space",
+    links:[{to:"rank",rel:"akin"}],
     tags:["hierarchy"],
     title:"目は、Zの字に流れる",
     claim:"目は左上から流れ出す。見せたいものは、その入口に。",
@@ -415,6 +426,7 @@ const TIPS_hierarchy = [
   {
     id:"rank",
     cat:"hierarchy",
+    links:[{to:"jump-rate",rel:"then"}],
     tags:[],
     title:"見せたいものに、順位をつける",
     claim:"すべてを同じ強さで置くと、どこから見ればいいか分からない。",
@@ -439,6 +451,7 @@ const TIPS_hierarchy = [
   {
     id:"jump-rate",
     cat:"hierarchy",
+    links:[{to:"big-short",rel:"akin"},{to:"donki",rel:"tension"}],
     tags:["text"],
     title:"大きく、小さく",
     claim:"大きさの差が、読む順番をそのまま決める。",
@@ -464,6 +477,7 @@ const TIPS_hierarchy = [
   {
     id:"donki",
     cat:"hierarchy",
+    links:[{to:"who-is-star",rel:"echo"},{to:"text-color-sparingly",rel:"echo"}],
     tags:["color"],
     title:"強調しすぎは、目立たなくなる",
     claim:"全部を強調すると、何も強調されない。",
@@ -490,6 +504,7 @@ const TIPS_hierarchy = [
   {
     id:"who-is-star",
     cat:"hierarchy",
+    links:[{to:"no-filler",rel:"akin"},{to:"need-this-line",rel:"akin"}],
     tags:["draw"],
     title:"主役は、誰？",
     claim:"どうでもいい矢印や枠を、主役より目立たせない。",
@@ -537,6 +552,7 @@ const TIPS_hierarchy = [
   {
     id:"big-short",
     cat:"hierarchy",
+    links:[{to:"thirteen-chars",rel:"akin"}],
     tags:["text"],
     title:"文字は大きく、文章は短く",
     claim:"大きい文字に、短い言葉。これが届く形。",
@@ -561,6 +577,7 @@ const TIPS_hierarchy = [
   {
     id:"repeat-form",
     cat:"hierarchy",
+    links:[{to:"same-badge",rel:"echo"},{to:"consistent-line-weight",rel:"echo"}],
     tags:[],
     title:"同じ形を、くり返す",
     claim:"同じ意味のものは、同じ形で揃える。",
@@ -583,6 +600,7 @@ const TIPS_hierarchy = [
   {
     id:"same-badge",
     cat:"hierarchy",
+    links:[{to:"same-word",rel:"echo"}],
     tags:["color","text"],
     title:"くり返す概念は、同じバッジで",
     claim:"何度も出る概念は、毎回おなじ見た目で示す。",
@@ -615,6 +633,7 @@ const TIPS_hierarchy = [
   {
     id:"unify-font",
     cat:"hierarchy",
+    links:[{to:"avoid-monospace",rel:"akin"},{to:"fewer-colors",rel:"echo"}],
     tags:["text"],
     title:"フォントは、統一する",
     claim:"書体がばらつくと、それだけで散らかって見える。",
@@ -644,6 +663,7 @@ const TIPS_hierarchy = [
   {
     id:"avoid-monospace",
     cat:"hierarchy",
+    links:[{to:"avoid-italic",rel:"akin"}],
     tags:["text"],
     title:"等幅フォントは、避ける",
     claim:"等幅フォントは、本文には読みにくい。",
@@ -685,6 +705,7 @@ const TIPS_hierarchy = [
   {
     id:"show-count",
     cat:"hierarchy",
+    links:[{to:"no-lost-reader",rel:"akin"},{to:"bullets-over-prose",rel:"akin"}],
     tags:["text"],
     title:"いくつあるか、先に言う",
     claim:"先に総数を告げると、終わりまでの見通しが立つ。",
@@ -728,6 +749,7 @@ const TIPS_flow = [
   {
     id:"means-not-end",
     cat:"flow",
+    links:[{to:"so-what",rel:"akin"},{to:"rough-first",rel:"then"}],
     tags:[],
     title:"図は、手段でしかない",
     claim:"凝る前に、誰に何を伝えたいかへ立ち返る。",
@@ -752,6 +774,7 @@ const TIPS_flow = [
   {
     id:"show-early",
     cat:"flow",
+    links:[{to:"good-enough",rel:"akin"}],
     tags:[],
     title:"早めに、見せる",
     claim:"完成を待たず、読む人に早く見せる。",
@@ -814,6 +837,7 @@ const TIPS_flow = [
   {
     id:"just-start",
     cat:"flow",
+    links:[{to:"rough-first",rel:"akin"},{to:"good-enough",rel:"akin"}],
     tags:[],
     title:"とりあえず、作る",
     claim:"良い案が出ないなら、悪い案でも形にする。",
@@ -838,6 +862,7 @@ const TIPS_flow = [
   {
     id:"squint-test",
     cat:"flow",
+    links:[{to:"rank",rel:"akin"},{to:"donki",rel:"akin"}],
     tags:["hierarchy"],
     title:"目を細めて、見る",
     claim:"目を細めると、効いている強弱だけが残る。",
@@ -958,6 +983,7 @@ const TIPS_color = [
   {
     id:"shade-not-hue",
     cat:"color",
+    links:[{to:"gray-is-useful",rel:"akin"},{to:"graph-colors",rel:"akin"}],
     tags:["draw"],
     title:"色味より、濃淡を使う",
     claim:"系列を分けたいなら、色味より同じ色の濃淡で。",
@@ -987,6 +1013,7 @@ const TIPS_color = [
   {
     id:"gray-is-useful",
     cat:"color",
+    links:[{to:"text-color-sparingly",rel:"akin"}],
     tags:[],
     title:"灰色は、便利",
     claim:"迷ったら灰色。脇役は灰色に引かせる。",
@@ -1044,6 +1071,7 @@ const TIPS_color = [
   {
     id:"ensure-contrast",
     cat:"color",
+    links:[{to:"shade-not-hue",rel:"akin"}],
     tags:[],
     title:"コントラストは、確保する",
     claim:"薄い色を薄い地に置くと、読めない。",
@@ -1073,6 +1101,7 @@ const TIPS_color = [
   {
     id:"knockout",
     cat:"color",
+    links:[{to:"fill-not-border",rel:"akin"},{to:"graph-colors",rel:"akin"}],
     tags:[],
     title:"白抜きで、色数を絞る",
     claim:"色を重ねたくなったら、白抜きでクリアにする。",
@@ -1100,6 +1129,7 @@ const TIPS_color = [
   {
     id:"fill-not-border",
     cat:"color",
+    links:[{to:"need-this-line",rel:"akin"}],
     tags:["space","draw"],
     title:"枠線の代わりに、地の色",
     claim:"囲うより、塗る。罫線は要らないことが多い。",
@@ -1128,6 +1158,7 @@ const TIPS_color = [
   {
     id:"gradient-careful",
     cat:"color",
+    links:[{to:"soft-contrast",rel:"akin"},{to:"knockout",rel:"akin"}],
     tags:[],
     title:"グラデーションは、慎重に",
     claim:"むやみなグラデーションは、野暮ったくなる。",
@@ -1150,6 +1181,7 @@ const TIPS_color = [
   {
     id:"semantic-color",
     cat:"color",
+    links:[{to:"same-badge",rel:"akin"}],
     tags:["text"],
     title:"色の意味には、逆らわない",
     claim:"色がもとから持つ意味に、逆らわない。",
@@ -1212,6 +1244,7 @@ const TIPS_text = [
   {
     id:"write-action",
     cat:"text",
+    links:[{to:"say-it-straight",rel:"akin"},{to:"lead-first",rel:"akin"}],
     tags:[],
     title:"タイトルには、結局なにかを書く",
     claim:"「〜について」ではなく「〜してください」と書く。",
@@ -1232,6 +1265,7 @@ const TIPS_text = [
   {
     id:"lead-first",
     cat:"text",
+    links:[{to:"thirteen-chars",rel:"akin"}],
     tags:[],
     title:"0.1秒で、読むか決まる",
     claim:"長い修飾だらけのタイトルは、最後まで読まれない。",
@@ -1274,6 +1308,7 @@ const TIPS_text = [
   {
     id:"excuse-last",
     cat:"text",
+    links:[{to:"so-what",rel:"akin"},{to:"no-filler",rel:"akin"}],
     tags:[],
     title:"言い訳は、末尾に小さく",
     claim:"あなたのエクスキューズを読みたい人はいない。",
@@ -1317,6 +1352,7 @@ const TIPS_text = [
   {
     id:"bold-not-marker",
     cat:"text",
+    links:[{to:"bold-not-underline",rel:"akin"},{to:"text-color-sparingly",rel:"echo"}],
     tags:["color"],
     title:"蛍光ペンより、太字",
     claim:"強調は、塗るより太らせる。",
@@ -1337,6 +1373,7 @@ const TIPS_text = [
   {
     id:"bold-not-underline",
     cat:"text",
+    links:[{to:"avoid-italic",rel:"akin"}],
     tags:[],
     title:"下線より、太字",
     claim:"下線で引くより、太字で立たせる。",
@@ -1377,6 +1414,7 @@ const TIPS_text = [
   {
     id:"try-icon",
     cat:"text",
+    links:[{to:"bullets-over-prose",rel:"akin"},{to:"area-over-number",rel:"echo"}],
     tags:[],
     title:"アイコンにしてみる",
     claim:"文字で説明するより、絵で見せたほうが速い。",
@@ -1400,6 +1438,7 @@ const TIPS_text = [
   {
     id:"same-word",
     cat:"text",
+    links:[{to:"different-word",rel:"tension"}],
     tags:[],
     title:"同じものは、同じ言葉で",
     claim:"一つのものを指す言葉は、最後まで一つに統一する。",
@@ -1421,6 +1460,7 @@ const TIPS_text = [
   {
     id:"different-word",
     cat:"text",
+    links:[{to:"semantic-color",rel:"akin"}],
     tags:[],
     title:"違うものは、違う言葉で",
     claim:"別の意味のものに、同じ言葉を使い回さない。",
@@ -1442,6 +1482,7 @@ const TIPS_text = [
   {
     id:"plain-words",
     cat:"text",
+    links:[{to:"say-it-straight",rel:"akin"},{to:"bullets-over-prose",rel:"akin"}],
     tags:[],
     title:"やさしい言葉で、言う",
     claim:"難しい言葉は、やさしい言葉に置き換える。",
@@ -1514,6 +1555,7 @@ const TIPS_draw = [
   {
     id:"triangle-arrow",
     cat:"draw",
+    links:[{to:"need-this-line",rel:"akin"},{to:"consistent-line-weight",rel:"akin"}],
     tags:[],
     title:"矢印は、三角で十分",
     claim:"矢印は三角ひとつで伝わる。",
@@ -1572,6 +1614,7 @@ const TIPS_draw = [
   {
     id:"bar-from-zero",
     cat:"draw",
+    links:[{to:"area-over-number",rel:"akin"},{to:"pie-two-max",rel:"akin"}],
     tags:[],
     title:"棒グラフは、ゼロから",
     claim:"棒グラフの起点をゼロにしないのは、印象操作。",
@@ -1596,6 +1639,7 @@ const TIPS_draw = [
   {
     id:"pie-two-max",
     cat:"draw",
+    links:[{to:"few-parallels",rel:"akin"}],
     tags:[],
     title:"円グラフ、値は2つまで",
     claim:"3つ以上の割合は、円グラフでは比べられない。",
@@ -1654,6 +1698,7 @@ const TIPS_draw = [
   {
     id:"no-jaggy",
     cat:"draw",
+    links:[{to:"keep-ratio",rel:"akin"},{to:"no-filler",rel:"akin"}],
     tags:[],
     title:"ジャギーするなら、載せない",
     claim:"粗く伸びた画像は、無いほうがまし。",
@@ -1670,6 +1715,7 @@ const TIPS_draw = [
   {
     id:"keep-ratio",
     cat:"draw",
+    links:[{to:"area-over-number",rel:"akin"}],
     tags:[],
     title:"縦横比は、変えない",
     claim:"画像の歪みが、違和感になる。",
