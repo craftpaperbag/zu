@@ -135,6 +135,43 @@
     background-clip:padding-box;
   }
   #history-scroll::-webkit-scrollbar-thumb:hover{background-color:var(--ink-soft);}
+  /* 「すべて」の章立て見出し：朱は使わず、墨と罫だけの静かな区切り。
+     項目（特に目次の行）とはっきり見分くよう、丸ゴシックで大きく太く。 */
+  .sec-head{
+    display:flex;align-items:center;gap:.55rem;
+    margin:2.5rem 0 1rem;padding-bottom:.55rem;
+    border-bottom:2px solid var(--line);
+  }
+  .sec-head:first-child{margin-top:.5rem;}
+  .sec-head .sec-label{font-family:'Zen Maru Gothic',sans-serif;font-weight:700;font-size:1.4rem;color:var(--ink);}
+  .sec-head .sec-count{font-size:.85rem;color:var(--ink-soft);opacity:.85;}
+  /* 目次（list）表示：図を省いた1行。タイトル＋claimで素早く拾い読みする */
+  .toc{display:flex;flex-direction:column;}
+  .tocrow{
+    display:flex;align-items:baseline;gap:.75rem;width:100%;text-align:left;
+    padding:.7rem .25rem;border-bottom:1px solid var(--line);cursor:pointer;
+    transition:background-color .15s ease;
+  }
+  .tocrow:hover{background:var(--card);}
+  .tocrow .toc-title{font-weight:700;color:var(--ink);flex:0 0 auto;}
+  .tocrow .toc-claim{color:var(--ink-soft);font-size:.9rem;flex:1 1 auto;min-width:0;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .tocrow .toc-go{color:var(--ink-soft);opacity:.5;flex:0 0 auto;}
+  @media (max-width:639px){
+    .tocrow{flex-direction:column;gap:.15rem;}
+    .tocrow .toc-claim{white-space:normal;font-size:.85rem;}
+    .tocrow .toc-go{display:none;}
+  }
+  /* 固定バーの下端：スクロールする一覧が、すっと溶けて潜るように薄める */
+  #filterbar::after{
+    content:"";position:absolute;left:0;right:0;top:100%;height:18px;
+    background:linear-gradient(var(--paper),transparent);pointer-events:none;
+  }
+  /* 表示切り替えトグル：選択側だけ濃い面に明るい字（chip と同じ反転表現） */
+  .viewseg{display:inline-flex;gap:2px;padding:2px;border:1px solid var(--line);background:var(--card);}
+  .viewseg button{display:inline-flex;align-items:center;gap:.35rem;padding:.35rem .7rem;border-radius:13px;
+    font-size:.8rem;color:var(--ink-soft);background:transparent;border:none;cursor:pointer;transition:all .15s ease;}
+  .viewseg button[aria-pressed="true"]{background:var(--strong);color:var(--on-strong);}
 </style>
 </head>
 <body>
@@ -163,12 +200,12 @@
   </p>
 
   <p class="mt-3 max-w-2xl text-base md:text-lg" style="color:var(--ink-soft)">
-    見せて伝えるものは、ぜんぶ「図」。伝わりやすくするコツを、よければ持っていってください。
+    <span style="display:inline-block">見せて伝えるものは、ぜんぶ「図」。</span><span style="display:inline-block">伝わりやすくするコツを集めました。</span>
   </p>
 </header>
 
-<!-- 検索 + カテゴリ -->
-<div class="px-6 max-w-5xl xl:max-w-7xl mx-auto sticky top-0 z-20 pt-2 pb-3 md:pb-4" style="background:linear-gradient(var(--paper) 78%,transparent)">
+<!-- 検索 + カテゴリ + 一覧の操作（総数・表示切替・ランダム）をひとまとめに固定する -->
+<div id="filterbar" class="px-6 max-w-5xl xl:max-w-7xl mx-auto sticky top-0 z-20 pt-2 pb-3 md:pb-4" style="background:var(--paper)">
   <div class="flex items-center gap-2.5">
     <a id="mini-logo" href="#top" aria-label="ページの先頭へ戻る"
       class="is-hidden focusable chip shrink-0 inline-flex items-baseline gap-1 maru font-bold leading-none"
@@ -188,18 +225,28 @@
     </div>
   </div>
   <div id="cats" class="flex flex-wrap gap-2 mt-2.5 md:mt-3"></div>
+  <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 mt-3">
+    <div id="count" class="text-sm" style="color:var(--ink-soft)"></div>
+    <div class="flex items-center gap-2 shrink-0">
+      <div id="view-seg" class="viewseg soft focusable" role="group" aria-label="一覧の表示を切り替える">
+        <button id="view-card" type="button" aria-label="カード表示" aria-pressed="true">
+          <i data-lucide="layout-grid" class="w-4 h-4"></i>カード
+        </button>
+        <button id="view-list" type="button" aria-label="目次表示" aria-pressed="false">
+          <i data-lucide="list" class="w-4 h-4"></i>目次
+        </button>
+      </div>
+      <button id="random" type="button"
+        class="focusable chip inline-flex items-center gap-1.5 text-sm soft px-3 py-1.5 border"
+        style="color:var(--ink-soft);background:var(--card);border-color:var(--line);cursor:pointer">
+        <i data-lucide="shuffle" class="w-4 h-4"></i>ランダムに一枚
+      </button>
+    </div>
+  </div>
 </div>
 
 <!-- Tips一覧 -->
-<main class="px-6 max-w-5xl xl:max-w-7xl mx-auto pb-8">
-  <div class="flex items-center justify-between gap-3 mb-4">
-    <div id="count" class="text-sm" style="color:var(--ink-soft)"></div>
-    <button id="random" type="button"
-      class="focusable chip shrink-0 inline-flex items-center gap-1.5 text-sm soft px-3 py-1.5 border"
-      style="color:var(--ink-soft);background:var(--card);border-color:var(--line);cursor:pointer">
-      <i data-lucide="shuffle" class="w-4 h-4"></i>ランダムに一枚
-    </button>
-  </div>
+<main class="px-6 max-w-5xl xl:max-w-7xl mx-auto pt-4 pb-8">
   <div id="grid" class="grid gap-5 md:grid-cols-2 xl:grid-cols-3"></div>
   <div id="empty" class="hidden text-center py-16" style="color:var(--ink-soft)">
     <i data-lucide="telescope" class="w-8 h-8 mx-auto mb-3"></i>
@@ -310,6 +357,7 @@ const TIPS = [].concat(
 
 let activeCat = "all";
 let keyword = "";
+let viewMode = "card";   // "card"=図つきカード / "list"=目次（図を省いた1行）
 const catLabel = id => (CATEGORIES.find(c=>c.id===id)||{}).label || "";
 const catIcon  = id => (CATEGORIES.find(c=>c.id===id)||{}).icon  || "tag";
 
@@ -385,6 +433,25 @@ function card(t){
   </article>`;
 }
 
+// 章立て見出し：朱を使わず、墨と罫だけの静かな区切り（全体像のため）
+function sectionHead(cat,count){
+  return `<div class="sec-head">
+    <i data-lucide="${catIcon(cat)}" class="w-5 h-5" style="color:var(--ink-soft)"></i>
+    <span class="sec-label">${catLabel(cat)}</span>
+    <span class="sec-count tnum">${count}</span>
+  </div>`;
+}
+
+// 目次の1行：図を省き、タイトル＋claimで素早く拾い読みできる
+function cardRow(t){
+  return `<article data-id="${t.id}" role="button" tabindex="0" aria-label="${t.title} — 詳しく読む"
+    class="tocrow focusable fade-in">
+    <span class="toc-title maru">${hl(t.title)}</span>
+    <span class="toc-claim">${hl(t.claim)}</span>
+    <i data-lucide="chevron-right" class="w-4 h-4 toc-go"></i>
+  </article>`;
+}
+
 // 詳細（モーダル内）：全項目を表示
 function detail(t){
   return `
@@ -412,7 +479,25 @@ function renderGrid(){
   const grid = document.getElementById("grid");
   const empty = document.getElementById("empty");
   const count = document.getElementById("count");
-  grid.innerHTML = currentList.map(card).join("");
+  const item = viewMode==="list" ? cardRow : card;
+  // カード表示はレスポンシブグリッド、目次表示は1列。区画ごとに付け外しする。
+  const gridCls = "grid gap-5 md:grid-cols-2 xl:grid-cols-3";
+  if(activeCat==="all"){
+    // 「すべて」：カテゴリで章立てして全体像を見せる（0件の区画は出さない）
+    grid.className = "";
+    grid.innerHTML = CATEGORIES.map(c=>{
+      const items = currentList.filter(t=>t.cat===c.id);
+      if(!items.length) return "";
+      const body = viewMode==="list"
+        ? `<div class="toc">${items.map(item).join("")}</div>`
+        : `<div class="${gridCls}">${items.map(item).join("")}</div>`;
+      return sectionHead(c.id, items.length) + body;
+    }).join("");
+  } else {
+    // 特定カテゴリ：見出しは冗長なのでフラットに並べる
+    grid.className = viewMode==="list" ? "toc" : gridCls;
+    grid.innerHTML = currentList.map(item).join("");
+  }
   empty.classList.toggle("hidden", currentList.length>0);
   count.textContent = `${currentList.length} 件の覚え書き`;
   // ランダムに一枚：選べる候補があるときだけ出す
@@ -604,6 +689,24 @@ function syncClear(){ qClear.classList.toggle("is-hidden", !qInput.value); }
 qInput.addEventListener("input",e=>{ keyword=e.target.value; syncClear(); renderCats(); renderGrid(); });
 qClear.onclick=()=>{ qInput.value=""; keyword=""; syncClear(); renderCats(); renderGrid(); qInput.focus(); };
 
+// 表示切り替え（カード / 目次）：選択を localStorage に保存（テーマと同型）
+const viewCardBtn = document.getElementById("view-card");
+const viewListBtn = document.getElementById("view-list");
+function paintViewSeg(){
+  viewCardBtn.setAttribute("aria-pressed", String(viewMode==="card"));
+  viewListBtn.setAttribute("aria-pressed", String(viewMode==="list"));
+}
+function setView(mode){
+  if(mode!=="card" && mode!=="list") return;
+  if(mode===viewMode){ return; }
+  viewMode = mode;
+  try{ localStorage.setItem("zu-view", mode); }catch(e){}
+  paintViewSeg();
+  renderGrid();
+}
+viewCardBtn.onclick=()=>setView("card");
+viewListBtn.onclick=()=>setView("list");
+
 // ランダムに一枚：いま絞り込まれている並びから無作為に開く
 document.getElementById("random").onclick=()=>{
   if(!currentList.length) return;
@@ -640,6 +743,9 @@ syncScrollUI();
   if(cat && (cat==="all" || CATEGORIES.some(c=>c.id===cat))) activeCat = cat;
   const q = p.get("q");
   if(q){ keyword = q; qInput.value = q; syncClear(); }
+  // 表示の好み（カード/目次）を復元（URLには載せず localStorage のみ）
+  try{ const v = localStorage.getItem("zu-view"); if(v==="list"||v==="card") viewMode = v; }catch(e){}
+  paintViewSeg();
 })();
 
 renderCats();
