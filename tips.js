@@ -657,25 +657,25 @@ const TIPS_hierarchy = [
         <rect x="114" y="42" width="15" height="24" rx="2"/>
       </g>
       <g fill="var(--ink-soft)">
-        <rect x="29.5" y="46" width="4" height="16" rx="1"/>
+        <rect x="25" y="46" width="4" height="16" rx="1"/>
         <rect x="40" y="46" width="13" height="16" rx="1"/>
-        <rect x="59" y="46" width="5" height="16" rx="1"/>
+        <rect x="55" y="46" width="5" height="16" rx="1"/>
         <rect x="70" y="46" width="13" height="16" rx="1"/>
-        <rect x="89.5" y="46" width="4" height="16" rx="1"/>
+        <rect x="85" y="46" width="4" height="16" rx="1"/>
         <rect x="100" y="46" width="13" height="16" rx="1"/>
-        <rect x="119" y="46" width="5" height="16" rx="1"/>
+        <rect x="115" y="46" width="5" height="16" rx="1"/>
       </g>
-      <text x="72" y="112" text-anchor="middle" font-size="11" fill="var(--ink-soft)">等幅＝字間がでこぼこ</text>
+      <text x="76" y="112" text-anchor="middle" font-size="11" fill="var(--ink-soft)">等幅＝字間がでこぼこ</text>
       <g fill="var(--calm)">
         <rect x="196" y="46" width="4" height="16" rx="1"/>
-        <rect x="206" y="46" width="13" height="16" rx="1"/>
-        <rect x="225" y="46" width="5" height="16" rx="1"/>
-        <rect x="236" y="46" width="13" height="16" rx="1"/>
-        <rect x="255" y="46" width="4" height="16" rx="1"/>
-        <rect x="265" y="46" width="13" height="16" rx="1"/>
-        <rect x="284" y="46" width="5" height="16" rx="1"/>
+        <rect x="204" y="46" width="13" height="16" rx="1"/>
+        <rect x="221" y="46" width="5" height="16" rx="1"/>
+        <rect x="230" y="46" width="13" height="16" rx="1"/>
+        <rect x="247" y="46" width="4" height="16" rx="1"/>
+        <rect x="255" y="46" width="13" height="16" rx="1"/>
+        <rect x="272" y="46" width="5" height="16" rx="1"/>
       </g>
-      <text x="244" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">可変＝字間がそろう</text>
+      <text x="236" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">可変＝字間がそろう</text>
     </svg>`,
     apply:"本文は字幅の変わる（プロポーショナル）書体にし、等幅はコードや数字の桁揃えだけに使う。",
     term:"カーニング",
