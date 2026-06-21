@@ -867,26 +867,26 @@ const TIPS_flow = [
     tags:[],
     title:"完璧を、求めない",
     claim:"100点を1回より、80点を2回。",
-    why:"スマホで写真を撮るとき、一枚で完璧に決めようと構え続けるより、まず一枚撮って画面で確かめ、気になる所を直してもう一枚撮るほうが、結局いい写真になります。図づくりも同じで、はじめから100点を狙うと手が止まり、直しもきかない。まず80点で形にして、見直してからもう一度直すほうが、同じ時間でずっと先まで行けます。完璧主義は、たいてい未完成のまま終わります。",
-    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="一発で100点を狙うと届かず止まり、80点を二度重ねるほうが同じ手間で先まで届く">
-      <!-- 悪い例: 一発で100点を狙うが届かず止まる -->
-      <line x1="24" y1="34" x2="128" y2="34" stroke="var(--ink-soft)" stroke-width="1.5" stroke-dasharray="4 3"/>
-      <text x="126" y="30" text-anchor="end" font-size="10" fill="var(--ink-soft)">100点</text>
-      <rect x="60" y="60" width="34" height="28" rx="4" fill="var(--ink-soft)" opacity="0.5"/>
-      <line x1="77" y1="60" x2="77" y2="46" stroke="var(--ink-soft)" stroke-width="2" stroke-dasharray="3 3"/>
-      <text x="77" y="44" text-anchor="middle" font-size="13" fill="var(--ink-soft)">?</text>
-      <text x="77" y="108" text-anchor="middle" font-size="11" fill="var(--ink-soft)">一発で止まる</text>
-      <!-- 良い例: 80点を二度重ねて越える -->
-      <line x1="192" y1="34" x2="300" y2="34" stroke="var(--calm)" stroke-width="1.5" stroke-dasharray="4 3"/>
-      <text x="298" y="30" text-anchor="end" font-size="10" fill="var(--calm)">100点</text>
-      <rect x="214" y="58" width="34" height="30" rx="4" fill="var(--calm)" opacity="0.5"/>
-      <text x="231" y="52" text-anchor="middle" font-size="10" fill="var(--calm)">80</text>
-      <rect x="256" y="26" width="34" height="62" rx="4" fill="var(--calm)"/>
-      <text x="273" y="60" text-anchor="middle" font-size="10" fill="var(--card)">＋80</text>
-      <circle cx="273" cy="26" r="3" fill="var(--accent)"/>
-      <text x="248" y="108" text-anchor="middle" font-size="11" fill="var(--calm)">二度で越える</text>
+    why:"坂を登るとき、八合目までは軽い足取りで着けても、そこから頂上までの最後のひと登りに、それまでと同じだけ汗をかきます。仕上げも同じで、80点まではすっと進むのに、残りの20点を詰めるのに、もう一山ぶんの手間がかかる。その手間をまるごと回せば、別のものをもう80点まで仕上げられます。一つを磨き切る前に、同じ力で二つ目に手をつけるほうが、全体ではずっと遠くまで届きます。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="同じ手間なら、ひとつを100点にするより、80点をふたつ仕上げるほうが多く届く">
+      <!-- 前提: かける手間は同じ -->
+      <rect x="128" y="16" width="64" height="17" rx="8.5" fill="var(--paper)" stroke="var(--line)"/>
+      <text x="160" y="28" text-anchor="middle" font-size="11" fill="var(--ink-soft)">同じ手間</text>
+      <!-- 悪い例: その手間をひとつに注ぎ、100点をひとつだけ -->
+      <line x1="54" y1="98" x2="102" y2="98" stroke="var(--line)" stroke-width="1.5"/>
+      <rect x="62" y="44" width="34" height="54" rx="4" fill="var(--ink-soft)"/>
+      <text x="79" y="74" text-anchor="middle" font-size="11" fill="var(--card)">100</text>
+      <text x="79" y="112" text-anchor="middle" font-size="11" fill="var(--ink-soft)">ひとつだけ</text>
+      <!-- 良い例: 同じ手間で80点をふたつ -->
+      <line x1="190" y1="98" x2="276" y2="98" stroke="var(--line)" stroke-width="1.5"/>
+      <rect x="196" y="55" width="30" height="43" rx="4" fill="var(--calm)"/>
+      <text x="211" y="80" text-anchor="middle" font-size="11" fill="var(--card)">80</text>
+      <rect x="240" y="55" width="30" height="43" rx="4" fill="var(--calm)"/>
+      <text x="255" y="80" text-anchor="middle" font-size="11" fill="var(--card)">80</text>
+      <circle cx="255" cy="55" r="3" fill="var(--accent)"/>
+      <text x="233" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">ふたつできる</text>
     </svg>`,
-    apply:"100点を狙って固まりそうになったら、80点でいったん区切る。一周で仕上げず、二周目で直す前提で進める。",
+    apply:"一つを100点に磨き込む前に、80点で切り上げて次へ。最後の20点に同じ手間をかけるより、その力で二つ目を仕上げる。",
     term:"",
   },
 ];
