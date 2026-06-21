@@ -1,1 +1,9 @@
+# OS が勝手に作るゴミ（macOS）
+.DS_Store
+
+# Claude Code のローカル設定・プラン置き場
+.claude/
+
+# スクショ作業の生成物（SCREENSHOTS.md の手順は /tmp 完結だが、念のため）
 .shots/
+node_modules/
