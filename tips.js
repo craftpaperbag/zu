@@ -887,7 +887,7 @@ const TIPS_flow = [
       <text x="233" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">ふたつできる</text>
     </svg>`,
     apply:"一つを100点に磨き込む前に、80点で切り上げて次へ。最後の20点に同じ手間をかけるより、その力で二つ目を仕上げる。",
-    term:"",
+    term:"パレートの法則（80:20の法則）／収穫逓減",
   },
 ];
 
