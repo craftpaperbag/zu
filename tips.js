@@ -32,7 +32,7 @@ const TIPS_space = [
       <text x="242" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">外周を空ける</text>
     </svg>`,
     apply:"スライドや資料は、内容を置く前に外周をひと回り空けてから始める。",
-    term:"",
+    term:"ホワイトスペース（余白）",
   },
   {
     id:"line-length",
@@ -59,7 +59,7 @@ const TIPS_space = [
       <text x="242" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">短く折る</text>
     </svg>`,
     apply:"一行は全角35〜45字を上限の目安に。長くなったら段を分けるか、幅を狭める。",
-    term:"",
+    term:"適正行長（メジャー）",
   },
   {
     id:"proximity",
@@ -117,7 +117,7 @@ const TIPS_space = [
       <text x="254" y="116" text-anchor="middle" font-size="11" fill="var(--calm)">下の塊のもの</text>
     </svg>`,
     apply:"見出しの上を広く、下を狭く空ける。ラベルは説明したい対象のすぐそばへ。",
-    term:"",
+    term:"近接の原理",
   },
   {
     id:"title-space",
@@ -147,7 +147,7 @@ const TIPS_space = [
       <text x="242" y="114" text-anchor="middle" font-size="11" fill="var(--calm)">余白で浮かせる</text>
     </svg>`,
     apply:"タイトルを目立たせたいときは、太く大きくする前に、上下の余白を増やしてみる。",
-    term:"",
+    term:"間（ま）",
   },
   {
     id:"invisible-line",
@@ -202,7 +202,7 @@ const TIPS_space = [
       <text x="250" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">息ができる</text>
     </svg>`,
     apply:"本文の行の高さは、文字サイズの1.7〜1.8倍を目安に空ける。",
-    term:"",
+    term:"行送り（レディング）",
   },
   {
     id:"less-stands-out",
@@ -222,7 +222,7 @@ const TIPS_space = [
       <text x="242" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">一つ → 必ず見つかる</text>
     </svg>`,
     apply:"迷ったら足すより減らす。一番見てほしいものを残し、その他は思い切って削る。",
-    term:"",
+    term:"フォン・レストルフ効果（孤立効果）",
   },
   {
     id:"one-message",
@@ -248,7 +248,7 @@ const TIPS_space = [
       <text x="242" y="108" text-anchor="middle" font-size="11" fill="var(--calm)">分割する</text>
     </svg>`,
     apply:"一枚が四方へ広がり始めたら、分割の合図。1枚1メッセージに割り直す。",
-    term:"",
+    term:"ワンスライド・ワンメッセージ",
   },
   {
     id:"no-lost-reader",
@@ -300,7 +300,7 @@ const TIPS_space = [
       <text x="242" y="108" text-anchor="middle" font-size="11" fill="var(--calm)">ここ、と示す</text>
     </svg>`,
     apply:"図全体にかからない注は、対象のすぐ近くに置くか、印や線でかかる先を結ぶ。",
-    term:"",
+    term:"近接の原理",
   },
   {
     id:"visual-weight",
@@ -484,7 +484,7 @@ const TIPS_hierarchy = [
       <text x="248" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">一点だけ</text>
     </svg>`,
     apply:"強調は1枚に一つか二つまで。増やしたくなったら、ほかを弱めて相対的に立たせる。",
-    term:"",
+    term:"フォン・レストルフ効果（孤立効果）",
   },
   {
     id:"who-is-star",
@@ -504,7 +504,7 @@ const TIPS_hierarchy = [
       <text x="248" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">主役が立つ</text>
     </svg>`,
     apply:"矢印や囲み枠は最弱の色に下げ、主役より目立たないか必ず見比べる。",
-    term:"",
+    term:"視覚的階層",
   },
   {
     id:"dilute",
@@ -530,7 +530,7 @@ const TIPS_hierarchy = [
       <text x="248" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">削る＝濃くなる</text>
     </svg>`,
     apply:"全部書きたくなったら、一番言いたい一つを残して、あとは削れないか試す。",
-    term:"",
+    term:"情報過多（インフォメーション・オーバーロード）",
   },
   {
     id:"big-short",
@@ -554,7 +554,7 @@ const TIPS_hierarchy = [
       <text x="248" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">大きく短い</text>
     </svg>`,
     apply:"文字を大きくしたら、その分だけ言葉を削って短い言い切りにする。",
-    term:"",
+    term:"視認性（レジビリティ）",
   },
   {
     id:"repeat-form",
@@ -608,7 +608,7 @@ const TIPS_hierarchy = [
       <text x="252" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">おなじバッジ</text>
     </svg>`,
     apply:"概念ごとに色・形・アイコンを一度決めたら、最後まで同じ見た目を使い回す。",
-    term:"",
+    term:"一貫性（コンシステンシー）",
   },
   {
     id:"unify-font",
@@ -717,7 +717,7 @@ const TIPS_hierarchy = [
       <text x="246" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">終わりが見える</text>
     </svg>`,
     apply:"箇条書きや手順が増えてきたら、頭に「全部でいくつ」と総数を置く。番号を「1/5・2/5」と分母つきで振るのも同じ効き目。",
-    term:"",
+    term:"目標勾配効果",
   },
 ];
 
@@ -745,7 +745,7 @@ const TIPS_flow = [
       <text x="242" y="108" text-anchor="middle" font-size="11" fill="var(--calm)">目的を狙う</text>
     </svg>`,
     apply:"作り始める前に、誰に・何を・いつまでに伝えるかを書き出し、迷ったらそこへ戻る。",
-    term:"",
+    term:"手段の目的化",
   },
   {
     id:"show-early",
@@ -806,7 +806,7 @@ const TIPS_flow = [
       <text x="240" y="100" text-anchor="middle" font-size="11" fill="var(--calm)">骨組みから</text>
     </svg>`,
     apply:"色や飾りは後回しにして、まず配置だけのラフで全体の骨組みを確かめる。",
-    term:"",
+    term:"プロトタイピング（ワイヤーフレーム）",
   },
   {
     id:"just-start",
@@ -859,7 +859,7 @@ const TIPS_flow = [
       <text x="242" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">主役が残る</text>
     </svg>`,
     apply:"作り終えたら、目を細めて画面を眺める。最初に目に入る塊が主役なら成功。ぼやけて主役が立たないなら、強弱を付け直す。",
-    term:"",
+    term:"スクイントテスト",
   },
   {
     id:"good-enough",
@@ -917,7 +917,7 @@ const TIPS_color = [
       <text x="248" y="108" text-anchor="middle" font-size="11" fill="var(--calm)">一点 → 際立つ</text>
     </svg>`,
     apply:"資料の色は『地の色＋文字色＋強調色1つ』から始め、増やすのは理由ができてから。",
-    term:"",
+    term:"アクセントカラー",
   },
   {
     id:"fewer-colors",
@@ -949,7 +949,7 @@ const TIPS_color = [
       <text x="242" y="113" text-anchor="middle" font-size="11" fill="var(--calm)">地＋文字＋強調＝3</text>
     </svg>`,
     apply:"使う色は『地＋文字＋強調』の3つを上限の目安にし、足したくなったら何かを減らす。",
-    term:"",
+    term:"配色の60:30:10ルール",
   },
   {
     id:"shade-not-hue",
@@ -978,7 +978,7 @@ const TIPS_color = [
       <text x="246" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">同じ色の濃淡</text>
     </svg>`,
     apply:"グラフや系列の色分けは、色相を変えず、同じ色の濃い・薄いで段階をつける。",
-    term:"",
+    term:"モノクロマティック配色（単色配色）",
   },
   {
     id:"gray-is-useful",
@@ -1005,7 +1005,7 @@ const TIPS_color = [
       <text x="242" y="113" text-anchor="middle" font-size="11" fill="var(--calm)">脇は灰 → 主役が立つ</text>
     </svg>`,
     apply:"補助線・ラベル・脇の要素は灰色に回し、色は主役のためだけに取っておく。",
-    term:"",
+    term:"ニュートラルカラー（無彩色）",
   },
   {
     id:"soft-contrast",
@@ -1063,7 +1063,7 @@ const TIPS_color = [
       <text x="242" y="113" text-anchor="middle" font-size="11" fill="var(--calm)">明暗差あり → 読める</text>
     </svg>`,
     apply:"文字色と背景色を決めたら、薄い色どうしになっていないか、明暗差を必ず見直す。",
-    term:"",
+    term:"コントラスト比（WCAG）",
   },
   {
     id:"knockout",
@@ -1090,7 +1090,7 @@ const TIPS_color = [
       <text x="242" y="113" text-anchor="middle" font-size="11" fill="var(--calm)">白抜き → すっきり</text>
     </svg>`,
     apply:"濃い地に文字を載せるときは、色を重ねず白で抜いてコントラストを立てる。",
-    term:"",
+    term:"白抜き（ノックアウト）",
   },
   {
     id:"fill-not-border",
@@ -1118,7 +1118,7 @@ const TIPS_color = [
       <text x="242" y="113" text-anchor="middle" font-size="11" fill="var(--calm)">地の色 → 線なし</text>
     </svg>`,
     apply:"囲みたくなったら、まず罫線をやめて背景にうっすら色を敷けないか試す。",
-    term:"",
+    term:"図と地（フィギュア・グラウンド）",
   },
   {
     id:"gradient-careful",
@@ -1140,7 +1140,7 @@ const TIPS_color = [
       <text x="246" y="108" text-anchor="middle" font-size="11" fill="var(--calm)">一色で締まる</text>
     </svg>`,
     apply:"塗りはまず一色のベタで考える。グラデーションは奥行きや光が要るときだけ控えめに。",
-    term:"",
+    term:"フラットデザイン",
   },
   {
     id:"semantic-color",
@@ -1199,7 +1199,7 @@ const TIPS_color = [
       <text x="242" y="113" text-anchor="middle" font-size="11" fill="var(--calm)">一字だけ色 → 効く</text>
     </svg>`,
     apply:"文章は墨一色を基本にして、色を変えるのは『ここだけは』という一語に絞る。",
-    term:"",
+    term:"アクセントカラー",
   },
 ];
 
@@ -1222,7 +1222,7 @@ const TIPS_text = [
       </div>
     </div>`,
     apply:"タイトルは内容の紹介で終わらせず、相手にしてほしいことや結論をそのまま書き切る。",
-    term:"",
+    term:"コール・トゥ・アクション（CTA）",
   },
   {
     id:"lead-first",
@@ -1243,7 +1243,7 @@ const TIPS_text = [
       </div>
     </div>`,
     apply:"タイトルは修飾を後ろに回し、結論や用件を必ず先頭に置く。",
-    term:"",
+    term:"逆ピラミッド（結論先行）",
   },
   {
     id:"thirteen-chars",
@@ -1307,7 +1307,7 @@ const TIPS_text = [
       </div>
     </div>`,
     apply:"事実を書いたら、そこから導きたい結論や行動まで一文に含める。",
-    term:"",
+    term:"So What?（ピラミッド原則）",
   },
   {
     id:"bold-not-marker",
@@ -1347,7 +1347,7 @@ const TIPS_text = [
       </div>
     </div>`,
     apply:"リンク以外の強調では下線を引かず、線を足さずに文字を太くする。",
-    term:"",
+    term:"ヤコブの法則（下線＝リンクの慣習）",
   },
   {
     id:"avoid-italic",
@@ -1367,7 +1367,7 @@ const TIPS_text = [
       </div>
     </div>`,
     apply:"和文の強調に斜体は使わず、太字や字下げで代わりにする。",
-    term:"",
+    term:"疑似斜体（オブリーク）",
   },
   {
     id:"try-icon",
@@ -1390,7 +1390,7 @@ const TIPS_text = [
       <text x="240" y="100" text-anchor="middle" font-size="11" fill="var(--calm)">アイコンで一目</text>
     </svg>`,
     apply:"繰り返し出る定型の概念は、誰もが知る形のアイコンに置き換える。",
-    term:"",
+    term:"画像優位性効果（ピクチャー・スーペリオリティ）",
   },
   {
     id:"same-word",
@@ -1452,7 +1452,7 @@ const TIPS_text = [
       </div>
     </div>`,
     apply:"専門語や横文字は、日常のやさしい言葉に置き換えられないか一度試す。",
-    term:"",
+    term:"プレーン・ランゲージ（やさしい日本語）",
   },
   {
     id:"say-it-straight",
@@ -1472,7 +1472,7 @@ const TIPS_text = [
       </div>
     </div>`,
     apply:"禁止やお願いは、やわらげる前にまず結論をはっきり言い切る。",
-    term:"",
+    term:"ローコンテクスト・コミュニケーション",
   },
   {
     id:"bullets-over-prose",
@@ -1562,7 +1562,7 @@ const TIPS_draw = [
       <text x="242" y="108" text-anchor="middle" font-size="11" fill="var(--calm)">余白で揃える</text>
     </svg>`,
     apply:"線を引きたくなったら、まず余白と整列で代用できないか試す。引くなら最弱の色で。",
-    term:"",
+    term:"データインク比（タフテ）",
   },
   {
     id:"bar-from-zero",
@@ -1615,7 +1615,7 @@ const TIPS_draw = [
       <text x="242" y="110" text-anchor="middle" font-size="11" fill="var(--calm)">棒なら比べられる</text>
     </svg>`,
     apply:"割合が三つ以上になったら、円グラフをやめて棒グラフに並べ替える。",
-    term:"",
+    term:"角度・面積の知覚",
   },
   {
     id:"graph-colors",
@@ -1644,7 +1644,7 @@ const TIPS_draw = [
       <text x="242" y="110" text-anchor="middle" font-size="11" fill="var(--calm)">灰色に落として一本を立てる</text>
     </svg>`,
     apply:"グラフの色は一系統の濃淡でそろえ、強調したい系列だけ一色を立てる。",
-    term:"",
+    term:"カテゴリカルカラー",
   },
   {
     id:"no-jaggy",
@@ -1660,7 +1660,7 @@ const TIPS_draw = [
       <text x="242" y="110" text-anchor="middle" font-size="11" fill="var(--calm)">なめらか</text>
     </svg>`,
     apply:"きれいな大きさで出せない画像は、無理に拡大せず、いっそ載せない。",
-    term:"",
+    term:"解像度（ジャギー）",
   },
   {
     id:"keep-ratio",
@@ -1682,7 +1682,7 @@ const TIPS_draw = [
       <text x="242" y="108" text-anchor="middle" font-size="11" fill="var(--calm)">比率を保つ</text>
     </svg>`,
     apply:"画像のサイズ変更は、必ず縦横の比率を保つ。収まらないときはトリミングで合わせる。",
-    term:"",
+    term:"アスペクト比",
   },
   {
     id:"no-filler",
@@ -1717,7 +1717,7 @@ const TIPS_draw = [
       <text x="242" y="108" text-anchor="middle" font-size="11" fill="var(--calm)">余白を活かす</text>
     </svg>`,
     apply:"隙間を埋めるためだけの挿絵は置かない。余白はそのまま主役のために残す。",
-    term:"",
+    term:"チャートジャンク（タフテ）",
   },
   {
     id:"consistent-line-weight",
@@ -1741,7 +1741,7 @@ const TIPS_draw = [
       <text x="242" y="106" text-anchor="middle" font-size="11" fill="var(--calm)">そろえる</text>
     </svg>`,
     apply:"同じ役割の線は同じ太さに統一する。太さを変えるのは、意味の違いを示すときだけ。",
-    term:"",
+    term:"視覚変数（ベルタン）",
   },
   {
     id:"area-over-number",
@@ -1759,6 +1759,6 @@ const TIPS_draw = [
       <text x="244" y="104" text-anchor="middle" font-size="11" fill="var(--calm)">面積で比べる</text>
     </svg>`,
     apply:"量の大小は数字で書くより、面積や大きさのちがいそのもので見せる。",
-    term:"",
+    term:"前注意処理（プリアテンティブ）",
   },
 ];
