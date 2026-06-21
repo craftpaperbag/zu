@@ -1130,33 +1130,33 @@ const TIPS_color = [
     id:"text-color-sparingly",
     cat:"color",
     tags:["text"],
-    title:"文字の色変えは抑えめに",
+    title:"色を変えるのは、一語だけ",
     claim:"文字の色を変えるほど、どの色も効かなくなる。",
     why:"教科書に蛍光ペンを引きはじめると、つい一行、また一行と引いてしまい、気づけばページ全体が光っています。こうなると、もうどこが大事だったのか分かりません。文字の色も同じで、あちこちの語を色分けするほど、どれも同じ重さに見えて沈みます。本当に効かせたい一語だけ色を変えると、目はまっすぐそこへ向かいます。",
     visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="文字を一字ずつ色分けすると散らかり、ここぞの一字だけ色を変えると効く">
       <rect x="20" y="16" width="116" height="84" rx="10" fill="none" stroke="var(--line)"/>
       <!-- 悪い例: 文字を一字ずつ別の色に分ける多色サンプル(生hex) -->
-      <g font-size="15">
-        <text x="32" y="49" fill="#d9a23c">い</text>
-        <text x="54" y="49" fill="#4a6fb0">ろ</text>
-        <text x="76" y="49" fill="#5a9e54">は</text>
-        <text x="98" y="49" fill="#c1583f">に</text>
-        <text x="32" y="78" fill="#8a5fb0">ほ</text>
-        <text x="54" y="78" fill="#3aa6a0">へ</text>
-        <text x="76" y="78" fill="#c98b2f">と</text>
-        <text x="98" y="78" fill="#b04a8a">ち</text>
+      <g font-size="15" text-anchor="middle">
+        <text x="45" y="49" fill="#d9a23c">い</text>
+        <text x="67" y="49" fill="#4a6fb0">ろ</text>
+        <text x="89" y="49" fill="#5a9e54">は</text>
+        <text x="111" y="49" fill="#c1583f">に</text>
+        <text x="45" y="78" fill="#8a5fb0">ほ</text>
+        <text x="67" y="78" fill="#3aa6a0">へ</text>
+        <text x="89" y="78" fill="#c98b2f">と</text>
+        <text x="111" y="78" fill="#b04a8a">ち</text>
       </g>
       <text x="78" y="113" text-anchor="middle" font-size="11" fill="var(--ink-soft)">全部に色 → 散らかる</text>
       <rect x="184" y="16" width="116" height="84" rx="10" fill="none" stroke="var(--line)"/>
-      <g font-size="15" fill="var(--ink-soft)">
-        <text x="196" y="49">い</text>
-        <text x="218" y="49">ろ</text>
-        <text x="240" y="49" fill="var(--accent)">は</text>
-        <text x="262" y="49">に</text>
-        <text x="196" y="78">ほ</text>
-        <text x="218" y="78">へ</text>
-        <text x="240" y="78">と</text>
-        <text x="262" y="78">ち</text>
+      <g font-size="15" text-anchor="middle" fill="var(--ink-soft)">
+        <text x="209" y="49">い</text>
+        <text x="231" y="49">ろ</text>
+        <text x="253" y="49" fill="var(--accent)">は</text>
+        <text x="275" y="49">に</text>
+        <text x="209" y="78">ほ</text>
+        <text x="231" y="78">へ</text>
+        <text x="253" y="78">と</text>
+        <text x="275" y="78">ち</text>
       </g>
       <text x="242" y="113" text-anchor="middle" font-size="11" fill="var(--calm)">一字だけ色 → 効く</text>
     </svg>`,
