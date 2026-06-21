@@ -383,8 +383,8 @@ const TIPS_space = [
       <circle cx="280" cy="44" r="2.6" fill="var(--accent)"/>
       <text x="242" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">外＝内＋余白 → そろう</text>
     </svg>`,
-    apply:"外箱の角丸＝内箱の角丸＋間の余白で重ねる。曲率がなめらかに変わる『スーパー角丸（スーパー楕円）』が使えるなら、入れ子の角はいっそう自然になじむ。",
-    term:"同心円／スーパー楕円",
+    apply:"外箱の角丸＝内箱の角丸＋間の余白で重ねる。曲率がなめらかに変わる『スクワークル（超楕円）』が使えるなら、入れ子の角はいっそう自然になじむ。",
+    term:"同心円／スクワークル",
   },
   {
     id:"z-pattern",
@@ -685,9 +685,9 @@ const TIPS_hierarchy = [
     cat:"hierarchy",
     tags:["text"],
     title:"いくつあるか、先に言う",
-    claim:"3つ以上あるなら、まず「3つ」と数を告げる。",
+    claim:"先に総数を告げると、終わりまでの見通しが立つ。",
     why:"山道で『頂上まであと3つ目の休憩所』と言われると、ペースを配れて足取りが軽くなります。終わりの見えない上りは、同じ距離でも倍つらい。話も図も同じで、先に『これから3つ』と総数を告げると、聞く人は心の準備ができて、最後まで落ち着いて付き合えます。いつ終わるか分からない話を、集中して聞き通せる人はいません。",
-    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="総数を告げないと何個続くか分からず、先に『3つ』と数を示すと終わりが見えて落ち着いて読める">
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="総数を告げないと何個続くか分からず、先に総数を示すと終わりが見えて落ち着いて読める">
       <g fill="var(--ink-soft)">
         <circle cx="28" cy="28" r="3"/>
         <rect x="38" y="24" width="80" height="9" rx="3"/>
@@ -716,7 +716,7 @@ const TIPS_hierarchy = [
       </g>
       <text x="246" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">終わりが見える</text>
     </svg>`,
-    apply:"箇条書きや手順が3つ以上になったら、頭に「3つ」と総数を置く。番号を「1/3・2/3」と振るのも同じ効き目。",
+    apply:"箇条書きや手順が増えてきたら、頭に「全部でいくつ」と総数を置く。番号を「1/5・2/5」と分母つきで振るのも同じ効き目。",
     term:"",
   },
 ];
@@ -859,6 +859,34 @@ const TIPS_flow = [
       <text x="242" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">主役が残る</text>
     </svg>`,
     apply:"作り終えたら、目を細めて画面を眺める。最初に目に入る塊が主役なら成功。ぼやけて主役が立たないなら、強弱を付け直す。",
+    term:"",
+  },
+  {
+    id:"good-enough",
+    cat:"flow",
+    tags:[],
+    title:"完璧を、求めない",
+    claim:"100点を1回より、80点を2回。",
+    why:"スマホで写真を撮るとき、一枚で完璧に決めようと構え続けるより、まず一枚撮って画面で確かめ、気になる所を直してもう一枚撮るほうが、結局いい写真になります。図づくりも同じで、はじめから100点を狙うと手が止まり、直しもきかない。まず80点で形にして、見直してからもう一度直すほうが、同じ時間でずっと先まで行けます。完璧主義は、たいてい未完成のまま終わります。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="一発で100点を狙うと届かず止まり、80点を二度重ねるほうが同じ手間で先まで届く">
+      <!-- 悪い例: 一発で100点を狙うが届かず止まる -->
+      <line x1="24" y1="34" x2="128" y2="34" stroke="var(--ink-soft)" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <text x="126" y="30" text-anchor="end" font-size="10" fill="var(--ink-soft)">100点</text>
+      <rect x="60" y="60" width="34" height="28" rx="4" fill="var(--ink-soft)" opacity="0.5"/>
+      <line x1="77" y1="60" x2="77" y2="46" stroke="var(--ink-soft)" stroke-width="2" stroke-dasharray="3 3"/>
+      <text x="77" y="44" text-anchor="middle" font-size="13" fill="var(--ink-soft)">?</text>
+      <text x="77" y="108" text-anchor="middle" font-size="11" fill="var(--ink-soft)">一発で止まる</text>
+      <!-- 良い例: 80点を二度重ねて越える -->
+      <line x1="192" y1="34" x2="300" y2="34" stroke="var(--calm)" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <text x="298" y="30" text-anchor="end" font-size="10" fill="var(--calm)">100点</text>
+      <rect x="214" y="58" width="34" height="30" rx="4" fill="var(--calm)" opacity="0.5"/>
+      <text x="231" y="52" text-anchor="middle" font-size="10" fill="var(--calm)">80</text>
+      <rect x="256" y="26" width="34" height="62" rx="4" fill="var(--calm)"/>
+      <text x="273" y="60" text-anchor="middle" font-size="10" fill="var(--card)">＋80</text>
+      <circle cx="273" cy="26" r="3" fill="var(--accent)"/>
+      <text x="248" y="108" text-anchor="middle" font-size="11" fill="var(--calm)">二度で越える</text>
+    </svg>`,
+    apply:"100点を狙って固まりそうになったら、80点でいったん区切る。一周で仕上げず、二周目で直す前提で進める。",
     term:"",
   },
 ];
