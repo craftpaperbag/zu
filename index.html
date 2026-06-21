@@ -659,24 +659,30 @@ function hideModal(){
   if(lastFocused) lastFocused.focus();
 }
 
+// いま積んでいる履歴の深さ（つながりを辿った段数）。閉じるときに一気に戻すために使う。
+let closing = false;   // 閉じる操作で history を巻き戻している最中は、popstate で開き直さない
 // 一覧から開く（履歴を1つ積むので、ブラウザの「戻る」で閉じられる）
 function openTip(id){
   if(!TIPS.some(x=>x.id===id)) return;
   // モーダルが閉じているときだけ開き元を覚える（つながりを辿っても元の一枚へ戻れるように）
   if(modal.classList.contains("hidden")) lastFocused = document.activeElement;
-  history.pushState({tip:id,pushed:true}, "", baseURL().replace(/#.*$/,"") + "#tip=" + id);
+  // つながりを辿るたびに1段深くなる。閉じるときはこの段数ぶん一気に戻して全部畳む。
+  const depth = ((history.state && history.state.depth) || 0) + 1;
+  history.pushState({tip:id,pushed:true,depth}, "", baseURL().replace(/#.*$/,"") + "#tip=" + id);
   showModal(id);
 }
-// 前後送り：同じ詳細表示のなかでの移動なので履歴は積み替えるだけ（pushed の素性は保つ）
+// 前後送り：同じ詳細表示のなかでの移動なので履歴は積み替えるだけ（pushed・depth の素性は保つ）
 function navTip(id, dir){
-  const pushed = !!(history.state && history.state.pushed);
-  history.replaceState({tip:id,pushed}, "", baseURL().replace(/#.*$/,"") + "#tip=" + id);
+  const st = history.state || {};
+  history.replaceState({tip:id,pushed:!!st.pushed,depth:st.depth||0}, "", baseURL().replace(/#.*$/,"") + "#tip=" + id);
   showModal(id, dir);
 }
-// 閉じる：自分で積んだ履歴があるときだけ戻す。共有リンク直開きでは自前で閉じる（サイトから出てしまわない）
+// 閉じる：自分で積んだ段数を一気に巻き戻して全部畳む（つながりを辿っていても1回で閉じる）。
+// 共有リンク直開きでは戻る先がないので自前で閉じる（サイトから出てしまわない）。
 function closeModal(){
   if(modal.classList.contains("hidden")) return;
-  if(history.state && history.state.pushed){ history.back(); }
+  const st = history.state;
+  if(st && st.pushed){ closing = true; history.go(-(st.depth||1)); }
   else { hideModal(); history.replaceState(null,"",baseURL().replace(/#.*$/,"")); }
 }
 function stepTip(dir){
@@ -691,6 +697,14 @@ modalNext.onclick=()=>stepTip(1);
 
 // ブラウザの戻る/進むで URL の #tip に追従する
 window.addEventListener("popstate", ()=>{
+  // 閉じる操作で巻き戻している最中は、途中の段で開き直さず確実に畳む。
+  // 直開きの一枚に着地したときは、その #tip も消してから閉じる。
+  if(closing){
+    closing = false;
+    hideModal();
+    if(tipIdFromHash()) history.replaceState(null,"",baseURL().replace(/#.*$/,""));
+    return;
+  }
   const id = tipIdFromHash();
   if(id && TIPS.some(x=>x.id===id)) showModal(id);
   else hideModal();
