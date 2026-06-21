@@ -64,6 +64,7 @@ const TIPS_space = [
   {
     id:"proximity",
     cat:"space",
+    links:[{to:"belonging",rel:"akin"}],
     tags:[],
     title:"余白が、塊を作る",
     claim:"間を空けるだけで、情報はグループに分かれる。",
@@ -509,6 +510,7 @@ const TIPS_hierarchy = [
   {
     id:"dilute",
     cat:"hierarchy",
+    links:[{to:"fewer-colors",rel:"echo"},{to:"few-parallels",rel:"echo"},{to:"one-color",rel:"echo"}],
     tags:["text"],
     title:"増やすほど、薄まる",
     claim:"文字を足すほど、一文字の価値は下がる。",
@@ -785,6 +787,7 @@ const TIPS_flow = [
     id:"rough-first",
     cat:"flow",
     tags:[],
+    links:[{to:"show-early",rel:"then"}],
     title:"まず、下書きから",
     claim:"いきなり作り込まず、骨組みから確かめる。",
     why:"建物は、土台を据えてから壁を立てます。建ててしまってから基礎をずらすのは、とても大変だからです。図も同じで、色や飾りから手をつけると、あとで骨組みを直したくなったとき総崩れになる。まず大きな配置だけのラフで全体を確かめてから細部を詰めれば、やり直しが効きます。",
@@ -895,6 +898,7 @@ const TIPS_color = [
   {
     id:"one-color",
     cat:"color",
+    links:[{to:"fewer-colors",rel:"akin"}],
     tags:["hierarchy"],
     title:"一点だけ、色を許す",
     claim:"全部を目立たせると、何も目立たない。",
@@ -1010,6 +1014,7 @@ const TIPS_color = [
   {
     id:"soft-contrast",
     cat:"color",
+    links:[{to:"ensure-contrast",rel:"tension"}],
     tags:[],
     title:"真っ白×真っ黒は、避ける",
     claim:"純白に純黒は、まぶしくて疲れる。",

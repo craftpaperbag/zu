@@ -162,6 +162,24 @@
     .tocrow .toc-claim{white-space:normal;font-size:.85rem;}
     .tocrow .toc-go{display:none;}
   }
+  /* つながり（覚え書き同士のリンク）：彩度は足さず、アイコンと静かな言葉だけで種別を分ける */
+  .ties{border-top:1px solid var(--line);}
+  .ties-head{
+    display:flex;align-items:center;gap:.4rem;
+    font-size:.8rem;color:var(--ink-soft);margin-bottom:.5rem;letter-spacing:.04em;
+  }
+  .ties-list{display:flex;flex-direction:column;gap:.2rem;}
+  .tie{
+    display:flex;align-items:center;gap:.55rem;width:100%;text-align:left;
+    padding:.5rem .55rem;border-radius:12px;cursor:pointer;
+    color:var(--ink-soft);transition:background-color .15s ease;
+  }
+  .tie:hover{background:var(--paper);}
+  .tie .tie-ic{flex:0 0 auto;opacity:.7;}
+  .tie .tie-word{flex:0 0 auto;font-size:.78rem;opacity:.75;}
+  .tie .tie-title{flex:1 1 auto;min-width:0;color:var(--ink);font-weight:700;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .tie .tie-go{flex:0 0 auto;opacity:.4;}
   /* 固定バーの下端：スクロールする一覧が、すっと溶けて潜るように薄める */
   #filterbar::after{
     content:"";position:absolute;left:0;right:0;top:100%;height:18px;
@@ -355,6 +373,48 @@ const TIPS = [].concat(
    ▲▲▲ たねは以上。以下は描画ロジック（基本さわらない） ▲▲▲
    ========================================================= */
 
+/* ---- 覚え書き同士のつながり（リンク） ----
+   片側に links:[{to,rel}] を書けば、逆向きは自動で出る（両端に書かない）。
+   rel は4種。色は足さず、アイコンと静かな言葉だけで種別を分ける（semantic-colorを濁さない）。
+     echo    別の分野・側面で同じこと（対称）
+     akin    関連が深い話（対称）
+     tension 逆から見た／対になる話（対称）
+     then    前後で効いてくる（向きあり：書いた側→to が「この次に」、to から見ると「その前に」）   */
+const REL = {
+  echo:    { icon:"repeat",      sym:true,  word:"別の顔で" },
+  akin:    { icon:"link",        sym:true,  word:"近い話" },
+  tension: { icon:"git-compare", sym:true,  word:"逆から見ると" },
+  then:    { icon:"arrow-right", sym:false, word:"この次に",
+             back:{ icon:"arrow-left", word:"その前に" } },
+};
+const REL_ORDER = ["then","echo","akin","tension"];
+
+// 各idが受けている逆向きリンクを集める（描画前に1度だけ）
+const BACKLINKS = (()=>{
+  const map = {};
+  TIPS.forEach(t=>(t.links||[]).forEach(l=>{
+    (map[l.to] = map[l.to] || []).push({ to:t.id, rel:l.rel });
+  }));
+  return map;
+})();
+
+// あるTIPの「つながり」を表示用にまとめる（前向き＋逆向き、重複除去、種別順に整列）
+function tiesFor(t){
+  const seen = new Set(), out = [];
+  const add = (to, rel, back)=>{
+    if(!to || to===t.id || seen.has(to+"|"+rel)) return;
+    const target = TIPS.find(x=>x.id===to), spec = REL[rel];
+    if(!target || !spec) return;
+    seen.add(to+"|"+rel);
+    const view = (!spec.sym && back) ? spec.back : spec;
+    out.push({ to, title:target.title, icon:view.icon, word:view.word, rel });
+  };
+  (t.links||[]).forEach(l=>add(l.to, l.rel, false));
+  (BACKLINKS[t.id]||[]).forEach(l=>add(l.to, l.rel, true));
+  out.sort((a,b)=>REL_ORDER.indexOf(a.rel)-REL_ORDER.indexOf(b.rel));
+  return out;
+}
+
 let activeCat = "all";
 let keyword = "";
 let viewMode = "card";   // "card"=図つきカード / "list"=目次（図を省いた1行）
@@ -452,6 +512,23 @@ function cardRow(t){
   </article>`;
 }
 
+// つながり（モーダル内）：関連する覚え書きへの導線。なければ何も出さない
+function tiesBlock(t){
+  const ties = tiesFor(t);
+  if(!ties.length) return "";
+  const rows = ties.map(x=>`
+    <button data-tie="${x.to}" class="tie focusable" aria-label="${x.word} ${x.title} へ移る">
+      <i data-lucide="${x.icon}" class="w-3.5 h-3.5 tie-ic"></i>
+      <span class="tie-word">${x.word}</span>
+      <span class="tie-title maru">${x.title}</span>
+      <i data-lucide="chevron-right" class="w-3.5 h-3.5 tie-go"></i>
+    </button>`).join("");
+  return `<div class="ties mx-6 mt-5 pt-4">
+    <div class="ties-head"><i data-lucide="waypoints" class="w-3.5 h-3.5"></i>つながり</div>
+    <div class="ties-list">${rows}</div>
+  </div>`;
+}
+
 // 詳細（モーダル内）：全項目を表示
 function detail(t){
   return `
@@ -467,6 +544,7 @@ function detail(t){
       <p class="text-sm md:text-base" style="color:var(--ink-soft)">${hl(t.apply)}</p>
     </div>
     ${tagChips(t)}
+    ${tiesBlock(t)}
     ${t.term?`<p class="px-6 pb-6 pt-2 text-xs" style="color:var(--ink-soft)">用語：${t.term}</p>`:`<div class="pb-6"></div>`}
   `;
 }
@@ -559,6 +637,10 @@ function showModal(id, dir=0){
       window.scrollTo({top:0,behavior:"smooth"});
     };
   });
+  // つながりから別の覚え書きへ移る（履歴を積むので「戻る」で元の一枚に戻れる）
+  modalBody.querySelectorAll("button[data-tie]").forEach(b=>{
+    b.onclick=()=>openTip(b.dataset.tie);
+  });
   // 前後送りの状態を更新
   const idx = currentList.findIndex(x=>x.id===id);
   const has = idx>=0;
@@ -580,7 +662,8 @@ function hideModal(){
 // 一覧から開く（履歴を1つ積むので、ブラウザの「戻る」で閉じられる）
 function openTip(id){
   if(!TIPS.some(x=>x.id===id)) return;
-  lastFocused = document.activeElement;
+  // モーダルが閉じているときだけ開き元を覚える（つながりを辿っても元の一枚へ戻れるように）
+  if(modal.classList.contains("hidden")) lastFocused = document.activeElement;
   history.pushState({tip:id,pushed:true}, "", baseURL().replace(/#.*$/,"") + "#tip=" + id);
   showModal(id);
 }
