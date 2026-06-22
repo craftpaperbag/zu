@@ -596,6 +596,7 @@ const modalNext = document.getElementById("modal-next");
 const modalPos  = document.getElementById("modal-pos");
 let lastFocused = null;
 let currentId = null;   // いま開いている覚え書き
+let closingModal = false;   // バツ等で「全部巻き戻して閉じる」最中かどうか
 
 /* ---- URL（共有リンク）まわり ----
    絞り込みは ?cat=&q= に、開いている詳細は #tip=id に残す。
@@ -663,20 +664,25 @@ function hideModal(){
 function openTip(id){
   if(!TIPS.some(x=>x.id===id)) return;
   // モーダルが閉じているときだけ開き元を覚える（つながりを辿っても元の一枚へ戻れるように）
-  if(modal.classList.contains("hidden")) lastFocused = document.activeElement;
-  history.pushState({tip:id,pushed:true}, "", baseURL().replace(/#.*$/,"") + "#tip=" + id);
+  const wasHidden = modal.classList.contains("hidden");
+  if(wasHidden) lastFocused = document.activeElement;
+  // グリッドから何段潜ったか（depth）を積む。つながりを辿るほど1ずつ深くなる。
+  const depth = (wasHidden ? 0 : ((history.state && history.state.depth) || 0)) + 1;
+  history.pushState({tip:id,pushed:true,depth}, "", baseURL().replace(/#.*$/,"") + "#tip=" + id);
   showModal(id);
 }
-// 前後送り：同じ詳細表示のなかでの移動なので履歴は積み替えるだけ（pushed の素性は保つ）
+// 前後送り：同じ詳細表示のなかでの移動なので履歴は積み替えるだけ（pushed・depth は保つ）
 function navTip(id, dir){
-  const pushed = !!(history.state && history.state.pushed);
-  history.replaceState({tip:id,pushed}, "", baseURL().replace(/#.*$/,"") + "#tip=" + id);
+  const st = history.state || {};
+  history.replaceState({tip:id,pushed:!!st.pushed,depth:st.depth||0}, "", baseURL().replace(/#.*$/,"") + "#tip=" + id);
   showModal(id, dir);
 }
-// 閉じる：自分で積んだ履歴があるときだけ戻す。共有リンク直開きでは自前で閉じる（サイトから出てしまわない）
+// 閉じる：このセッションで積んだ depth ぶんを一気に巻き戻して確実に閉じる
+// （つながりを潜ってから閉じても、手前のtipが顔を出さない）。共有リンク直開きでは自前で閉じる。
 function closeModal(){
   if(modal.classList.contains("hidden")) return;
-  if(history.state && history.state.pushed){ history.back(); }
+  const depth = (history.state && history.state.depth) || 0;
+  if(depth>0){ closingModal = true; history.go(-depth); }
   else { hideModal(); history.replaceState(null,"",baseURL().replace(/#.*$/,"")); }
 }
 function stepTip(dir){
@@ -691,6 +697,13 @@ modalNext.onclick=()=>stepTip(1);
 
 // ブラウザの戻る/進むで URL の #tip に追従する
 window.addEventListener("popstate", ()=>{
+  // バツ等での一括巻き戻し中は、着地点に #tip が残っていても開かずに閉じる
+  if(closingModal){
+    closingModal = false;
+    hideModal();
+    if(tipIdFromHash()) history.replaceState(null,"",baseURL().replace(/#.*$/,""));
+    return;
+  }
   const id = tipIdFromHash();
   if(id && TIPS.some(x=>x.id===id)) showModal(id);
   else hideModal();
