@@ -8,6 +8,11 @@
 <meta property="og:title" content="zu — 伝わりやすい形について">
 <meta property="og:description" content="紙の上に文字を置いた時点で、それはもう図だ。見せて伝えるすべてを少し伝わりやすくするための、視覚の覚え書き。">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="zu">
+<meta property="og:url" content="https://craftpaperbag.github.io/zu/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="zu — 伝わりやすい形について">
+<meta name="twitter:description" content="見せて伝えるものは、ぜんぶ「図」。伝わりやすくするコツを集めました。">
 <meta name="theme-color" content="#f7f6f2">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-1HRQ4MCG9M"></script>
@@ -212,6 +217,11 @@
 <!-- ヘッダー / ヒーロー -->
 <header id="top" class="relative px-6 pt-10 pb-6 md:pt-12 md:pb-8 max-w-5xl xl:max-w-7xl mx-auto">
   <div class="absolute right-6 top-5 md:top-7 flex items-center gap-2">
+    <button id="share-site-top" type="button" aria-label="このサイトを共有"
+      class="focusable chip inline-flex items-center justify-center soft p-2 border"
+      style="color:var(--ink-soft);background:var(--card);border-color:var(--line);cursor:pointer">
+      <i data-lucide="share-2" class="w-4 h-4"></i>
+    </button>
     <button id="theme-toggle" type="button" aria-label="表示テーマを切り替える" aria-pressed="false"
       class="focusable chip inline-flex items-center justify-center soft p-2 border"
       style="color:var(--ink-soft);background:var(--card);border-color:var(--line);cursor:pointer">
@@ -397,6 +407,10 @@
   <div class="max-w-2xl mx-auto flex items-center justify-between gap-4">
     <p class="text-xs" style="color:var(--footer-ink-soft)">craftpaperbag</p>
     <div class="flex items-center gap-5">
+      <button id="share-site" type="button"
+        class="focusable inline-flex items-center gap-2 text-sm" style="color:var(--footer-ink);background:none;border:none;cursor:pointer">
+        <i data-lucide="share-2" class="w-4 h-4"></i>共有
+      </button>
       <button id="privacy-open" type="button"
         class="focusable inline-flex items-center gap-2 text-sm" style="color:var(--footer-ink);background:none;border:none;cursor:pointer">
         <i data-lucide="shield" class="w-4 h-4"></i>プライバシー
@@ -794,6 +808,10 @@ function showToast(msg){
 function tipShareURL(id){
   return location.origin + location.pathname + "#tip=" + id;
 }
+// このサイト自体への共有リンク（詳細#tipや絞り込みクエリは外した、素のトップURL）
+function siteShareURL(){
+  return location.origin + location.pathname;
+}
 function copyText(text){
   if(navigator.clipboard && navigator.clipboard.writeText){
     return navigator.clipboard.writeText(text);
@@ -810,21 +828,37 @@ function copyText(text){
     }catch(e){ reject(e); }
   });
 }
-// 共有：スマホ（タッチ機）はOSの共有シート、PCはリンクをコピー＋静かな通知
+// 共有の作法は1か所に：スマホ（タッチ機）はOSの共有シート、PCはリンクをコピー＋静かな通知。
+// 個別の覚え書きでも、サイト全体でも同じふるまいにする。
+function shareOrCopy({ title, text, url, copiedMsg }){
+  const canNativeShare = navigator.share && window.matchMedia("(pointer:coarse)").matches;
+  if(canNativeShare){
+    navigator.share({ title, text, url }).catch(()=>{});
+  }else{
+    copyText(url).then(()=>showToast(copiedMsg||"リンクをコピーしました"))
+                 .catch(()=>showToast("コピーできませんでした"));
+  }
+}
+// この覚え書き一枚を共有する
 function shareCurrentTip(){
   if(!currentId) return;
   const t=TIPS.find(x=>x.id===currentId);
   if(!t) return;
-  const url=tipShareURL(t.id);
-  const canNativeShare = navigator.share && window.matchMedia("(pointer:coarse)").matches;
-  if(canNativeShare){
-    navigator.share({ title:"zu — "+t.title, text:t.claim, url }).catch(()=>{});
-  }else{
-    copyText(url).then(()=>showToast("リンクをコピーしました"))
-                 .catch(()=>showToast("コピーできませんでした"));
-  }
+  shareOrCopy({ title:"zu — "+t.title, text:t.claim, url:tipShareURL(t.id),
+                copiedMsg:"リンクをコピーしました" });
+}
+// サイト自体を誰かに渡す（フッターの「共有」から）
+function shareSite(){
+  shareOrCopy({
+    title:"zu — 伝わりやすい形について",
+    text:"見せて伝えるものは、ぜんぶ「図」。伝わりやすくするコツ集。",
+    url:siteShareURL(),
+    copiedMsg:"このサイトのリンクをコピーしました"
+  });
 }
 document.getElementById("modal-share").onclick=shareCurrentTip;
+document.getElementById("share-site").onclick=shareSite;
+document.getElementById("share-site-top").onclick=shareSite;
 
 // モバイル：モーダル内の横スワイプで前後の覚え書きへ（既存の stepTip/slide に乗せる）
 const modalPanel=document.getElementById("modal-panel");
