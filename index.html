@@ -129,6 +129,16 @@
   @keyframes toastIn{from{opacity:0;transform:translate(-50%,-10px);}to{opacity:1;transform:translate(-50%,0);}}
   @media (prefers-reduced-motion:reduce){#toast.toast-show{animation:none!important;}}
   .tipcard{cursor:pointer;}
+  /* カードを開いている間、後ろの紙面をぼかして階層をはっきりさせる */
+  #modal-backdrop,#history-backdrop,#privacy-backdrop{
+    backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);}
+  /* 暗い地ではカードと背景が近く溶けやすい。奥をより沈め、カードに輪郭を足す */
+  :root[data-theme="dark"] #modal-backdrop,
+  :root[data-theme="dark"] #history-backdrop,
+  :root[data-theme="dark"] #privacy-backdrop{background:rgba(6,7,10,.66)!important;}
+  :root[data-theme="dark"] #modal-panel,
+  :root[data-theme="dark"] #history-panel,
+  :root[data-theme="dark"] #privacy-panel{border:1px solid var(--line);}
   #modal:not(.hidden) #modal-backdrop,
   #history-modal:not(.hidden) #history-backdrop,
   #privacy-modal:not(.hidden) #privacy-backdrop{animation:fade .2s ease both;}
