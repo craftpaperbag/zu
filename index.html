@@ -119,6 +119,10 @@
   mark.hl{background:var(--accent-soft);color:inherit;border-radius:3px;padding:0 .1em;}
   .fade-in{animation:fade .5s ease both;}
   @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+  /* 静かな通知：上からふっと降りて、しばらくして消える */
+  #toast.toast-show{animation:toastIn .22s ease both;}
+  @keyframes toastIn{from{opacity:0;transform:translate(-50%,-10px);}to{opacity:1;transform:translate(-50%,0);}}
+  @media (prefers-reduced-motion:reduce){#toast.toast-show{animation:none!important;}}
   .tipcard{cursor:pointer;}
   #modal:not(.hidden) #modal-backdrop,
   #history-modal:not(.hidden) #history-backdrop,
@@ -290,6 +294,11 @@
        前後送りで開き直しても大きさが変わらず、量が増えても読みやすい。 -->
   <div id="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title"
     class="relative softer card-shadow overflow-hidden flex flex-col w-full max-w-xl h-[85dvh] md:h-[82vh]" style="background:var(--card)">
+    <button id="modal-share" aria-label="この覚え書きへのリンクを共有"
+      class="focusable chip absolute right-14 top-3 z-10 inline-flex items-center justify-center w-9 h-9 soft border"
+      style="background:var(--card);border-color:var(--line);color:var(--ink-soft)">
+      <i data-lucide="link" class="w-[18px] h-[18px]"></i>
+    </button>
     <button id="modal-close" aria-label="閉じる"
       class="focusable chip absolute right-3 top-3 z-10 inline-flex items-center justify-center w-9 h-9 soft border"
       style="background:var(--card);border-color:var(--line);color:var(--ink-soft)">
@@ -394,7 +403,10 @@
       </button>
       <a href="https://github.com/craftpaperbag/zu" target="_blank" rel="noopener"
         class="focusable inline-flex items-center gap-2 text-sm" style="color:var(--footer-ink)">
-        <i data-lucide="github" class="w-4 h-4"></i>GitHub
+        <!-- GitHub マークは lucide 1.21.0 から外れている（ブランド系は商標配慮で削除）ため SVG を直接置く -->
+        <svg class="w-4 h-4" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/>
+        </svg>GitHub
       </a>
     </div>
   </div>
@@ -406,6 +418,13 @@
   style="background:var(--strong);color:var(--on-strong);border:none;cursor:pointer">
   <i data-lucide="arrow-up" class="w-5 h-5"></i>
 </button>
+
+<!-- 静かな通知（リンクをコピーした等）。色は足さず、濃い面に明るい字でそっと出す -->
+<div id="toast" role="status" aria-live="polite"
+  class="is-hidden fixed left-1/2 -translate-x-1/2 z-[70] inline-flex items-center gap-1.5 text-sm soft px-3.5 py-2 card-shadow"
+  style="top:calc(env(safe-area-inset-top, 0px) + 1rem);background:var(--strong);color:var(--on-strong)">
+  <i data-lucide="check" class="w-4 h-4"></i><span id="toast-msg"></span>
+</div>
 
 <script src="history.js"></script>
 <script src="tips.js"></script>
@@ -758,6 +777,72 @@ function stepTip(dir){
 modalPrev.onclick=()=>stepTip(-1);
 modalNext.onclick=()=>stepTip(1);
 
+// 静かな通知（リンクをコピーした等）。濃い面に明るい字で上からそっと出し、しばらくして消す。
+let toastTimer=null;
+function showToast(msg){
+  const el=document.getElementById("toast");
+  document.getElementById("toast-msg").textContent=msg;
+  el.classList.remove("is-hidden","toast-show");
+  void el.offsetWidth;
+  el.classList.add("toast-show");
+  lucide.createIcons();
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.add("is-hidden"),1900);
+}
+
+// この覚え書きへの共有リンク（絞り込みクエリは外し、その一枚が素直に開く #tip=id の絶対URL）
+function tipShareURL(id){
+  return location.origin + location.pathname + "#tip=" + id;
+}
+function copyText(text){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    return navigator.clipboard.writeText(text);
+  }
+  // クリップボードAPIが無い環境向けのフォールバック
+  return new Promise((resolve,reject)=>{
+    try{
+      const ta=document.createElement("textarea");
+      ta.value=text; ta.setAttribute("readonly","");
+      ta.style.position="fixed"; ta.style.opacity="0";
+      document.body.appendChild(ta); ta.select();
+      document.execCommand("copy"); document.body.removeChild(ta);
+      resolve();
+    }catch(e){ reject(e); }
+  });
+}
+// 共有：スマホ（タッチ機）はOSの共有シート、PCはリンクをコピー＋静かな通知
+function shareCurrentTip(){
+  if(!currentId) return;
+  const t=TIPS.find(x=>x.id===currentId);
+  if(!t) return;
+  const url=tipShareURL(t.id);
+  const canNativeShare = navigator.share && window.matchMedia("(pointer:coarse)").matches;
+  if(canNativeShare){
+    navigator.share({ title:"zu — "+t.title, text:t.claim, url }).catch(()=>{});
+  }else{
+    copyText(url).then(()=>showToast("リンクをコピーしました"))
+                 .catch(()=>showToast("コピーできませんでした"));
+  }
+}
+document.getElementById("modal-share").onclick=shareCurrentTip;
+
+// モバイル：モーダル内の横スワイプで前後の覚え書きへ（既存の stepTip/slide に乗せる）
+const modalPanel=document.getElementById("modal-panel");
+let swipeX=0, swipeY=0, swiping=false;
+modalPanel.addEventListener("touchstart",e=>{
+  if(e.touches.length!==1){ swiping=false; return; }
+  swipeX=e.touches[0].clientX; swipeY=e.touches[0].clientY; swiping=true;
+},{passive:true});
+modalPanel.addEventListener("touchend",e=>{
+  if(!swiping) return; swiping=false;
+  const dx=e.changedTouches[0].clientX-swipeX;
+  const dy=e.changedTouches[0].clientY-swipeY;
+  // 横移動が縦より十分大きいときだけ（本文の縦スクロールと喧嘩させない）
+  if(Math.abs(dx)>60 && Math.abs(dx)>Math.abs(dy)*1.5){
+    stepTip(dx<0 ? 1 : -1);   // 左へ払う＝次へ
+  }
+},{passive:true});
+
 // ブラウザの戻る/進むで URL の #tip に追従する
 window.addEventListener("popstate", ()=>{
   // バツ等での一括巻き戻し中は、着地点に #tip が残っていても開かずに閉じる
@@ -851,8 +936,24 @@ function trapTab(e, container){
   else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
 }
 
+// どのモーダルも閉じているか（一覧を素のまま見ているか）
+function allClosed(){
+  return modal.classList.contains("hidden")
+      && historyModal.classList.contains("hidden")
+      && privacyModal.classList.contains("hidden");
+}
+
 document.addEventListener("keydown",e=>{
   if(e.key==="Escape"){ closeModal(); closeHistory(); closePrivacy(); return; }
+  // 軽いショートカット（修飾キー併用・入力中は無効にして邪魔をしない）
+  if(!e.metaKey && !e.ctrlKey && !e.altKey){
+    const tag=(e.target.tagName||"").toLowerCase();
+    const typing = tag==="input" || tag==="textarea" || e.target.isContentEditable;
+    if(!typing && allClosed()){
+      if(e.key==="/"){ e.preventDefault(); qInput.focus(); qInput.select(); return; }
+      if(e.key==="r"||e.key==="R"){ e.preventDefault(); openRandom(); return; }
+    }
+  }
   // 詳細を開いている間は ← → で前後の覚え書きへ
   if(!modal.classList.contains("hidden")){
     if(e.key==="ArrowLeft"){ e.preventDefault(); stepTip(-1); }
@@ -891,11 +992,12 @@ function setView(mode){
 viewCardBtn.onclick=()=>setView("card");
 viewListBtn.onclick=()=>setView("list");
 
-// ランダムに一枚：いま絞り込まれている並びから無作為に開く
-document.getElementById("random").onclick=()=>{
+// ランダムに一枚：いま絞り込まれている並びから無作為に開く（ボタンと「r」キー共通）
+function openRandom(){
   if(!currentList.length) return;
   openTip(currentList[Math.floor(Math.random()*currentList.length)].id);
-};
+}
+document.getElementById("random").onclick=openRandom;
 
 // カテゴリ帯：末尾まで送ったら右端フェードを消す（.at-end）
 const catsEl = document.getElementById("cats");
@@ -953,8 +1055,10 @@ renderGrid();
   const meta = document.querySelector('meta[name="theme-color"]');
   function paint(){
     const dark = root.getAttribute("data-theme") === "dark";
-    // ダーク時は「明るくする」太陽、ライト時は「暗くする」月を見せる
-    btn.querySelector("i").setAttribute("data-lucide", dark ? "sun" : "moon");
+    // ダーク時は「明るくする」太陽、ライト時は「暗くする」月を見せる。
+    // 起動時に createIcons() が走ると <i> は <svg> に置き換わるため、毎回アイコンを組み直す
+    // （querySelector("i") に頼ると、置換後は null になって落ちる）。
+    btn.innerHTML = `<i data-lucide="${dark ? "sun" : "moon"}" class="w-4 h-4"></i>`;
     btn.setAttribute("aria-pressed", String(dark));
     btn.setAttribute("aria-label", dark ? "ライトモードに切り替える" : "ダークモードに切り替える");
     if(meta) meta.setAttribute("content", dark ? "#15171c" : "#f7f6f2");
