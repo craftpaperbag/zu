@@ -458,6 +458,7 @@ function buildPrompt(){
   visual:\`（下記ラフSVGを zu-drawing-rules-prompt.md に従って清書）\`,
   apply:"${get("f-apply")}",
   term:"${get("f-term")}",
+  added:"${today}",
 }`;
 
   return `# 依頼：zu に新しい Tip を1件追加する
@@ -486,7 +487,7 @@ ${buildIntent()}
    - \`viewBox="0 0 320 120"\`（縦積みのみ160まで）／外周16の余白／色は **CSS変数のみ・生hex禁止**
    - accent は1図に1箇所まで／Before/After は左=問題(くすませる)・右=解決(calm、注目点だけaccent)
    - 矢印は三角／棒グラフはゼロ始点／\`role="img"\` と一文の \`aria-label\` を必ず付ける／1図1主張
-2. \`tips.js\` の \`TIPS_${cat}\` 配列に上のオブジェクトを1ブロック追記する（id は一意の kebab-case。重複時は調整）。
+2. \`tips.js\` の \`TIPS_${cat}\` 配列に上のオブジェクトを1ブロック追記する（id は一意の kebab-case。重複時は調整。\`added\` は当日の日付 ${today} を入れる＝新着順の並べ替えに使う）。
 3. \`history.js\` の \`HISTORY\` 先頭に ${today} 付で1項目追記する（追加した title「${get("f-title")}」を利用者向けの言葉で）。
 4. 最小チェックリストで自己検算してから完了とする。`;
 }
