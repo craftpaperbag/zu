@@ -170,7 +170,7 @@
 ## 現在地と次の作業
 
 - 本番ファイルは **`index.html`**（単一HTML・GitHub Pages 直下配信）。`PROTOTYPE.html` はデザインの原型で、参照用に残してある（旧5枠のダミーが入っているので本番には使わない）。
-- SEEDS.md の種を 6カテゴリ・**計67種**の実 Tips に肉付け済み。データは `tips.js` 内のカテゴリ別配列（`TIPS_space` / `TIPS_hierarchy` / `TIPS_color` / `TIPS_text` / `TIPS_draw` / `TIPS_flow`）で持ち、`index.html` 側で1本の `TIPS` に連結している。更新履歴は `history.js` の `HISTORY` 配列。
+- SEEDS.md の種を 6カテゴリ・**計71種**の実 Tips に肉付け済み。データは `tips.js` 内のカテゴリ別配列（`TIPS_space` / `TIPS_hierarchy` / `TIPS_color` / `TIPS_text` / `TIPS_draw` / `TIPS_flow`）で持ち、`index.html` 側で1本の `TIPS` に連結している。更新履歴は `history.js` の `HISTORY` 配列。
 - SEEDS.md の統合候補は実装時に反映済み：typeface→`jump-rate`、kanizsa→`invisible-line`、「同じレイヤーは同じ見た目」→`repeat-form`、「濃い文字・薄い背景」＋「真っ白×真っ黒」→`soft-contrast`。
 - 種を増やすときは、該当カテゴリの配列に1ブロック足すだけ。横串はタグで張る。
 - 既知の許容例外：`color` / `draw` の「多色は散らかる」を示す **Before（悪い例）パネルに限り**、多色見本のため生hexを使っている（After とそれ以外の全図は CSS 変数のみ）。
