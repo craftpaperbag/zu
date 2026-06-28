@@ -263,12 +263,17 @@ function renderGrid(){
   lucide.createIcons();
 }
 
-// 折りたたみバーの要約：閉じていても今の絞り込み状態がわかるようにする。
-// カテゴリ → 並べ替え → 表示 → キーワード（あるときだけ）の順に、静かな字で並べる。
+// 折りたたみバーの中身。
+// ・閉じているとき：今の絞り込み状態（カテゴリ→並べ替え→表示→キーワード）を静かに要約する。
+// ・開いているとき：下の操作そのものが状態を示すので要約は出さず、区画の見出しとして一語だけ置く（重複を避ける）。
 function escAttr(s){ return String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
 function renderFilterSummary(){
   const el = document.getElementById("filter-summary");
   if(!el) return;
+  if(filtersOpen){
+    el.innerHTML = `<span class="fsum-label">検索・絞り込み</span>`;
+    return;
+  }
   const parts = [];
   // カテゴリ：そのカテゴリのアイコン＋ラベル（「すべて」は一覧アイコン）
   parts.push(`<span class="fsum-item"><i data-lucide="${activeCat==="all"?"layout-grid":catIcon(activeCat)}" class="w-3.5 h-3.5"></i>${activeCat==="all"?"すべて":catLabel(activeCat)}</span>`);
@@ -702,8 +707,10 @@ function paintFilterToggle(){
 function setFiltersOpen(open){
   filtersOpen = open;
   paintFilterToggle();
+  renderFilterSummary();        // 開閉で中身（要約⇔見出し）を切り替える
+  lucide.createIcons();
   // 閉じている間は #cats の幅が測れない（display:none）。開いた瞬間に右端フェードを測り直す。
-  if(open){ syncCatsEnd(); lucide.createIcons(); }
+  if(open){ syncCatsEnd(); }
 }
 filterToggle.onclick=()=>setFiltersOpen(!filtersOpen);
 

@@ -187,11 +187,13 @@
   }
   /* 検索・絞り込みの開閉バー：閉じている間も今の状態を要約して見せる摘み。
      開くと下に検索窓・カテゴリ・操作が出る。シェブロンは開閉で回す。 */
+  /* コンテンツのカード（白）と階層を取り違えないよう、操作バーは脇役として地色に寄せ、罫線だけで示す */
   #filter-toggle{
     display:flex;align-items:center;gap:.55rem;
     padding:.62rem .9rem;text-align:left;cursor:pointer;
-    background:var(--card);border-color:var(--line);color:var(--ink-soft);
+    background:var(--paper);border-color:var(--line);color:var(--ink-soft);
   }
+  #filter-summary .fsum-label{flex:0 0 auto;}
   #filter-summary{
     flex:1 1 auto;min-width:0;
     display:flex;align-items:center;gap:.5rem;
