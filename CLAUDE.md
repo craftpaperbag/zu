@@ -158,6 +158,21 @@
 
 ---
 
+## 点検（テスト）— 種を増やしたら必ず通す
+
+`tests/` に、データと作図ルールの崩れを機械的に拾う点検を置いている（依存なし・Node 標準のテストランナーのみ。ビルドなしの方針のまま）。**Tips の追加・図の修正・カテゴリやrelの変更をしたら、コミット前に必ず通す。**
+
+```sh
+node --test "tests/*.test.js"
+```
+
+- 点検内容：id の一意性・kebab-case、必須フィールド、`cat` の妥当性、Tips が `cat` と一致する `TIPS_*` 配列に置かれているか、`added` の日付、`links` の整合（実在 id・rel 4種・自己/両端リンク禁止）、`role="img"`＋一文の `aria-label`、SVG の `viewBox`、生hex禁止、accent は1図1箇所、`HISTORY` の書式と新着順。
+- **許容例外は `tests/zu.test.js` 冒頭の allowlist に id 指定で集約**している（生hexの色実演図、1注目点を2トークンで描く図）。新たに例外が要るときは、理由を添えてここに id を足す。安易に増やさない。
+- `CATEGORIES` / `REL` は `app.js` を唯一の定義元として `tests/loader.js` が読むので、カテゴリやrelを変えたら点検も自動で追従する。
+- **コミットのたびに点検する**には一度だけ `git config core.hooksPath .githooks` を実行（clone ごとに必要）。以降 `git commit` 前に `.githooks/pre-commit` が走り、失敗でコミットを止める。push / PR では `.github/workflows/test.yml` が同じ点検を回す。
+
+---
+
 ## 種の工房（`tane.html`）— 図とネタの設計 → プロンプト化
 
 作者が**図のラフとネタを直感的に置いて設計し、それを「Claude Code に渡せば実装される作図プロンプト」に変換する**単体ページ。`index.html` と同じ階層に置き、ビルドなしで動く。サイト本体からはリンクせず、`README.md` からのみ辿れる作者向けの工房。
