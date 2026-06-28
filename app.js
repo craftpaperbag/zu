@@ -134,20 +134,20 @@ function tagChips(t){
 }
 
 // 一覧カード：図を主役に、詳細（why/apply/タグ/用語）は隠す
+// 一覧カード：図を主役に。タイトル→図→why の3層だけに絞り、claim と「詳しく読む」CTA は省く。
+// （claim は詳細モーダルに残す。カード全体が role=button なので CTA 行は不要。サイト自身が説く「少ないほど目立つ」の実演。）
 function card(t){
   return `<article data-id="${t.id}" role="button" tabindex="0" aria-label="${t.title} — 詳しく読む"
     class="tipcard fade-in focusable soft card-shadow overflow-hidden${isVisited(t.id)?' is-read':''}" style="background:var(--card)">
     <div class="px-5 pt-4 flex items-center gap-1.5 text-xs" style="color:var(--ink-soft)">
       <i data-lucide="${catIcon(t.cat)}" class="w-3.5 h-3.5"></i>${catLabel(t.cat)}
       <span class="read-mark ml-auto"><i data-lucide="check" class="w-3 h-3"></i>既読</span>
+      ${sortMode==="new"&&fmtAdded(t.added)?`<span class="tnum ml-auto" style="opacity:.6">${fmtAdded(t.added)}</span>`:""}
     </div>
-    <h3 class="maru font-bold px-5 mt-1" style="font-size:1.25rem">${hl(t.title)}</h3>
-    <p class="px-5 mt-1 text-sm" style="color:var(--ink)">${hl(t.claim)}</p>
-    <div class="mx-5 my-3 p-3 soft" style="background:var(--paper)">${t.visual}</div>
-    <p class="px-5 text-sm leading-relaxed clamp2" style="color:var(--ink-soft)">${hl(t.why)}</p>
-    <div class="px-5 pb-4 pt-2 flex items-center justify-between gap-2 text-xs" style="color:var(--ink-soft)">
-      <span class="flex items-center gap-1"><span>詳しく読む</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></span>
-      ${sortMode==="new"&&fmtAdded(t.added)?`<span class="tnum" style="opacity:.7">${fmtAdded(t.added)}</span>`:""}
+    <h3 class="maru font-bold px-5 mt-1.5" style="font-size:1.25rem">${hl(t.title)}</h3>
+    <div class="mx-5 mt-3 p-3 soft" style="background:var(--paper)">${t.visual}</div>
+    <div class="px-5 pt-3 pb-4">
+      <p class="text-sm leading-relaxed clamp2" style="color:var(--ink-soft)">${hl(t.why)}</p>
     </div>
   </article>`;
 }
