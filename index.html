@@ -89,7 +89,10 @@
   .card-shadow{box-shadow:0 1px 2px rgba(26,29,36,.04),0 8px 24px -12px rgba(26,29,36,.12);}
   .chip{transition:all .18s ease;}
   .chip:active{transform:scale(.96);}
-  .tipcard{transition:transform .2s ease, box-shadow .2s ease;}
+  .tipcard{transition:transform .2s ease, box-shadow .2s ease, opacity .2s ease;}
+  /* 既読のカードは全体をそっと退かせ、まだ見ていない一枚を前に出す。触れれば元の濃さに戻る。 */
+  .tipcard.is-read{opacity:.55;}
+  .tipcard.is-read:hover,.tipcard.is-read:focus-visible{opacity:1;}
   .tipcard:hover{transform:translateY(-3px);box-shadow:0 4px 8px rgba(26,29,36,.05),0 18px 40px -16px rgba(26,29,36,.22);}
   ::selection{background:var(--accent-soft);}
   .focusable:focus-visible{outline:3px solid var(--accent);outline-offset:2px;}
@@ -122,7 +125,9 @@
   }
   /* 検索ヒット語のハイライト：朱の「点」ではなく、ごく薄い検索補助の地色 */
   mark.hl{background:var(--accent-soft);color:inherit;border-radius:3px;padding:0 .1em;}
-  .fade-in{animation:fade .5s ease both;}
+  /* 入場アニメは backwards で。both（forwards）だと終了後も to{opacity:1} を保持し続け、
+     既読カードの opacity:.55 を上書きしてしまう。前持ちだけ残し、終了後は宣言値に委ねる。 */
+  .fade-in{animation:fade .5s ease backwards;}
   @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
   /* 静かな通知：上からふっと降りて、しばらくして消える */
   #toast.toast-show{animation:toastIn .22s ease both;}
@@ -130,21 +135,25 @@
   @media (prefers-reduced-motion:reduce){#toast.toast-show{animation:none!important;}}
   .tipcard{cursor:pointer;}
   /* カードを開いている間、後ろの紙面をぼかして階層をはっきりさせる */
-  #modal-backdrop,#history-backdrop,#privacy-backdrop{
+  #modal-backdrop,#history-backdrop,#privacy-backdrop,#visited-backdrop{
     backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);}
   /* 暗い地ではカードと背景が近く溶けやすい。奥をより沈め、カードに輪郭を足す */
   :root[data-theme="dark"] #modal-backdrop,
   :root[data-theme="dark"] #history-backdrop,
-  :root[data-theme="dark"] #privacy-backdrop{background:rgba(6,7,10,.66)!important;}
+  :root[data-theme="dark"] #privacy-backdrop,
+  :root[data-theme="dark"] #visited-backdrop{background:rgba(6,7,10,.66)!important;}
   :root[data-theme="dark"] #modal-panel,
   :root[data-theme="dark"] #history-panel,
-  :root[data-theme="dark"] #privacy-panel{border:1px solid var(--line);}
+  :root[data-theme="dark"] #privacy-panel,
+  :root[data-theme="dark"] #visited-panel{border:1px solid var(--line);}
   #modal:not(.hidden) #modal-backdrop,
   #history-modal:not(.hidden) #history-backdrop,
-  #privacy-modal:not(.hidden) #privacy-backdrop{animation:fade .2s ease both;}
+  #privacy-modal:not(.hidden) #privacy-backdrop,
+  #visited-modal:not(.hidden) #visited-backdrop{animation:fade .2s ease both;}
   #modal:not(.hidden) #modal-panel,
   #history-modal:not(.hidden) #history-panel,
-  #privacy-modal:not(.hidden) #privacy-panel{animation:pop .22s ease both;}
+  #privacy-modal:not(.hidden) #privacy-panel,
+  #visited-modal:not(.hidden) #visited-panel{animation:pop .22s ease both;}
   @keyframes pop{from{opacity:0;transform:translateY(12px) scale(.985);}to{opacity:1;transform:none;}}
   /* 前後送りの中身は、進む向きに合わせてすっと滑り込ませる */
   .slide-next{animation:slideNext .26s cubic-bezier(.22,.61,.36,1) both;}
@@ -155,16 +164,16 @@
     .slide-next,.slide-prev,.fade-in{animation:none!important;}
   }
   /* 更新履歴：ピル型のミニマルなスクロールバー（角丸の内側に収める） */
-  #history-scroll{scrollbar-width:thin;scrollbar-color:var(--line) transparent;}
-  #history-scroll::-webkit-scrollbar{width:10px;}
-  #history-scroll::-webkit-scrollbar-track{background:transparent;}
-  #history-scroll::-webkit-scrollbar-thumb{
+  #history-scroll,#visited-scroll{scrollbar-width:thin;scrollbar-color:var(--line) transparent;}
+  #history-scroll::-webkit-scrollbar,#visited-scroll::-webkit-scrollbar{width:10px;}
+  #history-scroll::-webkit-scrollbar-track,#visited-scroll::-webkit-scrollbar-track{background:transparent;}
+  #history-scroll::-webkit-scrollbar-thumb,#visited-scroll::-webkit-scrollbar-thumb{
     background-color:var(--line);
     border-radius:999px;
     border:3px solid transparent;
     background-clip:padding-box;
   }
-  #history-scroll::-webkit-scrollbar-thumb:hover{background-color:var(--ink-soft);}
+  #history-scroll::-webkit-scrollbar-thumb:hover,#visited-scroll::-webkit-scrollbar-thumb:hover{background-color:var(--ink-soft);}
   /* 「すべて」の章立て見出し：朱は使わず、墨と罫だけの静かな区切り。
      項目（特に目次の行）とはっきり見分くよう、丸ゴシックで大きく太く。 */
   .sec-head{
@@ -193,6 +202,11 @@
     .tocrow .toc-claim{white-space:normal;font-size:.85rem;}
     .tocrow .toc-go{display:none;}
   }
+  /* 既読：もう見た覚え書きにそっと印を付ける。色は足さず、墨のうすい字と小さなチェックだけ。 */
+  .read-mark{display:none;align-items:center;gap:.25rem;color:var(--ink-soft);opacity:.6;font-size:.72rem;line-height:1;white-space:nowrap;}
+  .is-read .read-mark{display:inline-flex;}
+  .tocrow .read-mark{flex:0 0 auto;align-self:center;}
+  @media (max-width:639px){ .tocrow .read-mark{align-self:flex-start;} }
   /* つながり（覚え書き同士のリンク）：彩度は足さず、アイコンと静かな言葉だけで種別を分ける */
   .ties{border-top:1px solid var(--line);}
   .ties-head{
@@ -238,6 +252,11 @@
       class="focusable chip inline-flex items-center justify-center soft p-2 border"
       style="color:var(--ink-soft);background:var(--card);border-color:var(--line);cursor:pointer">
       <i data-lucide="moon" class="w-4 h-4"></i>
+    </button>
+    <button id="visited-open" type="button" aria-label="閲覧履歴（最近見た覚え書き）"
+      class="focusable chip inline-flex items-center justify-center soft p-2 border"
+      style="color:var(--ink-soft);background:var(--card);border-color:var(--line);cursor:pointer">
+      <i data-lucide="clock" class="w-4 h-4"></i>
     </button>
     <button id="history-open" type="button"
       class="focusable chip inline-flex items-center gap-1.5 text-sm soft px-3 py-1.5 border"
@@ -409,6 +428,38 @@
           <h4 class="maru font-bold" style="color:var(--ink)">本ポリシーの変更</h4>
           <p>本プライバシーポリシーの内容は、必要に応じて予告なく変更することがあります。変更後の内容は、当ページに掲載した時点から効力を生じるものとします。</p>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 閲覧履歴モーダル（最近見た覚え書き。ブラウザにだけ残り、いつでも消せる） -->
+<div id="visited-modal" class="hidden fixed inset-0 z-50 flex items-start md:items-center justify-center p-4 md:p-6" aria-hidden="true">
+  <div id="visited-backdrop" class="absolute inset-0" style="background:rgba(26,29,36,.45)"></div>
+  <div id="visited-panel" role="dialog" aria-modal="true" aria-labelledby="visited-title"
+    class="relative softer card-shadow overflow-hidden w-full max-w-xl max-h-[90vh]" style="background:var(--card)">
+    <button id="visited-close" aria-label="閉じる"
+      class="focusable chip absolute right-3 top-3 z-10 inline-flex items-center justify-center w-9 h-9 soft border"
+      style="background:var(--card);border-color:var(--line);color:var(--ink-soft)">
+      <i data-lucide="x" class="w-5 h-5"></i>
+    </button>
+    <div id="visited-scroll" class="overflow-y-auto max-h-[90vh]">
+      <div class="px-6 pt-6 flex items-center gap-1.5 text-xs" style="color:var(--ink-soft)">
+        <i data-lucide="clock" class="w-3.5 h-3.5"></i>閲覧履歴
+      </div>
+      <h3 id="visited-title" class="maru font-bold px-6 mt-1" style="font-size:1.35rem">最近見た覚え書き</h3>
+      <p class="px-6 mt-1 text-xs" style="color:var(--ink-soft)">この記録はお使いのブラウザにだけ残ります。下の「履歴を消す」でいつでも消せます。</p>
+      <div id="visited-body" class="px-6 pt-5 pb-3"></div>
+      <div id="visited-empty" class="hidden px-6 pt-6 pb-10 text-center text-sm" style="color:var(--ink-soft)">
+        <i data-lucide="telescope" class="w-7 h-7 mx-auto mb-2.5"></i>
+        <p>まだ何も見ていません。気になる一枚を開くと、ここに残ります。</p>
+      </div>
+      <div class="px-6 pb-7 pt-1">
+        <button id="visited-reset" type="button"
+          class="focusable chip inline-flex items-center gap-1.5 text-xs soft px-3 py-1.5 border"
+          style="color:var(--ink-soft);background:var(--card);border-color:var(--line);cursor:pointer">
+          <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>履歴を消す
+        </button>
       </div>
     </div>
   </div>
@@ -593,9 +644,10 @@ function tagChips(t){
 // 一覧カード：図を主役に、詳細（why/apply/タグ/用語）は隠す
 function card(t){
   return `<article data-id="${t.id}" role="button" tabindex="0" aria-label="${t.title} — 詳しく読む"
-    class="tipcard fade-in focusable soft card-shadow overflow-hidden" style="background:var(--card)">
+    class="tipcard fade-in focusable soft card-shadow overflow-hidden${isVisited(t.id)?' is-read':''}" style="background:var(--card)">
     <div class="px-5 pt-4 flex items-center gap-1.5 text-xs" style="color:var(--ink-soft)">
       <i data-lucide="${catIcon(t.cat)}" class="w-3.5 h-3.5"></i>${catLabel(t.cat)}
+      <span class="read-mark ml-auto"><i data-lucide="check" class="w-3 h-3"></i>既読</span>
     </div>
     <h3 class="maru font-bold px-5 mt-1" style="font-size:1.25rem">${hl(t.title)}</h3>
     <p class="px-5 mt-1 text-sm" style="color:var(--ink)">${hl(t.claim)}</p>
@@ -620,10 +672,11 @@ function sectionHead(cat,count){
 // 目次の1行：図を省き、タイトル＋claimで素早く拾い読みできる
 function cardRow(t){
   return `<article data-id="${t.id}" role="button" tabindex="0" aria-label="${t.title} — 詳しく読む"
-    class="tocrow focusable fade-in">
+    class="tocrow focusable fade-in${isVisited(t.id)?' is-read':''}">
     <span class="toc-title maru">${hl(t.title)}</span>
     <span class="toc-claim">${hl(t.claim)}</span>
     ${sortMode==="new"&&fmtAdded(t.added)?`<span class="toc-date tnum">${fmtAdded(t.added)}</span>`:""}
+    <span class="read-mark"><i data-lucide="check" class="w-3 h-3"></i>既読</span>
     <i data-lucide="chevron-right" class="w-4 h-4 toc-go"></i>
   </article>`;
 }
@@ -672,6 +725,7 @@ function detail(t){
 let currentList = [];
 
 function renderGrid(){
+  refreshVisitedSet();          // 既読の印を最新の状態で描く
   currentList = TIPS.filter(match);
   // 新着順：追加日の新しい順。同日は元の並び（＝カテゴリ順）を保つ安定ソート。
   // "YYYY-MM-DD" 文字列は辞書順がそのまま日付順になる。
@@ -716,6 +770,38 @@ function renderGrid(){
   lucide.createIcons();
 }
 
+/* ---- 閲覧履歴（最近見た覚え書き） ----
+   見た一枚を localStorage に新しい順で残す。サーバには送らず、いつでも消せる。
+   重複は最新の一回だけ残し、上限を超えた古い分は落とす。 */
+const VISITED_KEY = "zu-visited";
+const VISITED_MAX = 50;
+function loadVisited(){
+  try{
+    const arr = JSON.parse(localStorage.getItem(VISITED_KEY) || "[]");
+    return Array.isArray(arr) ? arr.filter(x=>x && typeof x.id==="string") : [];
+  }catch(e){ return []; }
+}
+function saveVisited(arr){
+  try{ localStorage.setItem(VISITED_KEY, JSON.stringify(arr)); }catch(e){}
+}
+function recordVisit(id){
+  if(!TIPS.some(x=>x.id===id)) return;
+  let arr = loadVisited().filter(x=>x.id!==id);   // 同じ一枚は最新の一回だけ
+  arr.unshift({ id, ts: Date.now() });            // 新しいものを先頭へ
+  saveVisited(arr.slice(0, VISITED_MAX));
+}
+// 既読の判定は一覧の描画で何度も呼ぶので、localStorage の読み直しを毎回せずセットに溜める
+let visitedSet = new Set();
+function refreshVisitedSet(){ visitedSet = new Set(loadVisited().map(v=>v.id)); }
+function isVisited(id){ return visitedSet.has(id); }
+// 一覧に出ているカード／目次行へ、いまの既読状態を反映する（再描画せず印だけ付け替える）
+function refreshReadMarks(){
+  refreshVisitedSet();
+  document.querySelectorAll("#grid article[data-id]").forEach(a=>{
+    a.classList.toggle("is-read", isVisited(a.dataset.id));
+  });
+}
+
 // 詳細モーダル
 const modal = document.getElementById("modal");
 const modalBody = document.getElementById("modal-body");
@@ -747,6 +833,7 @@ function showModal(id, dir=0){
   const t = TIPS.find(x=>x.id===id);
   if(!t) return;
   currentId = id;
+  recordVisit(id);            // 開いた覚え書きを閲覧履歴に残す（ブラウザのみ）
   modalBody.innerHTML = detail(t);
   // 進む向きに合わせて中身を滑り込ませる（新規に開くときはパネルの pop に任せる）
   modalBody.classList.remove("slide-next","slide-prev");
@@ -785,6 +872,7 @@ function hideModal(){
   modal.setAttribute("aria-hidden","true");
   document.body.style.overflow="";
   currentId = null;
+  refreshReadMarks();   // 見終えた一枚に「既読」の印が付く（一覧は再描画しない）
   if(lastFocused) lastFocused.focus();
 }
 
@@ -991,6 +1079,59 @@ document.getElementById("privacy-open").onclick=openPrivacy;
 document.getElementById("privacy-close").onclick=closePrivacy;
 document.getElementById("privacy-backdrop").onclick=closePrivacy;
 
+// 閲覧履歴モーダル（最近見た覚え書きを新しい順に。クリックで開ける／いつでも消せる）
+const visitedModal = document.getElementById("visited-modal");
+const visitedBody = document.getElementById("visited-body");
+let lastFocusedVisited = null;
+function renderVisited(){
+  // データから消えたidは静かに除く（古い履歴が残っていても落ちないように）
+  const list = loadVisited().filter(v=>TIPS.some(t=>t.id===v.id));
+  const empty = document.getElementById("visited-empty");
+  const reset = document.getElementById("visited-reset");
+  empty.classList.toggle("hidden", list.length>0);
+  reset.classList.toggle("is-hidden", list.length===0);
+  visitedBody.innerHTML = list.length ? `<div class="toc">` + list.map(v=>{
+    const t = TIPS.find(x=>x.id===v.id);
+    return `<article data-visited="${t.id}" role="button" tabindex="0" aria-label="${t.title} — 詳しく読む" class="tocrow focusable">
+      <span class="toc-title maru">${t.title}</span>
+      <span class="toc-claim">${t.claim}</span>
+      <i data-lucide="chevron-right" class="w-4 h-4 toc-go"></i>
+    </article>`;
+  }).join("") + `</div>` : "";
+  visitedBody.querySelectorAll("article[data-visited]").forEach(a=>{
+    const go=()=>{ closeVisited(); openTip(a.dataset.visited); };
+    a.onclick=go;
+    a.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(); } };
+  });
+  lucide.createIcons();
+}
+function openVisited(){
+  lastFocusedVisited = document.activeElement;
+  renderVisited();
+  visitedModal.classList.remove("hidden");
+  visitedModal.setAttribute("aria-hidden","false");
+  document.body.style.overflow="hidden";
+  lucide.createIcons();
+  document.getElementById("visited-scroll").scrollTop=0;
+  document.getElementById("visited-close").focus();
+}
+function closeVisited(){
+  if(visitedModal.classList.contains("hidden")) return;
+  visitedModal.classList.add("hidden");
+  visitedModal.setAttribute("aria-hidden","true");
+  document.body.style.overflow="";
+  if(lastFocusedVisited) lastFocusedVisited.focus();
+}
+document.getElementById("visited-open").onclick=openVisited;
+document.getElementById("visited-close").onclick=closeVisited;
+document.getElementById("visited-backdrop").onclick=closeVisited;
+document.getElementById("visited-reset").onclick=()=>{
+  saveVisited([]);
+  renderVisited();
+  refreshReadMarks();   // 一覧の「既読」の印も一緒に消す
+  showToast("閲覧履歴を消しました");
+};
+
 // モーダルが開いている間、Tab を中だけで巡回させる（背後に抜けさせない）
 function trapTab(e, container){
   if(e.key!=="Tab") return;
@@ -1006,11 +1147,12 @@ function trapTab(e, container){
 function allClosed(){
   return modal.classList.contains("hidden")
       && historyModal.classList.contains("hidden")
-      && privacyModal.classList.contains("hidden");
+      && privacyModal.classList.contains("hidden")
+      && visitedModal.classList.contains("hidden");
 }
 
 document.addEventListener("keydown",e=>{
-  if(e.key==="Escape"){ closeModal(); closeHistory(); closePrivacy(); return; }
+  if(e.key==="Escape"){ closeModal(); closeHistory(); closePrivacy(); closeVisited(); return; }
   // 軽いショートカット（修飾キー併用・入力中は無効にして邪魔をしない）
   if(!e.metaKey && !e.ctrlKey && !e.altKey){
     const tag=(e.target.tagName||"").toLowerCase();
@@ -1029,6 +1171,8 @@ document.addEventListener("keydown",e=>{
     trapTab(e, historyModal);
   } else if(!privacyModal.classList.contains("hidden")){
     trapTab(e, privacyModal);
+  } else if(!visitedModal.classList.contains("hidden")){
+    trapTab(e, visitedModal);
   }
 });
 
