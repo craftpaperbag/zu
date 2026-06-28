@@ -197,6 +197,11 @@
     .tocrow .toc-claim{white-space:normal;font-size:.85rem;}
     .tocrow .toc-go{display:none;}
   }
+  /* 既読：もう見た覚え書きにそっと印を付ける。色は足さず、墨のうすい字と小さなチェックだけ。 */
+  .read-mark{display:none;align-items:center;gap:.25rem;color:var(--ink-soft);opacity:.6;font-size:.72rem;line-height:1;white-space:nowrap;}
+  .is-read .read-mark{display:inline-flex;}
+  .tocrow .read-mark{flex:0 0 auto;align-self:center;}
+  @media (max-width:639px){ .tocrow .read-mark{align-self:flex-start;} }
   /* つながり（覚え書き同士のリンク）：彩度は足さず、アイコンと静かな言葉だけで種別を分ける */
   .ties{border-top:1px solid var(--line);}
   .ties-head{
@@ -634,9 +639,10 @@ function tagChips(t){
 // 一覧カード：図を主役に、詳細（why/apply/タグ/用語）は隠す
 function card(t){
   return `<article data-id="${t.id}" role="button" tabindex="0" aria-label="${t.title} — 詳しく読む"
-    class="tipcard fade-in focusable soft card-shadow overflow-hidden" style="background:var(--card)">
+    class="tipcard fade-in focusable soft card-shadow overflow-hidden${isVisited(t.id)?' is-read':''}" style="background:var(--card)">
     <div class="px-5 pt-4 flex items-center gap-1.5 text-xs" style="color:var(--ink-soft)">
       <i data-lucide="${catIcon(t.cat)}" class="w-3.5 h-3.5"></i>${catLabel(t.cat)}
+      <span class="read-mark ml-auto"><i data-lucide="check" class="w-3 h-3"></i>既読</span>
     </div>
     <h3 class="maru font-bold px-5 mt-1" style="font-size:1.25rem">${hl(t.title)}</h3>
     <p class="px-5 mt-1 text-sm" style="color:var(--ink)">${hl(t.claim)}</p>
@@ -661,10 +667,11 @@ function sectionHead(cat,count){
 // 目次の1行：図を省き、タイトル＋claimで素早く拾い読みできる
 function cardRow(t){
   return `<article data-id="${t.id}" role="button" tabindex="0" aria-label="${t.title} — 詳しく読む"
-    class="tocrow focusable fade-in">
+    class="tocrow focusable fade-in${isVisited(t.id)?' is-read':''}">
     <span class="toc-title maru">${hl(t.title)}</span>
     <span class="toc-claim">${hl(t.claim)}</span>
     ${sortMode==="new"&&fmtAdded(t.added)?`<span class="toc-date tnum">${fmtAdded(t.added)}</span>`:""}
+    <span class="read-mark"><i data-lucide="check" class="w-3 h-3"></i>既読</span>
     <i data-lucide="chevron-right" class="w-4 h-4 toc-go"></i>
   </article>`;
 }
@@ -713,6 +720,7 @@ function detail(t){
 let currentList = [];
 
 function renderGrid(){
+  refreshVisitedSet();          // 既読の印を最新の状態で描く
   currentList = TIPS.filter(match);
   // 新着順：追加日の新しい順。同日は元の並び（＝カテゴリ順）を保つ安定ソート。
   // "YYYY-MM-DD" 文字列は辞書順がそのまま日付順になる。
@@ -776,6 +784,17 @@ function recordVisit(id){
   let arr = loadVisited().filter(x=>x.id!==id);   // 同じ一枚は最新の一回だけ
   arr.unshift({ id, ts: Date.now() });            // 新しいものを先頭へ
   saveVisited(arr.slice(0, VISITED_MAX));
+}
+// 既読の判定は一覧の描画で何度も呼ぶので、localStorage の読み直しを毎回せずセットに溜める
+let visitedSet = new Set();
+function refreshVisitedSet(){ visitedSet = new Set(loadVisited().map(v=>v.id)); }
+function isVisited(id){ return visitedSet.has(id); }
+// 一覧に出ているカード／目次行へ、いまの既読状態を反映する（再描画せず印だけ付け替える）
+function refreshReadMarks(){
+  refreshVisitedSet();
+  document.querySelectorAll("#grid article[data-id]").forEach(a=>{
+    a.classList.toggle("is-read", isVisited(a.dataset.id));
+  });
 }
 
 // 詳細モーダル
@@ -848,6 +867,7 @@ function hideModal(){
   modal.setAttribute("aria-hidden","true");
   document.body.style.overflow="";
   currentId = null;
+  refreshReadMarks();   // 見終えた一枚に「既読」の印が付く（一覧は再描画しない）
   if(lastFocused) lastFocused.focus();
 }
 
@@ -1103,6 +1123,7 @@ document.getElementById("visited-backdrop").onclick=closeVisited;
 document.getElementById("visited-reset").onclick=()=>{
   saveVisited([]);
   renderVisited();
+  refreshReadMarks();   // 一覧の「既読」の印も一緒に消す
   showToast("閲覧履歴を消しました");
 };
 
