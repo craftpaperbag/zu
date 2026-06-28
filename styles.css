@@ -1,0 +1,193 @@
+  :root{
+    --ink:#1a1d24;        /* 主たる文字 */
+    --ink-soft:#5b6270;   /* 副次的な文字 */
+    --line:#cdd3dc;       /* 罫・境界（生成りの地でも見える程度に） */
+    --paper:#f7f6f2;      /* 紙の地 */
+    --card:#ffffff;
+    --accent:#e0533d;     /* 朱：ここぞの一点だけ */
+    --accent-soft:#fbeae6;
+    --calm:#3f7d6e;       /* 図の補助色（落ち着いた緑） */
+    --calm-soft:#e6f0ec;
+    /* 「濃い面に明るい字」を反転して使う要素（選択中チップ・トップへ戻る） */
+    --strong:#1a1d24; --on-strong:#ffffff;
+    /* フッターは両モードで落ち着いた濃い帯に保つ */
+    --footer-bg:#1a1d24; --footer-ink:#cfd4dd; --footer-ink-soft:#7c8492;
+  }
+  /* ダークモード：紙を暗く、墨を明るく。図はCSS変数参照なので一緒に反転する。 */
+  :root[data-theme="dark"]{
+    --ink:#e7e9ee;
+    --ink-soft:#a0a6b2;
+    --line:#383d49;
+    --paper:#15171c;
+    --card:#1e2128;
+    --accent:#f06a52;     /* 朱：暗所ではやや明るめに */
+    --accent-soft:#3a221d;
+    --calm:#5fa594;
+    --calm-soft:#1d2e2a;
+    --strong:#e7e9ee; --on-strong:#15171c;  /* 反転：明るいピルでアクティブ感を保つ */
+    --footer-bg:#1e2128; --footer-ink:#cfd4dd; --footer-ink-soft:#7c8492;
+  }
+  *{box-sizing:border-box;}
+  body{
+    font-family:'Zen Kaku Gothic New',sans-serif;
+    color:var(--ink);
+    background:var(--paper);
+    -webkit-font-smoothing:antialiased;
+    margin:0; line-height:1.8;
+    transition:background-color .3s ease, color .3s ease;
+  }
+  .maru{font-family:'Zen Maru Gothic',sans-serif;}
+  .tnum{font-feature-settings:"tnum";}
+  /* やわらかい角丸を全体の通奏低音にする（思想：現実に90°はない） */
+  .soft{border-radius:18px;}
+  .softer{border-radius:26px;}
+  .card-shadow{box-shadow:0 1px 2px rgba(26,29,36,.04),0 8px 24px -12px rgba(26,29,36,.12);}
+  .chip{transition:all .18s ease;}
+  .chip:active{transform:scale(.96);}
+  .tipcard{transition:transform .2s ease, box-shadow .2s ease, opacity .2s ease;}
+  /* 既読のカードは全体をそっと退かせ、まだ見ていない一枚を前に出す。触れれば元の濃さに戻る。 */
+  .tipcard.is-read{opacity:.55;}
+  .tipcard.is-read:hover,.tipcard.is-read:focus-visible{opacity:1;}
+  .tipcard:hover{transform:translateY(-3px);box-shadow:0 4px 8px rgba(26,29,36,.05),0 18px 40px -16px rgba(26,29,36,.22);}
+  ::selection{background:var(--accent-soft);}
+  .focusable:focus-visible{outline:3px solid var(--accent);outline-offset:2px;}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;}}
+  .is-hidden{display:none!important;}
+  /* 一覧カードの why は2行で抑え、図を主役に保ったまま「命」を覗かせる */
+  .clamp2{
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  /* モーダルの前後送り：端では押せないことを見た目でも伝える */
+  #modal-prev[disabled],#modal-next[disabled]{opacity:.35;cursor:default;pointer-events:none;}
+  /* スマホ：カテゴリを折り返さず横1列スクロールにし、占有する高さを抑える */
+  @media (max-width:767px){
+    #cats{
+      flex-wrap:nowrap;
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;            /* スクロールバーは隠す（chip だけ見せる） */
+      /* px-6(1.5rem) ぶん外へ広げて端まで気持ちよくスクロールさせる */
+      margin-left:-1.5rem; margin-right:-1.5rem;
+      padding-left:1.5rem; padding-right:1.5rem;
+      /* 右端をふっと薄めて「まだ続く」と気づかせる（末尾まで送ると .at-end で消える） */
+      -webkit-mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent);
+      mask-image:linear-gradient(to right,#000 calc(100% - 28px),transparent);
+    }
+    #cats.at-end{-webkit-mask-image:none;mask-image:none;}
+    #cats::-webkit-scrollbar{display:none;}
+    #cats>button{flex:0 0 auto;}      /* chip を縮めず横に流す */
+  }
+  /* 検索ヒット語のハイライト：朱の「点」ではなく、ごく薄い検索補助の地色 */
+  mark.hl{background:var(--accent-soft);color:inherit;border-radius:3px;padding:0 .1em;}
+  /* 入場アニメは backwards で。both（forwards）だと終了後も to{opacity:1} を保持し続け、
+     既読カードの opacity:.55 を上書きしてしまう。前持ちだけ残し、終了後は宣言値に委ねる。 */
+  .fade-in{animation:fade .5s ease backwards;}
+  @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+  /* 静かな通知：上からふっと降りて、しばらくして消える */
+  #toast.toast-show{animation:toastIn .22s ease both;}
+  @keyframes toastIn{from{opacity:0;transform:translate(-50%,-10px);}to{opacity:1;transform:translate(-50%,0);}}
+  @media (prefers-reduced-motion:reduce){#toast.toast-show{animation:none!important;}}
+  .tipcard{cursor:pointer;}
+  /* カードを開いている間、後ろの紙面をぼかして階層をはっきりさせる */
+  #modal-backdrop,#history-backdrop,#privacy-backdrop,#visited-backdrop{
+    backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);}
+  /* 暗い地ではカードと背景が近く溶けやすい。奥をより沈め、カードに輪郭を足す */
+  :root[data-theme="dark"] #modal-backdrop,
+  :root[data-theme="dark"] #history-backdrop,
+  :root[data-theme="dark"] #privacy-backdrop,
+  :root[data-theme="dark"] #visited-backdrop{background:rgba(6,7,10,.66)!important;}
+  :root[data-theme="dark"] #modal-panel,
+  :root[data-theme="dark"] #history-panel,
+  :root[data-theme="dark"] #privacy-panel,
+  :root[data-theme="dark"] #visited-panel{border:1px solid var(--line);}
+  #modal:not(.hidden) #modal-backdrop,
+  #history-modal:not(.hidden) #history-backdrop,
+  #privacy-modal:not(.hidden) #privacy-backdrop,
+  #visited-modal:not(.hidden) #visited-backdrop{animation:fade .2s ease both;}
+  #modal:not(.hidden) #modal-panel,
+  #history-modal:not(.hidden) #history-panel,
+  #privacy-modal:not(.hidden) #privacy-panel,
+  #visited-modal:not(.hidden) #visited-panel{animation:pop .22s ease both;}
+  @keyframes pop{from{opacity:0;transform:translateY(12px) scale(.985);}to{opacity:1;transform:none;}}
+  /* 前後送りの中身は、進む向きに合わせてすっと滑り込ませる */
+  .slide-next{animation:slideNext .26s cubic-bezier(.22,.61,.36,1) both;}
+  .slide-prev{animation:slidePrev .26s cubic-bezier(.22,.61,.36,1) both;}
+  @keyframes slideNext{from{opacity:0;transform:translateX(26px);}to{opacity:1;transform:none;}}
+  @keyframes slidePrev{from{opacity:0;transform:translateX(-26px);}to{opacity:1;transform:none;}}
+  @media (prefers-reduced-motion:reduce){
+    .slide-next,.slide-prev,.fade-in{animation:none!important;}
+  }
+  /* 更新履歴：ピル型のミニマルなスクロールバー（角丸の内側に収める） */
+  #history-scroll,#visited-scroll{scrollbar-width:thin;scrollbar-color:var(--line) transparent;}
+  #history-scroll::-webkit-scrollbar,#visited-scroll::-webkit-scrollbar{width:10px;}
+  #history-scroll::-webkit-scrollbar-track,#visited-scroll::-webkit-scrollbar-track{background:transparent;}
+  #history-scroll::-webkit-scrollbar-thumb,#visited-scroll::-webkit-scrollbar-thumb{
+    background-color:var(--line);
+    border-radius:999px;
+    border:3px solid transparent;
+    background-clip:padding-box;
+  }
+  #history-scroll::-webkit-scrollbar-thumb:hover,#visited-scroll::-webkit-scrollbar-thumb:hover{background-color:var(--ink-soft);}
+  /* 「すべて」の章立て見出し：朱は使わず、墨と罫だけの静かな区切り。
+     項目（特に目次の行）とはっきり見分くよう、丸ゴシックで大きく太く。 */
+  .sec-head{
+    display:flex;align-items:center;gap:.55rem;
+    margin:2.5rem 0 1rem;padding-bottom:.55rem;
+    border-bottom:2px solid var(--line);
+  }
+  .sec-head:first-child{margin-top:.5rem;}
+  .sec-head .sec-label{font-family:'Zen Maru Gothic',sans-serif;font-weight:700;font-size:1.4rem;color:var(--ink);}
+  .sec-head .sec-count{font-size:.85rem;color:var(--ink-soft);opacity:.85;}
+  /* 目次（list）表示：図を省いた1行。タイトル＋claimで素早く拾い読みする */
+  .toc{display:flex;flex-direction:column;}
+  .tocrow{
+    display:flex;align-items:baseline;gap:.75rem;width:100%;text-align:left;
+    padding:.7rem .25rem;border-bottom:1px solid var(--line);cursor:pointer;
+    transition:background-color .15s ease;
+  }
+  .tocrow:hover{background:var(--card);}
+  .tocrow .toc-title{font-weight:700;color:var(--ink);flex:0 0 auto;}
+  .tocrow .toc-claim{color:var(--ink-soft);font-size:.9rem;flex:1 1 auto;min-width:0;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .tocrow .toc-go{color:var(--ink-soft);opacity:.5;flex:0 0 auto;}
+  .tocrow .toc-date{color:var(--ink-soft);opacity:.7;font-size:.78rem;flex:0 0 auto;}
+  @media (max-width:639px){
+    .tocrow{flex-direction:column;gap:.15rem;}
+    .tocrow .toc-claim{white-space:normal;font-size:.85rem;}
+    .tocrow .toc-go{display:none;}
+  }
+  /* 既読：もう見た覚え書きにそっと印を付ける。色は足さず、墨のうすい字と小さなチェックだけ。 */
+  .read-mark{display:none;align-items:center;gap:.25rem;color:var(--ink-soft);opacity:.6;font-size:.72rem;line-height:1;white-space:nowrap;}
+  .is-read .read-mark{display:inline-flex;}
+  .tocrow .read-mark{flex:0 0 auto;align-self:center;}
+  @media (max-width:639px){ .tocrow .read-mark{align-self:flex-start;} }
+  /* つながり（覚え書き同士のリンク）：彩度は足さず、アイコンと静かな言葉だけで種別を分ける */
+  .ties{border-top:1px solid var(--line);}
+  .ties-head{
+    display:flex;align-items:center;gap:.4rem;
+    font-size:.8rem;color:var(--ink-soft);margin-bottom:.5rem;letter-spacing:.04em;
+  }
+  .ties-list{display:flex;flex-direction:column;gap:.2rem;}
+  .tie{
+    display:flex;align-items:center;gap:.55rem;width:100%;text-align:left;
+    padding:.5rem .55rem;border-radius:12px;cursor:pointer;
+    color:var(--ink-soft);transition:background-color .15s ease;
+  }
+  .tie:hover{background:var(--paper);}
+  .tie .tie-ic{flex:0 0 auto;opacity:.7;}
+  .tie .tie-word{flex:0 0 auto;font-size:.78rem;opacity:.75;}
+  .tie .tie-title{flex:1 1 auto;min-width:0;color:var(--ink);font-weight:700;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .tie .tie-go{flex:0 0 auto;opacity:.4;}
+  /* 固定バーの下端：スクロールする一覧が、すっと溶けて潜るように薄める */
+  #filterbar::after{
+    content:"";position:absolute;left:0;right:0;top:100%;height:18px;
+    background:linear-gradient(var(--paper),transparent);pointer-events:none;
+  }
+  /* 一覧の操作トグル（並び順・表示）：カテゴリ選択（濃い面のチップ）と取り違えないよう、
+     別種の見た目にする——薄い溝に静かな摘みが乗る“スイッチ”。アイコンは付けず字だけ。色は足さない。 */
+  .viewseg{display:inline-flex;gap:2px;padding:3px;border:none;background:var(--line);border-radius:999px;}
+  .viewseg button{display:inline-flex;align-items:center;padding:.32rem .72rem;border-radius:999px;
+    font-size:.78rem;line-height:1;color:var(--ink-soft);background:transparent;border:none;cursor:pointer;transition:all .15s ease;}
+  .viewseg button[aria-pressed="true"]{background:var(--card);color:var(--ink);font-weight:700;box-shadow:0 1px 2px rgba(26,29,36,.12);}
