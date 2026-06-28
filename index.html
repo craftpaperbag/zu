@@ -187,6 +187,7 @@
   .tocrow .toc-claim{color:var(--ink-soft);font-size:.9rem;flex:1 1 auto;min-width:0;
     overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .tocrow .toc-go{color:var(--ink-soft);opacity:.5;flex:0 0 auto;}
+  .tocrow .toc-date{color:var(--ink-soft);opacity:.7;font-size:.78rem;flex:0 0 auto;}
   @media (max-width:639px){
     .tocrow{flex-direction:column;gap:.15rem;}
     .tocrow .toc-claim{white-space:normal;font-size:.85rem;}
@@ -281,6 +282,14 @@
   <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 mt-3">
     <div id="count" class="text-sm" style="color:var(--ink-soft)"></div>
     <div class="flex items-center gap-2 shrink-0">
+      <div id="sort-seg" class="viewseg soft focusable" role="group" aria-label="並び順を切り替える">
+        <button id="sort-cat" type="button" aria-label="標準（カテゴリ順）で並べる" aria-pressed="true">
+          <i data-lucide="layers" class="w-4 h-4"></i>標準
+        </button>
+        <button id="sort-new" type="button" aria-label="新着順で並べる" aria-pressed="false">
+          <i data-lucide="clock" class="w-4 h-4"></i>新着
+        </button>
+      </div>
       <div id="view-seg" class="viewseg soft focusable" role="group" aria-label="一覧の表示を切り替える">
         <button id="view-card" type="button" aria-label="カード表示" aria-pressed="true">
           <i data-lucide="layout-grid" class="w-4 h-4"></i>カード
@@ -524,6 +533,12 @@ function tiesFor(t){
 let activeCat = "all";
 let keyword = "";
 let viewMode = "card";   // "card"=図つきカード / "list"=目次（図を省いた1行）
+let sortMode = "cat";    // "cat"=カテゴリ順（既定） / "new"=新着順（追加日の新しい順）
+
+// 追加日（"YYYY-MM-DD"）を静かに見せる表記に整える。空や不正なら空文字。
+function fmtAdded(s){
+  return (typeof s==="string" && /^\d{4}-\d{2}-\d{2}$/.test(s)) ? s.replace(/-/g,".") : "";
+}
 const catLabel = id => (CATEGORIES.find(c=>c.id===id)||{}).label || "";
 const catIcon  = id => (CATEGORIES.find(c=>c.id===id)||{}).icon  || "tag";
 
@@ -593,8 +608,9 @@ function card(t){
     <p class="px-5 mt-1 text-sm" style="color:var(--ink)">${hl(t.claim)}</p>
     <div class="mx-5 my-3 p-3 soft" style="background:var(--paper)">${t.visual}</div>
     <p class="px-5 text-sm leading-relaxed clamp2" style="color:var(--ink-soft)">${hl(t.why)}</p>
-    <div class="px-5 pb-4 pt-2 flex items-center gap-1 text-xs" style="color:var(--ink-soft)">
-      <span>詳しく読む</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+    <div class="px-5 pb-4 pt-2 flex items-center justify-between gap-2 text-xs" style="color:var(--ink-soft)">
+      <span class="flex items-center gap-1"><span>詳しく読む</span><i data-lucide="chevron-right" class="w-3.5 h-3.5"></i></span>
+      ${sortMode==="new"&&fmtAdded(t.added)?`<span class="tnum" style="opacity:.7">${fmtAdded(t.added)}</span>`:""}
     </div>
   </article>`;
 }
@@ -614,6 +630,7 @@ function cardRow(t){
     class="tocrow focusable fade-in">
     <span class="toc-title maru">${hl(t.title)}</span>
     <span class="toc-claim">${hl(t.claim)}</span>
+    ${sortMode==="new"&&fmtAdded(t.added)?`<span class="toc-date tnum">${fmtAdded(t.added)}</span>`:""}
     <i data-lucide="chevron-right" class="w-4 h-4 toc-go"></i>
   </article>`;
 }
@@ -651,7 +668,10 @@ function detail(t){
     </div>
     ${tagChips(t)}
     ${tiesBlock(t)}
-    ${t.term?`<p class="px-6 pb-6 pt-2 text-xs" style="color:var(--ink-soft)">用語：${t.term}</p>`:`<div class="pb-6"></div>`}
+    <div class="px-6 pb-6 pt-2 flex items-baseline justify-between gap-3 text-xs" style="color:var(--ink-soft)">
+      <span>${t.term?`用語：${t.term}`:""}</span>
+      ${fmtAdded(t.added)?`<span class="tnum shrink-0" style="opacity:.7">追加 ${fmtAdded(t.added)}</span>`:""}
+    </div>
   `;
 }
 
@@ -660,13 +680,22 @@ let currentList = [];
 
 function renderGrid(){
   currentList = TIPS.filter(match);
+  // 新着順：追加日の新しい順。同日は元の並び（＝カテゴリ順）を保つ安定ソート。
+  // "YYYY-MM-DD" 文字列は辞書順がそのまま日付順になる。
+  if(sortMode==="new"){
+    currentList = currentList
+      .map((t,i)=>[t,i])
+      .sort((a,b)=> (b[0].added||"").localeCompare(a[0].added||"") || a[1]-b[1])
+      .map(p=>p[0]);
+  }
   const grid = document.getElementById("grid");
   const empty = document.getElementById("empty");
   const count = document.getElementById("count");
   const item = viewMode==="list" ? cardRow : card;
   // カード表示はレスポンシブグリッド、目次表示は1列。区画ごとに付け外しする。
   const gridCls = "grid gap-5 md:grid-cols-2 xl:grid-cols-3";
-  if(activeCat==="all"){
+  // 章立て（カテゴリ見出し）は「すべて」かつカテゴリ順のときだけ。新着順は全カテゴリ横断でフラットに並べる。
+  if(activeCat==="all" && sortMode!=="new"){
     // 「すべて」：カテゴリで章立てして全体像を見せる（0件の区画は出さない）
     grid.className = "";
     grid.innerHTML = CATEGORIES.map(c=>{
@@ -678,7 +707,7 @@ function renderGrid(){
       return sectionHead(c.id, items.length) + body;
     }).join("");
   } else {
-    // 特定カテゴリ：見出しは冗長なのでフラットに並べる
+    // 特定カテゴリ、または新着順：見出しを出さずフラットに並べる
     grid.className = viewMode==="list" ? "toc" : gridCls;
     grid.innerHTML = currentList.map(item).join("");
   }
@@ -1036,6 +1065,24 @@ function setView(mode){
 viewCardBtn.onclick=()=>setView("card");
 viewListBtn.onclick=()=>setView("list");
 
+// 並べ替え（カテゴリ順 / 新着順）：選択を localStorage に保存（表示切替と同型）
+const sortCatBtn = document.getElementById("sort-cat");
+const sortNewBtn = document.getElementById("sort-new");
+function paintSortSeg(){
+  sortCatBtn.setAttribute("aria-pressed", String(sortMode==="cat"));
+  sortNewBtn.setAttribute("aria-pressed", String(sortMode==="new"));
+}
+function setSort(mode){
+  if(mode!=="cat" && mode!=="new") return;
+  if(mode===sortMode){ return; }
+  sortMode = mode;
+  try{ localStorage.setItem("zu-sort", mode); }catch(e){}
+  paintSortSeg();
+  renderGrid();
+}
+sortCatBtn.onclick=()=>setSort("cat");
+sortNewBtn.onclick=()=>setSort("new");
+
 // ランダムに一枚：いま絞り込まれている並びから無作為に開く（ボタンと「r」キー共通）
 function openRandom(){
   if(!currentList.length) return;
@@ -1076,6 +1123,9 @@ syncScrollUI();
   // 表示の好み（カード/目次）を復元（URLには載せず localStorage のみ）
   try{ const v = localStorage.getItem("zu-view"); if(v==="list"||v==="card") viewMode = v; }catch(e){}
   paintViewSeg();
+  // 並べ替えの好み（カテゴリ順/新着順）を復元（URLには載せず localStorage のみ）
+  try{ const s = localStorage.getItem("zu-sort"); if(s==="cat"||s==="new") sortMode = s; }catch(e){}
+  paintSortSeg();
 })();
 
 renderCats();

@@ -2,12 +2,14 @@
    ▼▼▼ ここだけ触れば増やせる：Tipsのたね ▼▼▼
    why    = 現実世界の観察・例え（このサイトの命）
    visual = SVG/HTML直描きの図（主役・6〜7割）
+   added  = 追加日（YYYY-MM-DD）。種を足した日を入れる（新着順の並べ替えに使う）。
    種を増やすときは、該当カテゴリの配列に1ブロック足すだけ。
    1本につなぐ処理（const TIPS）は index.html 側にある。
    ========================================================= */
 const TIPS_space = [
   {
     id:"outer-margin",
+    added:"2026-06-17",
     cat:"space",
     links:[{to:"line-height",rel:"akin"},{to:"title-space",rel:"akin"}],
     tags:[],
@@ -37,6 +39,7 @@ const TIPS_space = [
   },
   {
     id:"line-length",
+    added:"2026-06-17",
     cat:"space",
     links:[{to:"line-height",rel:"akin"},{to:"thirteen-chars",rel:"akin"}],
     tags:[],
@@ -65,6 +68,7 @@ const TIPS_space = [
   },
   {
     id:"proximity",
+    added:"2026-06-17",
     cat:"space",
     links:[{to:"belonging",rel:"akin"}],
     tags:[],
@@ -92,6 +96,7 @@ const TIPS_space = [
   },
   {
     id:"belonging",
+    added:"2026-06-17",
     cat:"space",
     tags:[],
     title:"余白の広さが、所属を決める",
@@ -124,6 +129,7 @@ const TIPS_space = [
   },
   {
     id:"title-space",
+    added:"2026-06-17",
     cat:"space",
     links:[{to:"proximity",rel:"echo"}],
     tags:[],
@@ -155,6 +161,7 @@ const TIPS_space = [
   },
   {
     id:"invisible-line",
+    added:"2026-06-17",
     cat:"space",
     links:[{to:"belonging",rel:"akin"}],
     tags:["draw"],
@@ -183,6 +190,7 @@ const TIPS_space = [
   },
   {
     id:"line-height",
+    added:"2026-06-17",
     cat:"space",
     tags:[],
     title:"行間は、空けておく",
@@ -211,6 +219,7 @@ const TIPS_space = [
   },
   {
     id:"less-stands-out",
+    added:"2026-06-17",
     cat:"space",
     links:[{to:"one-color",rel:"echo"},{to:"few-parallels",rel:"akin"}],
     tags:["hierarchy"],
@@ -232,6 +241,7 @@ const TIPS_space = [
   },
   {
     id:"one-message",
+    added:"2026-06-17",
     cat:"space",
     links:[{to:"less-stands-out",rel:"akin"},{to:"no-lost-reader",rel:"akin"}],
     tags:["hierarchy"],
@@ -259,6 +269,7 @@ const TIPS_space = [
   },
   {
     id:"no-lost-reader",
+    added:"2026-06-17",
     cat:"space",
     links:[{to:"proximity",rel:"akin"}],
     tags:["hierarchy"],
@@ -284,6 +295,7 @@ const TIPS_space = [
   },
   {
     id:"annotation-target",
+    added:"2026-06-17",
     cat:"space",
     links:[{to:"belonging",rel:"akin"},{to:"invisible-line",rel:"akin"}],
     tags:["text"],
@@ -313,6 +325,7 @@ const TIPS_space = [
   },
   {
     id:"visual-weight",
+    added:"2026-06-17",
     cat:"space",
     links:[{to:"concentric-radius",rel:"akin"},{to:"z-pattern",rel:"akin"}],
     tags:["hierarchy"],
@@ -344,6 +357,7 @@ const TIPS_space = [
   },
   {
     id:"few-parallels",
+    added:"2026-06-17",
     cat:"space",
     tags:["hierarchy"],
     title:"並べるのは、2〜3まで",
@@ -374,6 +388,7 @@ const TIPS_space = [
   },
   {
     id:"concentric-radius",
+    added:"2026-06-20",
     cat:"space",
     links:[{to:"invisible-line",rel:"echo"}],
     tags:[],
@@ -399,6 +414,7 @@ const TIPS_space = [
   },
   {
     id:"z-pattern",
+    added:"2026-06-20",
     cat:"space",
     links:[{to:"rank",rel:"akin"}],
     tags:["hierarchy"],
@@ -425,6 +441,7 @@ const TIPS_space = [
 const TIPS_hierarchy = [
   {
     id:"rank",
+    added:"2026-06-17",
     cat:"hierarchy",
     links:[{to:"jump-rate",rel:"then"}],
     tags:[],
@@ -450,6 +467,7 @@ const TIPS_hierarchy = [
   },
   {
     id:"jump-rate",
+    added:"2026-06-17",
     cat:"hierarchy",
     links:[{to:"big-short",rel:"akin"},{to:"donki",rel:"tension"}],
     tags:["text"],
@@ -476,6 +494,7 @@ const TIPS_hierarchy = [
   },
   {
     id:"donki",
+    added:"2026-06-17",
     cat:"hierarchy",
     links:[{to:"who-is-star",rel:"echo"},{to:"text-color-sparingly",rel:"echo"}],
     tags:["color"],
@@ -503,6 +522,7 @@ const TIPS_hierarchy = [
   },
   {
     id:"who-is-star",
+    added:"2026-06-17",
     cat:"hierarchy",
     links:[{to:"no-filler",rel:"akin"},{to:"need-this-line",rel:"akin"}],
     tags:["draw"],
@@ -524,6 +544,7 @@ const TIPS_hierarchy = [
   },
   {
     id:"dilute",
+    added:"2026-06-17",
     cat:"hierarchy",
     links:[{to:"fewer-colors",rel:"echo"},{to:"few-parallels",rel:"echo"},{to:"one-color",rel:"echo"}],
     tags:["text"],
@@ -551,6 +572,7 @@ const TIPS_hierarchy = [
   },
   {
     id:"big-short",
+    added:"2026-06-17",
     cat:"hierarchy",
     links:[{to:"thirteen-chars",rel:"akin"}],
     tags:["text"],
@@ -576,6 +598,7 @@ const TIPS_hierarchy = [
   },
   {
     id:"repeat-form",
+    added:"2026-06-17",
     cat:"hierarchy",
     links:[{to:"same-badge",rel:"echo"},{to:"consistent-line-weight",rel:"echo"}],
     tags:[],
@@ -599,6 +622,7 @@ const TIPS_hierarchy = [
   },
   {
     id:"same-badge",
+    added:"2026-06-17",
     cat:"hierarchy",
     links:[{to:"same-word",rel:"echo"}],
     tags:["color","text"],
@@ -632,6 +656,7 @@ const TIPS_hierarchy = [
   },
   {
     id:"unify-font",
+    added:"2026-06-17",
     cat:"hierarchy",
     links:[{to:"avoid-monospace",rel:"akin"},{to:"fewer-colors",rel:"echo"}],
     tags:["text"],
@@ -662,6 +687,7 @@ const TIPS_hierarchy = [
   },
   {
     id:"avoid-monospace",
+    added:"2026-06-17",
     cat:"hierarchy",
     links:[{to:"avoid-italic",rel:"akin"}],
     tags:["text"],
@@ -704,6 +730,7 @@ const TIPS_hierarchy = [
   },
   {
     id:"show-count",
+    added:"2026-06-20",
     cat:"hierarchy",
     links:[{to:"no-lost-reader",rel:"akin"},{to:"bullets-over-prose",rel:"akin"}],
     tags:["text"],
@@ -744,6 +771,7 @@ const TIPS_hierarchy = [
   },
   {
     id:"eye-catch",
+    added:"2026-06-28",
     cat:"hierarchy",
     links:[{to:"who-is-star",rel:"akin"}],
     tags:["space"],
@@ -779,6 +807,7 @@ const TIPS_hierarchy = [
 const TIPS_flow = [
   {
     id:"means-not-end",
+    added:"2026-06-17",
     cat:"flow",
     links:[{to:"so-what",rel:"akin"},{to:"rough-first",rel:"then"}],
     tags:[],
@@ -804,6 +833,7 @@ const TIPS_flow = [
   },
   {
     id:"show-early",
+    added:"2026-06-17",
     cat:"flow",
     links:[{to:"good-enough",rel:"akin"}],
     tags:[],
@@ -839,6 +869,7 @@ const TIPS_flow = [
   },
   {
     id:"rough-first",
+    added:"2026-06-17",
     cat:"flow",
     tags:[],
     links:[{to:"show-early",rel:"then"}],
@@ -867,6 +898,7 @@ const TIPS_flow = [
   },
   {
     id:"just-start",
+    added:"2026-06-17",
     cat:"flow",
     links:[{to:"rough-first",rel:"akin"},{to:"good-enough",rel:"akin"}],
     tags:[],
@@ -892,6 +924,7 @@ const TIPS_flow = [
   },
   {
     id:"squint-test",
+    added:"2026-06-20",
     cat:"flow",
     links:[{to:"rank",rel:"akin"},{to:"donki",rel:"akin"}],
     tags:["hierarchy"],
@@ -922,6 +955,7 @@ const TIPS_flow = [
   },
   {
     id:"good-enough",
+    added:"2026-06-21",
     cat:"flow",
     tags:[],
     title:"完璧を、求めない",
@@ -950,6 +984,7 @@ const TIPS_flow = [
   },
   {
     id:"where-it-lands",
+    added:"2026-06-28",
     cat:"flow",
     links:[{to:"first-words",rel:"akin"}],
     tags:["space"],
@@ -981,6 +1016,7 @@ const TIPS_flow = [
 const TIPS_color = [
   {
     id:"one-color",
+    added:"2026-06-17",
     cat:"color",
     links:[{to:"fewer-colors",rel:"akin"}],
     tags:["hierarchy"],
@@ -1009,6 +1045,7 @@ const TIPS_color = [
   },
   {
     id:"fewer-colors",
+    added:"2026-06-17",
     cat:"color",
     tags:[],
     title:"色を増やすと、ダサくなる",
@@ -1041,6 +1078,7 @@ const TIPS_color = [
   },
   {
     id:"shade-not-hue",
+    added:"2026-06-17",
     cat:"color",
     links:[{to:"gray-is-useful",rel:"akin"},{to:"graph-colors",rel:"akin"}],
     tags:["draw"],
@@ -1071,6 +1109,7 @@ const TIPS_color = [
   },
   {
     id:"gray-is-useful",
+    added:"2026-06-17",
     cat:"color",
     links:[{to:"text-color-sparingly",rel:"akin"}],
     tags:[],
@@ -1099,6 +1138,7 @@ const TIPS_color = [
   },
   {
     id:"soft-contrast",
+    added:"2026-06-17",
     cat:"color",
     links:[{to:"ensure-contrast",rel:"tension"}],
     tags:[],
@@ -1129,6 +1169,7 @@ const TIPS_color = [
   },
   {
     id:"ensure-contrast",
+    added:"2026-06-17",
     cat:"color",
     links:[{to:"shade-not-hue",rel:"akin"}],
     tags:[],
@@ -1159,6 +1200,7 @@ const TIPS_color = [
   },
   {
     id:"knockout",
+    added:"2026-06-17",
     cat:"color",
     links:[{to:"fill-not-border",rel:"akin"},{to:"graph-colors",rel:"akin"}],
     tags:[],
@@ -1187,6 +1229,7 @@ const TIPS_color = [
   },
   {
     id:"fill-not-border",
+    added:"2026-06-17",
     cat:"color",
     links:[{to:"need-this-line",rel:"akin"}],
     tags:["space","draw"],
@@ -1216,6 +1259,7 @@ const TIPS_color = [
   },
   {
     id:"gradient-careful",
+    added:"2026-06-17",
     cat:"color",
     links:[{to:"soft-contrast",rel:"akin"},{to:"knockout",rel:"akin"}],
     tags:[],
@@ -1239,6 +1283,7 @@ const TIPS_color = [
   },
   {
     id:"semantic-color",
+    added:"2026-06-20",
     cat:"color",
     links:[{to:"same-badge",rel:"akin"}],
     tags:["text"],
@@ -1262,6 +1307,7 @@ const TIPS_color = [
   },
   {
     id:"text-color-sparingly",
+    added:"2026-06-21",
     cat:"color",
     tags:["text"],
     title:"色を変えるのは、一語だけ",
@@ -1302,6 +1348,7 @@ const TIPS_color = [
 const TIPS_text = [
   {
     id:"write-action",
+    added:"2026-06-17",
     cat:"text",
     links:[{to:"say-it-straight",rel:"akin"},{to:"lead-first",rel:"akin"}],
     tags:[],
@@ -1323,6 +1370,7 @@ const TIPS_text = [
   },
   {
     id:"lead-first",
+    added:"2026-06-17",
     cat:"text",
     links:[{to:"thirteen-chars",rel:"akin"}],
     tags:[],
@@ -1345,6 +1393,7 @@ const TIPS_text = [
   },
   {
     id:"thirteen-chars",
+    added:"2026-06-17",
     cat:"text",
     tags:[],
     title:"見出しは、13文字まで",
@@ -1366,6 +1415,7 @@ const TIPS_text = [
   },
   {
     id:"excuse-last",
+    added:"2026-06-17",
     cat:"text",
     links:[{to:"so-what",rel:"akin"},{to:"no-filler",rel:"akin"}],
     tags:[],
@@ -1389,6 +1439,7 @@ const TIPS_text = [
   },
   {
     id:"so-what",
+    added:"2026-06-17",
     cat:"text",
     tags:[],
     title:"「だから何？」を、書かない",
@@ -1410,6 +1461,7 @@ const TIPS_text = [
   },
   {
     id:"bold-not-marker",
+    added:"2026-06-17",
     cat:"text",
     links:[{to:"bold-not-underline",rel:"akin"},{to:"text-color-sparingly",rel:"echo"}],
     tags:["color"],
@@ -1431,6 +1483,7 @@ const TIPS_text = [
   },
   {
     id:"bold-not-underline",
+    added:"2026-06-17",
     cat:"text",
     links:[{to:"avoid-italic",rel:"akin"}],
     tags:[],
@@ -1452,6 +1505,7 @@ const TIPS_text = [
   },
   {
     id:"avoid-italic",
+    added:"2026-06-17",
     cat:"text",
     tags:[],
     title:"斜体は、避ける",
@@ -1472,6 +1526,7 @@ const TIPS_text = [
   },
   {
     id:"try-icon",
+    added:"2026-06-17",
     cat:"text",
     links:[{to:"bullets-over-prose",rel:"akin"},{to:"area-over-number",rel:"echo"}],
     tags:[],
@@ -1496,6 +1551,7 @@ const TIPS_text = [
   },
   {
     id:"same-word",
+    added:"2026-06-17",
     cat:"text",
     links:[{to:"different-word",rel:"tension"}],
     tags:[],
@@ -1518,6 +1574,7 @@ const TIPS_text = [
   },
   {
     id:"different-word",
+    added:"2026-06-17",
     cat:"text",
     links:[{to:"semantic-color",rel:"akin"}],
     tags:[],
@@ -1540,6 +1597,7 @@ const TIPS_text = [
   },
   {
     id:"plain-words",
+    added:"2026-06-17",
     cat:"text",
     links:[{to:"say-it-straight",rel:"akin"},{to:"bullets-over-prose",rel:"akin"}],
     tags:[],
@@ -1561,6 +1619,7 @@ const TIPS_text = [
   },
   {
     id:"say-it-straight",
+    added:"2026-06-17",
     cat:"text",
     tags:[],
     title:"はっきり、言う",
@@ -1581,6 +1640,7 @@ const TIPS_text = [
   },
   {
     id:"bullets-over-prose",
+    added:"2026-06-17",
     cat:"text",
     tags:[],
     title:"文章より、箇条書き",
@@ -1610,6 +1670,7 @@ const TIPS_text = [
   },
   {
     id:"first-words",
+    added:"2026-06-28",
     cat:"text",
     links:[{to:"lead-first",rel:"akin"},{to:"write-action",rel:"akin"}],
     tags:["hierarchy"],
@@ -1641,6 +1702,7 @@ const TIPS_text = [
   },
   {
     id:"heading-is-art",
+    added:"2026-06-28",
     cat:"text",
     links:[{to:"try-icon",rel:"akin"},{to:"eye-catch",rel:"akin"}],
     tags:["draw"],
@@ -1672,6 +1734,7 @@ const TIPS_text = [
 const TIPS_draw = [
   {
     id:"triangle-arrow",
+    added:"2026-06-17",
     cat:"draw",
     links:[{to:"need-this-line",rel:"akin"},{to:"consistent-line-weight",rel:"akin"}],
     tags:[],
@@ -1690,6 +1753,7 @@ const TIPS_draw = [
   },
   {
     id:"need-this-line",
+    added:"2026-06-17",
     cat:"draw",
     tags:["space"],
     title:"その線、いる？",
@@ -1731,6 +1795,7 @@ const TIPS_draw = [
   },
   {
     id:"bar-from-zero",
+    added:"2026-06-17",
     cat:"draw",
     links:[{to:"area-over-number",rel:"akin"},{to:"pie-two-max",rel:"akin"}],
     tags:[],
@@ -1756,6 +1821,7 @@ const TIPS_draw = [
   },
   {
     id:"pie-two-max",
+    added:"2026-06-17",
     cat:"draw",
     links:[{to:"few-parallels",rel:"akin"}],
     tags:[],
@@ -1786,6 +1852,7 @@ const TIPS_draw = [
   },
   {
     id:"graph-colors",
+    added:"2026-06-17",
     cat:"draw",
     tags:["color"],
     title:"グラフの色は、絞る",
@@ -1815,6 +1882,7 @@ const TIPS_draw = [
   },
   {
     id:"no-jaggy",
+    added:"2026-06-17",
     cat:"draw",
     links:[{to:"keep-ratio",rel:"akin"},{to:"no-filler",rel:"akin"}],
     tags:[],
@@ -1832,6 +1900,7 @@ const TIPS_draw = [
   },
   {
     id:"keep-ratio",
+    added:"2026-06-17",
     cat:"draw",
     links:[{to:"area-over-number",rel:"akin"}],
     tags:[],
@@ -1855,6 +1924,7 @@ const TIPS_draw = [
   },
   {
     id:"no-filler",
+    added:"2026-06-17",
     cat:"draw",
     tags:["space"],
     title:"余白埋めのイラストは、置かない",
@@ -1890,6 +1960,7 @@ const TIPS_draw = [
   },
   {
     id:"consistent-line-weight",
+    added:"2026-06-17",
     cat:"draw",
     tags:[],
     title:"線の太さに、意味を持たせる",
@@ -1914,6 +1985,7 @@ const TIPS_draw = [
   },
   {
     id:"area-over-number",
+    added:"2026-06-17",
     cat:"draw",
     tags:[],
     title:"数字より、面積で",
