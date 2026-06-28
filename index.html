@@ -216,11 +216,12 @@
     content:"";position:absolute;left:0;right:0;top:100%;height:18px;
     background:linear-gradient(var(--paper),transparent);pointer-events:none;
   }
-  /* 表示切り替えトグル：選択側だけ濃い面に明るい字（chip と同じ反転表現） */
-  .viewseg{display:inline-flex;gap:2px;padding:2px;border:1px solid var(--line);background:var(--card);border-radius:999px;}
-  .viewseg button{display:inline-flex;align-items:center;gap:.35rem;padding:.35rem .7rem;border-radius:999px;
-    font-size:.8rem;color:var(--ink-soft);background:transparent;border:none;cursor:pointer;transition:all .15s ease;}
-  .viewseg button[aria-pressed="true"]{background:var(--strong);color:var(--on-strong);}
+  /* 一覧の操作トグル（並び順・表示）：カテゴリ選択（濃い面のチップ）と取り違えないよう、
+     別種の見た目にする——薄い溝に静かな摘みが乗る“スイッチ”。アイコンは付けず字だけ。色は足さない。 */
+  .viewseg{display:inline-flex;gap:2px;padding:3px;border:none;background:var(--line);border-radius:999px;}
+  .viewseg button{display:inline-flex;align-items:center;padding:.32rem .72rem;border-radius:999px;
+    font-size:.78rem;line-height:1;color:var(--ink-soft);background:transparent;border:none;cursor:pointer;transition:all .15s ease;}
+  .viewseg button[aria-pressed="true"]{background:var(--card);color:var(--ink);font-weight:700;box-shadow:0 1px 2px rgba(26,29,36,.12);}
 </style>
 </head>
 <body>
@@ -281,27 +282,19 @@
   <div id="cats" class="flex flex-wrap gap-2 mt-2.5 md:mt-3"></div>
   <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 mt-3">
     <div id="count" class="text-sm" style="color:var(--ink-soft)"></div>
-    <div class="flex items-center gap-2 shrink-0">
+    <div class="flex flex-wrap items-center justify-end gap-2 min-w-0">
       <div id="sort-seg" class="viewseg soft focusable" role="group" aria-label="並び順を切り替える">
-        <button id="sort-cat" type="button" aria-label="標準（カテゴリ順）で並べる" aria-pressed="true">
-          <i data-lucide="layers" class="w-4 h-4"></i>標準
-        </button>
-        <button id="sort-new" type="button" aria-label="新着順で並べる" aria-pressed="false">
-          <i data-lucide="clock" class="w-4 h-4"></i>新着
-        </button>
+        <button id="sort-cat" type="button" aria-label="標準（カテゴリ順）で並べる" aria-pressed="true">標準</button>
+        <button id="sort-new" type="button" aria-label="新着順で並べる" aria-pressed="false">新着</button>
       </div>
       <div id="view-seg" class="viewseg soft focusable" role="group" aria-label="一覧の表示を切り替える">
-        <button id="view-card" type="button" aria-label="カード表示" aria-pressed="true">
-          <i data-lucide="layout-grid" class="w-4 h-4"></i>カード
-        </button>
-        <button id="view-list" type="button" aria-label="目次表示" aria-pressed="false">
-          <i data-lucide="list" class="w-4 h-4"></i>目次
-        </button>
+        <button id="view-card" type="button" aria-label="カード表示" aria-pressed="true">カード</button>
+        <button id="view-list" type="button" aria-label="目次表示" aria-pressed="false">目次</button>
       </div>
-      <button id="random" type="button"
-        class="focusable chip inline-flex items-center gap-1.5 text-sm soft px-3 py-1.5 border"
+      <button id="random" type="button" title="ランダムに一枚を開く（r）" aria-label="ランダムに一枚を開く"
+        class="focusable chip inline-flex items-center justify-center w-9 h-9 soft border"
         style="color:var(--ink-soft);background:var(--card);border-color:var(--line);cursor:pointer">
-        <i data-lucide="shuffle" class="w-4 h-4"></i>ランダムに一枚
+        <i data-lucide="shuffle" class="w-4 h-4"></i>
       </button>
     </div>
   </div>
