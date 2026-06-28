@@ -125,7 +125,9 @@
   }
   /* 検索ヒット語のハイライト：朱の「点」ではなく、ごく薄い検索補助の地色 */
   mark.hl{background:var(--accent-soft);color:inherit;border-radius:3px;padding:0 .1em;}
-  .fade-in{animation:fade .5s ease both;}
+  /* 入場アニメは backwards で。both（forwards）だと終了後も to{opacity:1} を保持し続け、
+     既読カードの opacity:.55 を上書きしてしまう。前持ちだけ残し、終了後は宣言値に委ねる。 */
+  .fade-in{animation:fade .5s ease backwards;}
   @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
   /* 静かな通知：上からふっと降りて、しばらくして消える */
   #toast.toast-show{animation:toastIn .22s ease both;}
