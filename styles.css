@@ -185,6 +185,29 @@
     content:"";position:absolute;left:0;right:0;top:100%;height:18px;
     background:linear-gradient(var(--paper),transparent);pointer-events:none;
   }
+  /* 検索・絞り込みの開閉バー：閉じている間も今の状態を要約して見せる摘み。
+     開くと下に検索窓・カテゴリ・操作が出る。シェブロンは開閉で回す。 */
+  /* コンテンツのカード（白）と階層を取り違えないよう、操作バーは脇役として地色に寄せ、罫線だけで示す */
+  #filter-toggle{
+    display:flex;align-items:center;gap:.55rem;
+    padding:.62rem .9rem;text-align:left;cursor:pointer;
+    background:var(--paper);border-color:var(--line);color:var(--ink-soft);
+  }
+  #filter-summary .fsum-label{flex:0 0 auto;}
+  #filter-summary{
+    flex:1 1 auto;min-width:0;
+    display:flex;align-items:center;gap:.5rem;
+    overflow:hidden;white-space:nowrap;
+    font-size:.85rem;line-height:1.2;color:var(--ink-soft);
+  }
+  #filter-summary .fsum-item{display:inline-flex;align-items:center;gap:.3rem;flex:0 0 auto;}
+  #filter-summary .fsum-item i{flex:0 0 auto;}
+  /* キーワードだけは「いま検索中」と伝わるよう、墨色で少し強める（朱は使わない） */
+  #filter-summary .fsum-key{flex:0 1 auto;min-width:0;color:var(--ink);font-weight:600;}
+  #filter-summary .fsum-key .kw{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  #filter-summary .fsum-sep{flex:0 0 auto;opacity:.4;}
+  #filter-chevron{color:var(--ink-soft);transition:transform .2s ease;}
+  #filter-toggle[aria-expanded="true"] #filter-chevron{transform:rotate(180deg);}
   /* 一覧の操作トグル（並び順・表示）：カテゴリ選択（濃い面のチップ）と取り違えないよう、
      別種の見た目にする——薄い溝に静かな摘みが乗る“スイッチ”。アイコンは付けず字だけ。色は足さない。 */
   .viewseg{display:inline-flex;gap:2px;padding:3px;border:none;background:var(--line);border-radius:999px;}

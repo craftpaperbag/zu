@@ -84,7 +84,9 @@
   </p>
 </header>
 
-<!-- 検索 + カテゴリ + 一覧の操作（総数・表示切替・ランダム）をひとまとめに固定する -->
+<!-- 検索 + カテゴリ + 一覧の操作（総数・表示切替・ランダム）をひとまとめに固定する。
+     操作は嵩張りやすいので折りたたみ式にし、既定は閉じる。閉じている間も
+     開閉バーが今の状態（カテゴリ・並べ替え・表示・キーワード）を要約して見せる。 -->
 <div id="filterbar" class="px-6 max-w-5xl xl:max-w-7xl mx-auto sticky top-0 z-20 pt-2 pb-3 md:pb-4" style="background:var(--paper)">
   <div class="flex items-center gap-2.5">
     <a id="mini-logo" href="#top" aria-label="ページの先頭へ戻る"
@@ -92,7 +94,18 @@
       style="font-size:1.6rem;color:var(--ink);text-decoration:none">
       zu<span class="inline-block w-1.5 h-1.5 rounded-full" style="background:var(--accent)"></span>
     </a>
-    <div class="relative flex-1">
+    <!-- 開閉バー：常に見える。これ自体が今の絞り込み状態の要約も兼ねる -->
+    <button id="filter-toggle" type="button" aria-expanded="false" aria-controls="filter-panel"
+      class="focusable chip soft border flex-1 min-w-0" aria-label="検索・絞り込みを開く">
+      <i data-lucide="sliders-horizontal" class="w-5 h-5 shrink-0" style="color:var(--ink-soft)"></i>
+      <span id="filter-summary" aria-live="polite"></span>
+      <i id="filter-chevron" data-lucide="chevron-down" class="w-5 h-5 shrink-0"></i>
+    </button>
+  </div>
+
+  <!-- 本体：既定は折りたたみ。開くと検索窓・カテゴリ・並べ替え/表示/ランダムが出る -->
+  <div id="filter-panel" class="is-hidden">
+    <div class="relative mt-2.5">
       <i data-lucide="search" class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2" style="color:var(--ink-soft)"></i>
       <input id="q" type="text" placeholder="キーワードで探す（例：余白、角丸、色）"
         class="focusable w-full pl-12 pr-11 py-3 md:py-3.5 soft border bg-white text-base"
@@ -103,24 +116,24 @@
         <i data-lucide="x" class="w-4 h-4"></i>
       </button>
     </div>
-  </div>
-  <div id="cats" class="flex flex-wrap gap-2 mt-2.5 md:mt-3"></div>
-  <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 mt-3">
-    <div id="count" class="text-sm" style="color:var(--ink-soft)"></div>
-    <div class="flex flex-wrap items-center justify-end gap-2 min-w-0">
-      <div id="sort-seg" class="viewseg soft focusable" role="group" aria-label="並び順を切り替える">
-        <button id="sort-cat" type="button" aria-label="標準（カテゴリ順）で並べる" aria-pressed="true">標準</button>
-        <button id="sort-new" type="button" aria-label="新着順で並べる" aria-pressed="false">新着</button>
+    <div id="cats" class="flex flex-wrap gap-2 mt-2.5 md:mt-3"></div>
+    <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 mt-3">
+      <div id="count" class="text-sm" style="color:var(--ink-soft)"></div>
+      <div class="flex flex-wrap items-center justify-end gap-2 min-w-0">
+        <div id="sort-seg" class="viewseg soft focusable" role="group" aria-label="並び順を切り替える">
+          <button id="sort-cat" type="button" aria-label="標準（カテゴリ順）で並べる" aria-pressed="true">標準</button>
+          <button id="sort-new" type="button" aria-label="新着順で並べる" aria-pressed="false">新着</button>
+        </div>
+        <div id="view-seg" class="viewseg soft focusable" role="group" aria-label="一覧の表示を切り替える">
+          <button id="view-card" type="button" aria-label="カード表示" aria-pressed="true">カード</button>
+          <button id="view-list" type="button" aria-label="目次表示" aria-pressed="false">目次</button>
+        </div>
+        <button id="random" type="button" title="ランダムに一枚を開く（r）" aria-label="ランダムに一枚を開く"
+          class="focusable chip inline-flex items-center justify-center w-9 h-9 soft border"
+          style="color:var(--ink-soft);background:var(--card);border-color:var(--line);cursor:pointer">
+          <i data-lucide="shuffle" class="w-4 h-4"></i>
+        </button>
       </div>
-      <div id="view-seg" class="viewseg soft focusable" role="group" aria-label="一覧の表示を切り替える">
-        <button id="view-card" type="button" aria-label="カード表示" aria-pressed="true">カード</button>
-        <button id="view-list" type="button" aria-label="目次表示" aria-pressed="false">目次</button>
-      </div>
-      <button id="random" type="button" title="ランダムに一枚を開く（r）" aria-label="ランダムに一枚を開く"
-        class="focusable chip inline-flex items-center justify-center w-9 h-9 soft border"
-        style="color:var(--ink-soft);background:var(--card);border-color:var(--line);cursor:pointer">
-        <i data-lucide="shuffle" class="w-4 h-4"></i>
-      </button>
     </div>
   </div>
 </div>

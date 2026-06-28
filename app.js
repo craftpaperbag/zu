@@ -259,7 +259,34 @@ function renderGrid(){
     c.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openTip(c.dataset.id); } };
   });
   writeFilterToURL();
+  renderFilterSummary();        // 折りたたみバーの状態要約を最新化（並べ替え/表示/カテゴリ/キーワード）
   lucide.createIcons();
+}
+
+// 折りたたみバーの中身。
+// ・閉じているとき：今の絞り込み状態（カテゴリ→並べ替え→表示→キーワード）を静かに要約する。
+// ・開いているとき：下の操作そのものが状態を示すので要約は出さず、区画の見出しとして一語だけ置く（重複を避ける）。
+function escAttr(s){ return String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function renderFilterSummary(){
+  const el = document.getElementById("filter-summary");
+  if(!el) return;
+  if(filtersOpen){
+    el.innerHTML = `<span class="fsum-label">検索・絞り込み</span>`;
+    return;
+  }
+  const parts = [];
+  // カテゴリ：そのカテゴリのアイコン＋ラベル（「すべて」は一覧アイコン）
+  parts.push(`<span class="fsum-item"><i data-lucide="${activeCat==="all"?"layout-grid":catIcon(activeCat)}" class="w-3.5 h-3.5"></i>${activeCat==="all"?"すべて":catLabel(activeCat)}</span>`);
+  // 並べ替え
+  parts.push(`<span class="fsum-item">${sortMode==="new"?"新着":"標準"}</span>`);
+  // 表示形式
+  parts.push(`<span class="fsum-item">${viewMode==="list"?"目次":"カード"}</span>`);
+  // キーワード：あるときだけ。検索アイコンを添えて「いま検索中」だと伝える
+  const k = keyword.trim();
+  if(k){
+    parts.push(`<span class="fsum-item fsum-key"><i data-lucide="search" class="w-3.5 h-3.5"></i><span class="kw">「${escAttr(k)}」</span></span>`);
+  }
+  el.innerHTML = parts.join('<span class="fsum-sep" aria-hidden="true">·</span>');
 }
 
 /* ---- 閲覧履歴（最近見た覚え書き） ----
@@ -650,7 +677,7 @@ document.addEventListener("keydown",e=>{
     const tag=(e.target.tagName||"").toLowerCase();
     const typing = tag==="input" || tag==="textarea" || e.target.isContentEditable;
     if(!typing && allClosed()){
-      if(e.key==="/"){ e.preventDefault(); qInput.focus(); qInput.select(); return; }
+      if(e.key==="/"){ e.preventDefault(); setFiltersOpen(true); qInput.focus(); qInput.select(); return; }
       if(e.key==="r"||e.key==="R"){ e.preventDefault(); openRandom(); return; }
     }
   }
@@ -667,6 +694,25 @@ document.addEventListener("keydown",e=>{
     trapTab(e, visitedModal);
   }
 });
+
+// 検索・絞り込みの開閉：既定は閉じる。閉じている間も開閉バーが状態を要約する。
+const filterToggle = document.getElementById("filter-toggle");
+const filterPanel  = document.getElementById("filter-panel");
+let filtersOpen = false;
+function paintFilterToggle(){
+  filterToggle.setAttribute("aria-expanded", String(filtersOpen));
+  filterToggle.setAttribute("aria-label", filtersOpen ? "検索・絞り込みを閉じる" : "検索・絞り込みを開く");
+  filterPanel.classList.toggle("is-hidden", !filtersOpen);
+}
+function setFiltersOpen(open){
+  filtersOpen = open;
+  paintFilterToggle();
+  renderFilterSummary();        // 開閉で中身（要約⇔見出し）を切り替える
+  lucide.createIcons();
+  // 閉じている間は #cats の幅が測れない（display:none）。開いた瞬間に右端フェードを測り直す。
+  if(open){ syncCatsEnd(); }
+}
+filterToggle.onclick=()=>setFiltersOpen(!filtersOpen);
 
 // 検索：入力中はクリアボタンを出す
 const qInput = document.getElementById("q");
