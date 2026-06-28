@@ -742,6 +742,37 @@ const TIPS_hierarchy = [
     apply:"箇条書きや手順が増えてきたら、頭に「全部でいくつ」と総数を置く。番号を「1/5・2/5」と分母つきで振るのも同じ効き目。",
     term:"目標勾配効果",
   },
+  {
+    id:"eye-catch",
+    cat:"hierarchy",
+    links:[{to:"who-is-star",rel:"akin"}],
+    tags:["space"],
+    title:"絵が、七割でいい",
+    claim:"文字を敷き詰めるより、絵に大きく場所をあける。",
+    why:"本屋の棚に並ぶ表紙の中で、ふと手が伸びるのは、絵や写真が大きく見えている一冊です。文字は近づいて読むものですが、絵は離れていても丸ごと目に飛び込んでくる。チラシも同じで、紙面の大半を一枚の絵や写真に明け渡すと、通りすがりの目が最初にそこで止まります。文字で埋めたくなる気持ちを抑えるほど、立ち止まってもらえます。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="紙面を文字で埋めるより、六〜七割を一枚の絵に明け渡すと通りすがりの目が止まる">
+      <rect x="36" y="16" width="96" height="88" rx="10" fill="var(--card)" stroke="var(--line)"/>
+      <rect x="44" y="24" width="28" height="22" rx="3" fill="var(--line)"/>
+      <g fill="var(--ink-soft)">
+        <rect x="44" y="52" width="80" height="7" rx="3"/>
+        <rect x="44" y="63" width="80" height="7" rx="3"/>
+        <rect x="44" y="74" width="80" height="7" rx="3"/>
+        <rect x="44" y="85" width="60" height="7" rx="3"/>
+      </g>
+      <text x="84" y="116" text-anchor="middle" font-size="11" fill="var(--ink-soft)">文字だらけ</text>
+      <rect x="188" y="16" width="96" height="88" rx="10" fill="var(--card)" stroke="var(--line)"/>
+      <rect x="196" y="24" width="80" height="52" rx="6" fill="var(--calm-soft)" stroke="var(--calm)"/>
+      <circle cx="214" cy="42" r="7" fill="var(--calm)"/>
+      <polygon points="226,68 248,44 270,68" fill="var(--calm)"/>
+      <g fill="var(--line)">
+        <rect x="196" y="82" width="80" height="7" rx="3"/>
+        <rect x="196" y="93" width="56" height="7" rx="3"/>
+      </g>
+      <text x="236" y="116" text-anchor="middle" font-size="11" fill="var(--calm)">絵が七割</text>
+    </svg>`,
+    apply:"まず紙面の六〜七割を絵・写真の場所として確保し、残りに文字を置く。",
+    term:"アイキャッチ",
+  },
 ];
 
 /* 進め方：図そのものの作法ではなく、作る過程・こころがけ。 */
@@ -916,6 +947,34 @@ const TIPS_flow = [
     </svg>`,
     apply:"一つを100点に磨き込む前に、80点で切り上げて次へ。最後の20点に同じ手間をかけるより、その力で二つ目を仕上げる。",
     term:"パレートの法則（80:20の法則）／収穫逓減",
+  },
+  {
+    id:"where-it-lands",
+    cat:"flow",
+    links:[{to:"first-words",rel:"akin"}],
+    tags:["space"],
+    title:"どこに置かれるかを、考える",
+    claim:"紙は手元で全部見えるとは限らない。置かれ方から逆算する。",
+    why:"チラシ置き場のラックに差すと、重なって上の数センチしか見えないことがあります。手元で広げれば全部見えるつもりで作っても、置かれた場所では上端の帯だけが勝負どころになる。だから作る前に、これがどこにどう置かれるのかを思い浮かべる。掲示板に貼られるのか、ポストに折って入るのか、ラックに差さるのか——見える場所が分かれば、そこに一番のフックを寄せられます。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="ラックでは上端しか見えないので、フックを中ほどに置くと隠れ、上端に置くと見える">
+      <rect x="36" y="16" width="96" height="88" rx="10" fill="var(--card)" stroke="var(--line)"/>
+      <rect x="37" y="58" width="94" height="45" fill="var(--line)"/>
+      <line x1="36" y1="58" x2="132" y2="58" stroke="var(--ink-soft)" stroke-width="1.5"/>
+      <g fill="var(--line)">
+        <rect x="44" y="28" width="68" height="6" rx="3"/>
+        <rect x="44" y="40" width="48" height="6" rx="3"/>
+      </g>
+      <rect x="44" y="72" width="80" height="16" rx="3" fill="var(--ink-soft)"/>
+      <text x="84" y="116" text-anchor="middle" font-size="11" fill="var(--ink-soft)">フックが下→隠れる</text>
+      <rect x="188" y="16" width="96" height="88" rx="10" fill="var(--card)" stroke="var(--line)"/>
+      <rect x="189" y="58" width="94" height="45" fill="var(--line)"/>
+      <line x1="188" y1="58" x2="284" y2="58" stroke="var(--ink-soft)" stroke-width="1.5"/>
+      <rect x="196" y="26" width="80" height="16" rx="3" fill="var(--calm)"/>
+      <rect x="196" y="47" width="54" height="6" rx="3" fill="var(--line)"/>
+      <text x="236" y="116" text-anchor="middle" font-size="11" fill="var(--calm)">フックが上→見える</text>
+    </svg>`,
+    apply:"作る前に『どこに・どう置かれるか』を思い描き、見える位置（ラックなら上端）に一番のフックを置く。",
+    term:"",
   },
 ];
 
@@ -1547,6 +1606,65 @@ const TIPS_text = [
       <text x="246" y="110" text-anchor="middle" font-size="11" fill="var(--calm)">箇条書き</text>
     </svg>`,
     apply:"要点が複数あるなら、続く文章にせず、一つずつ行を分けて箇条書きにする。",
+    term:"",
+  },
+  {
+    id:"first-words",
+    cat:"text",
+    links:[{to:"lead-first",rel:"akin"},{to:"write-action",rel:"akin"}],
+    tags:["hierarchy"],
+    title:"最初の一言を、えらぶ",
+    claim:"一番大きい言葉が、読む・読まないを分ける。",
+    why:"通りで手渡されるチラシを受け取るかどうか、人は最初の一言で一瞬に決めています。そこに『〇〇市〇〇制度』『四十周年』『こんな疑問はありませんか』と大きく書かれていても、受け取る側には自分の用事がない。一番大きい文字は、書き手が言いたいことではなく、読み手の用事のために空けておく。最初の一言が自分ごとに見えた瞬間、はじめて先を読んでもらえます。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="一番大きい文字を制度名にするより、読み手の用事に充てたほうが目に留まる">
+      <rect x="36" y="16" width="96" height="88" rx="10" fill="var(--card)" stroke="var(--line)"/>
+      <rect x="44" y="26" width="80" height="22" rx="4" fill="var(--ink-soft)"/>
+      <text x="84" y="41" text-anchor="middle" font-size="11" fill="var(--card)">〇〇市〇〇制度</text>
+      <g fill="var(--line)">
+        <rect x="44" y="58" width="80" height="7" rx="3"/>
+        <rect x="44" y="70" width="80" height="7" rx="3"/>
+        <rect x="44" y="82" width="60" height="7" rx="3"/>
+      </g>
+      <text x="84" y="116" text-anchor="middle" font-size="11" fill="var(--ink-soft)">大きいのが制度名</text>
+      <rect x="188" y="16" width="96" height="88" rx="10" fill="var(--card)" stroke="var(--line)"/>
+      <rect x="196" y="26" width="80" height="22" rx="4" fill="var(--calm)"/>
+      <text x="236" y="41" text-anchor="middle" font-size="11" fill="var(--card)">がん検診 無料</text>
+      <g fill="var(--line)">
+        <rect x="196" y="58" width="80" height="7" rx="3"/>
+        <rect x="196" y="70" width="64" height="7" rx="3"/>
+      </g>
+      <text x="196" y="92" font-size="9" fill="var(--ink-soft)">〇〇市〇〇制度</text>
+      <text x="236" y="116" text-anchor="middle" font-size="11" fill="var(--calm)">大きいのが用事</text>
+    </svg>`,
+    apply:"一番大きい文字は『読み手の用事』に。制度名・主催者名・あいさつは小さく末尾へ回す。",
+    term:"キャッチコピー",
+  },
+  {
+    id:"heading-is-art",
+    cat:"text",
+    links:[{to:"try-icon",rel:"akin"},{to:"eye-catch",rel:"akin"}],
+    tags:["draw"],
+    title:"見出しも、絵のうち",
+    claim:"見出しは読む文章ではなく、形として見える部品。",
+    why:"店の看板の文字は、遠くからはまず大きなかたまりとして目に映り、近づいて初めて文章として読まれます。見出しも同じで、読まれる前に、まず形として絵の一部に見えている。だから見出しは、本文の延長で流し込むのではなく、大きさ・太さ・置き場所まで含めて絵の一部品として設計する。文字を絵として扱うほど、見出しは紙面に溶け込んで強く効きます。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="見出しを本文と同じ調子で流し込むより、大きさと位置を絵の部品として組むと強く効く">
+      <rect x="36" y="16" width="96" height="88" rx="10" fill="var(--card)" stroke="var(--line)"/>
+      <rect x="44" y="24" width="80" height="40" rx="4" fill="var(--line)"/>
+      <g fill="var(--ink-soft)">
+        <rect x="44" y="72" width="80" height="8" rx="3"/>
+        <rect x="44" y="84" width="70" height="8" rx="3"/>
+      </g>
+      <text x="84" y="116" text-anchor="middle" font-size="11" fill="var(--ink-soft)">見出しが素通り</text>
+      <rect x="188" y="16" width="96" height="88" rx="10" fill="var(--card)" stroke="var(--line)"/>
+      <rect x="196" y="24" width="80" height="44" rx="4" fill="var(--calm-soft)"/>
+      <rect x="196" y="56" width="80" height="20" rx="4" fill="var(--calm)"/>
+      <g fill="var(--line)">
+        <rect x="196" y="84" width="60" height="7" rx="3"/>
+        <rect x="196" y="94" width="44" height="7" rx="3"/>
+      </g>
+      <text x="236" y="116" text-anchor="middle" font-size="11" fill="var(--calm)">見出しが効く</text>
+    </svg>`,
+    apply:"見出しは本文の続きで流し込まず、大きさ・太さ・位置を絵の部品として決める。",
     term:"",
   },
 ];
