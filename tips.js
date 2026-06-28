@@ -1618,7 +1618,8 @@ const TIPS_text = [
     why:"通りで手渡されるチラシを受け取るかどうか、人は最初の一言で一瞬に決めています。そこに『〇〇市主催』『四十周年』『こんな疑問はありませんか』と大きく書かれていても、受け取る側には自分の用事がない。一番大きい文字は、書き手が言いたいことではなく、読み手の用事のために空けておく。最初の一言が自分ごとに見えた瞬間、はじめて先を読んでもらえます。",
     visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="一番大きい文字を主催者名にするより、読み手の用事に充てたほうが目に留まる">
       <rect x="36" y="16" width="96" height="88" rx="10" fill="var(--card)" stroke="var(--line)"/>
-      <rect x="44" y="28" width="80" height="20" rx="4" fill="var(--ink-soft)"/>
+      <rect x="44" y="26" width="80" height="22" rx="4" fill="var(--ink-soft)"/>
+      <text x="84" y="41" text-anchor="middle" font-size="11" fill="var(--card)">〇〇市 主催</text>
       <g fill="var(--line)">
         <rect x="44" y="58" width="80" height="7" rx="3"/>
         <rect x="44" y="70" width="80" height="7" rx="3"/>
@@ -1626,12 +1627,13 @@ const TIPS_text = [
       </g>
       <text x="84" y="116" text-anchor="middle" font-size="11" fill="var(--ink-soft)">大きいのが主催名</text>
       <rect x="188" y="16" width="96" height="88" rx="10" fill="var(--card)" stroke="var(--line)"/>
-      <rect x="196" y="28" width="80" height="20" rx="4" fill="var(--calm)"/>
+      <rect x="196" y="26" width="80" height="22" rx="4" fill="var(--calm)"/>
+      <text x="236" y="41" text-anchor="middle" font-size="11" fill="var(--card)">申込 受付中</text>
       <g fill="var(--line)">
         <rect x="196" y="58" width="80" height="7" rx="3"/>
         <rect x="196" y="70" width="64" height="7" rx="3"/>
       </g>
-      <rect x="196" y="86" width="40" height="6" rx="3" fill="var(--ink-soft)"/>
+      <text x="196" y="92" font-size="9" fill="var(--ink-soft)">〇〇市 主催</text>
       <text x="236" y="116" text-anchor="middle" font-size="11" fill="var(--calm)">大きいのが用事</text>
     </svg>`,
     apply:"一番大きい文字は『読み手の用事』に。主催者名・周年・あいさつは小さく末尾へ回す。",

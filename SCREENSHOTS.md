@@ -49,9 +49,12 @@ npx tailwindcss -i in.css -o tw.css --content ./index.html --minify
 cp node_modules/lucide/dist/umd/lucide.min.js .
 node -e '
   const fs=require("fs");let h=fs.readFileSync("index.html","utf8");
-  h=h.replace(`<script src="https://cdn.tailwindcss.com"></script>`,`<link rel="stylesheet" href="tw.css">`);
-  h=h.replace(`<script src="https://unpkg.com/lucide@latest"></script>`,`<script src="lucide.min.js"></script>`);
-  fs.writeFileSync("preview.html",h);'
+  // unpkg の lucide タグはバージョン固定＋integrity 付き（例: lucide@1.21.0/dist/umd/...）。
+  // 完全一致だと空振りするので、属性ごと正規表現で拾う。差し替え漏れ＝lucide 未定義で openTip() が止まる。
+  h=h.replace(/<script src="https:\/\/cdn\.tailwindcss\.com"><\/script>/,`<link rel="stylesheet" href="tw.css">`);
+  h=h.replace(/<script src="https:\/\/unpkg\.com\/lucide[^"]*"[^>]*><\/script>/,`<script src="lucide.min.js"></script>`);
+  fs.writeFileSync("preview.html",h);
+  console.log("tailwind:",h.includes("tw.css"),"| lucide:",h.includes(`src="lucide.min.js"`),"| unpkg gone:",!h.includes("unpkg.com"));'
 ```
 
 ### 撮影スクリプト（`/tmp/shot/shot.js`）
