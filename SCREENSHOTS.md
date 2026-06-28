@@ -36,14 +36,16 @@ cd /tmp && rm -rf shot && mkdir shot && cd shot && npm init -y >/dev/null
 npm i puppeteer >/dev/null
 npx puppeteer browsers install chrome     # ~/.cache/puppeteer に入る
 
-# 2) サイトのファイルを持ってくる
-cp /home/user/zu/index.html /home/user/zu/history.js /home/user/zu/tips.js .
+# 2) サイトのファイルを持ってくる（styles.css・app.js も必須）
+cp /home/user/zu/index.html /home/user/zu/styles.css /home/user/zu/app.js /home/user/zu/history.js /home/user/zu/tips.js .
 
 # 3) Tailwind を「使っているクラスだけ」ローカル生成（v3 系で十分）
 npm i -D tailwindcss@3 >/dev/null
 npm i lucide >/dev/null                    # 本物のアイコンUMD
 printf '@tailwind base;\n@tailwind components;\n@tailwind utilities;\n' > in.css
-npx tailwindcss -i in.css -o tw.css --content ./index.html --minify
+# 描画ロジック（カード等のクラスを組み立てる）は app.js にあるので、--content に必ず含める。
+# 含め忘れると app.js 産のユーティリティクラスが tw.css に入らず、一覧が崩れる。
+npx tailwindcss -i in.css -o tw.css --content "./index.html,./app.js" --minify
 
 # 4) CDN参照をローカル差し替え（フォントの2行はそのまま＝許可hostなので生かす）
 cp node_modules/lucide/dist/umd/lucide.min.js .
