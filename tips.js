@@ -1628,7 +1628,7 @@ const TIPS_text = [
       <text x="84" y="116" text-anchor="middle" font-size="11" fill="var(--ink-soft)">大きいのが主催名</text>
       <rect x="188" y="16" width="96" height="88" rx="10" fill="var(--card)" stroke="var(--line)"/>
       <rect x="196" y="26" width="80" height="22" rx="4" fill="var(--calm)"/>
-      <text x="236" y="41" text-anchor="middle" font-size="11" fill="var(--card)">申込 受付中</text>
+      <text x="236" y="41" text-anchor="middle" font-size="11" fill="var(--card)">がん検診 無料</text>
       <g fill="var(--line)">
         <rect x="196" y="58" width="80" height="7" rx="3"/>
         <rect x="196" y="70" width="64" height="7" rx="3"/>
