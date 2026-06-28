@@ -29,12 +29,14 @@
 
 ## 技術・配信の前提
 
-- **ビルドなし・単体配信**で完結させる。`index.html` を GitHub Pages 直下で公開する想定。
-- データは2つの外部 JS ファイルに分離してある。どちらも `<script src>` で先に読み込み、`index.html` 側の描画ロジックが参照する（バンドラ不要）。
-  - `tips.js` — Tipsのたね（`TIPS_space` などカテゴリ別の `TIPS_*` 配列）。**種を増やすときはここの該当配列に1ブロック足すだけ。** 1本につなぐ `const TIPS` の連結処理は `index.html` 側にある。
+- **ビルドなし・単体配信**で完結させる。`index.html` を GitHub Pages 直下で公開する想定。バンドラは使わず、関連ファイルは `<link>` / `<script src>` で読み込むだけ。
+- 役割ごとにファイルを分けてある。`index.html` は**マークアップ中心**に保ち、スタイルとロジックとデータは外部ファイルが持つ。
+  - `styles.css` — サイトのスタイル（CSS変数のデザイントークン・コンポーネント class・アニメーション）。`<head>` で `<link>` 読み込み。**Tailwind CDN・フォントの後**に置いてカスケードを保つ。
+  - `app.js` — 描画・モーダル・共有・フィルタなどの画面ロジック（`CATEGORIES`・`REL`・`TIPS` 連結・描画関数群）。`<body>` 末尾で読み込む。**`history.js` → `tips.js` → `app.js` の順を厳守**（`app.js` は `HISTORY` と `TIPS_*` を参照するため後に読む）。
+  - `tips.js` — Tipsのたね（`TIPS_space` などカテゴリ別の `TIPS_*` 配列）。**種を増やすときはここの該当配列に1ブロック足すだけ。** 1本につなぐ `const TIPS` の連結処理は `app.js` 側にある。
   - `history.js` — 更新履歴（`HISTORY` 配列）。見える変更のたびに先頭へ追記する。
-  - 構造・スタイル・描画ロジック（`CATEGORIES`・`index.html` の `<script>`）はあまり変わらないので `index.html` に残す。
-  - ※さらにデータが増えても CSS/JS の全面3分割はしない。編集の主戦場（履歴・たね）だけ外に出す方針で、単体配信のシンプルさを守る。
+  - ※`<head>` の gtag と FOUC対策のテーマ初期化スクリプトだけは、描画前に走る必要があるため `index.html` にインラインで残す。
+  - ※これ以上の分割（例：`tips.js` のカテゴリ別ファイル化）はしない。単体配信のシンプルさを守る。
 - Tailwind（CDN）+ lucide アイコン（CDN）。
 - **固定画像（PNG/JPG）は使わない。図はすべて SVG または HTML 要素で直接描く。**
 - スクショを撮るときは `SCREENSHOTS.md` を見る（クラウド環境は CDN が egress で遮断されるため、Tailwind ローカルビルド＋puppeteer で本番同等に撮る手順を残してある）。
@@ -170,8 +172,8 @@
 
 ## 現在地と次の作業
 
-- 本番ファイルは **`index.html`**（単一HTML・GitHub Pages 直下配信）。`PROTOTYPE.html` はデザインの原型で、参照用に残してある（旧5枠のダミーが入っているので本番には使わない）。
-- SEEDS.md の種を 6カテゴリ・**計71種**の実 Tips に肉付け済み。データは `tips.js` 内のカテゴリ別配列（`TIPS_space` / `TIPS_hierarchy` / `TIPS_color` / `TIPS_text` / `TIPS_draw` / `TIPS_flow`）で持ち、`index.html` 側で1本の `TIPS` に連結している。更新履歴は `history.js` の `HISTORY` 配列。
+- 本番は **`index.html`**（マークアップ）＋ **`styles.css`**（スタイル）＋ **`app.js`**（画面ロジック）＋ **`tips.js`** / **`history.js`**（データ）の構成で、GitHub Pages 直下に配信。すべてビルドなしで読み込む。`PROTOTYPE.html` はデザインの原型で、参照用に残してある（旧5枠のダミーが入っているので本番には使わない）。
+- SEEDS.md の種を 6カテゴリ・**計71種**の実 Tips に肉付け済み。データは `tips.js` 内のカテゴリ別配列（`TIPS_space` / `TIPS_hierarchy` / `TIPS_color` / `TIPS_text` / `TIPS_draw` / `TIPS_flow`）で持ち、`app.js` 側で1本の `TIPS` に連結している。更新履歴は `history.js` の `HISTORY` 配列。
 - SEEDS.md の統合候補は実装時に反映済み：typeface→`jump-rate`、kanizsa→`invisible-line`、「同じレイヤーは同じ見た目」→`repeat-form`、「濃い文字・薄い背景」＋「真っ白×真っ黒」→`soft-contrast`。
 - 種を増やすときは、該当カテゴリの配列に1ブロック足すだけ（`added` に当日の日付も忘れずに入れる）。横串はタグで張る。
 - 各種に追加日 `added` を付与済み。一覧上部の「標準／新着」で並べ替えられ、新着順では全カテゴリ横断のフラット表示になりカードに日付が出る。詳細モーダルには常時そっと追加日が出る。既存71種の `added` は更新履歴から最善で推定（名指しで辿れる分は実日付、初期分は公開日 2026-06-17）。
