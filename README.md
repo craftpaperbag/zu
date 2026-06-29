@@ -46,13 +46,22 @@
 
 ### 点検（テスト）
 
-データと作図ルールの崩れを機械的に拾う点検を `tests/` に置いています。依存パッケージはなく、Node 標準のテストランナーだけで動きます（ビルドなしの方針のまま）。
+データ・作図ルール・画面ロジックの崩れを機械的に拾う点検を `tests/` に置いています。**「ビルドなし・単体配信」は配信物（`index.html` / `*.js` / `styles.css`）に対する方針**で、テストはその制約の外。テストだけは dev 依存（[Vitest](https://vitest.dev/) ＋ [jsdom](https://github.com/jsdom/jsdom)）を持ち、図を実 DOM/SVG としてパースして検査し、`app.js` を jsdom で実際に起動して挙動まで見ます。
+
+初回だけ依存を入れ、あとは `npm test` で回します（`node_modules/` は配信物には含めません）。
 
 ```sh
-node --test "tests/*.test.js"
+npm install   # 初回のみ
+npm test
 ```
 
-点検する内容：id の一意性・kebab-case、必須フィールド、`cat` が定義済みカテゴリか、Tips が `cat` と一致する配列に置かれているか、`added` の日付、`links` の整合（実在 id・rel 4種・自己/両端リンク禁止）、図の `role="img"` と一文の `aria-label`、SVG の `viewBox`、生hex禁止（色実演の許可リストを除く）、accent は1図1箇所まで、`HISTORY` の書式と新着順。許容例外は `tests/zu.test.js` 冒頭に id 指定で明示しています。
+点検する内容：
+
+- **データ**：id の一意性・kebab-case、必須フィールド、`cat` が定義済みカテゴリか、Tips が `cat` と一致する配列に置かれているか、`added` の日付、`links` の整合（実在 id・rel 4種・自己/両端リンク禁止）、`HISTORY` の書式と新着順。
+- **作図ルール（図を実 DOM で検査）**：図が妥当な DOM/SVG としてパースできるか（タグ閉じ忘れなど malformed を検知）、`role="img"` と一文の `aria-label`、SVG の `viewBox`、生hex禁止（色実演の許可リストを除く）、accent は1図1箇所まで、図が参照する CSS 変数が `styles.css` に定義済みか。
+- **画面ロジック（`app.js` を jsdom で起動）**：全 Tips が描画されるか、カテゴリ絞り込み・検索・並べ替え、カードを開いたときのモーダル内容と「つながり」表示、更新履歴の描画。
+
+許容例外（生hexの色実演図など）は `tests/data.test.js` 冒頭に id 指定で明示しています。
 
 **コミットのたびに点検する**には、リポジトリで一度だけ次を実行してフックを有効化します（clone ごとに必要）。
 
@@ -60,7 +69,7 @@ node --test "tests/*.test.js"
 git config core.hooksPath .githooks
 ```
 
-以降 `git commit` のたびに `.githooks/pre-commit` が点検を走らせ、失敗するとコミットを止めます（急ぐときは `git commit --no-verify` で飛ばせます）。push / PR では `.github/workflows/test.yml` が同じ点検を実行します。
+以降 `git commit` のたびに `.githooks/pre-commit` が点検を走らせ（依存が無ければ初回だけ自動で `npm install`）、失敗するとコミットを止めます（急ぐときは `git commit --no-verify` で飛ばせます）。push / PR では `.github/workflows/test.yml` が同じ点検を実行します。
 
 ### 種の工房（作図支援ツール）
 

@@ -160,16 +160,20 @@
 
 ## 点検（テスト）— 種を増やしたら必ず通す
 
-`tests/` に、データと作図ルールの崩れを機械的に拾う点検を置いている（依存なし・Node 標準のテストランナーのみ。ビルドなしの方針のまま）。**Tips の追加・図の修正・カテゴリやrelの変更をしたら、コミット前に必ず通す。**
+`tests/` に、データ・作図ルール・画面ロジックの崩れを機械的に拾う点検を置いている。**「ビルドなし・単体配信」は配信物（`index.html` / `*.js` / `styles.css`）に対する方針であって、テストには適用しない。** テストだけは dev 依存（Vitest ＋ jsdom）を持ち、図を実 DOM/SVG としてパースして検査し、`app.js` を jsdom で起動して挙動まで見る。**Tips の追加・図の修正・カテゴリやrelの変更をしたら、コミット前に必ず通す。**
 
 ```sh
-node --test "tests/*.test.js"
+npm install   # 初回のみ（vitest / jsdom を取得）
+npm test
 ```
 
-- 点検内容：id の一意性・kebab-case、必須フィールド、`cat` の妥当性、Tips が `cat` と一致する `TIPS_*` 配列に置かれているか、`added` の日付、`links` の整合（実在 id・rel 4種・自己/両端リンク禁止）、`role="img"`＋一文の `aria-label`、SVG の `viewBox`、生hex禁止、accent は1図1箇所、`HISTORY` の書式と新着順。
-- **許容例外は `tests/zu.test.js` 冒頭の allowlist に id 指定で集約**している（生hexの色実演図、1注目点を2トークンで描く図）。新たに例外が要るときは、理由を添えてここに id を足す。安易に増やさない。
-- `CATEGORIES` / `REL` は `app.js` を唯一の定義元として `tests/loader.js` が読むので、カテゴリやrelを変えたら点検も自動で追従する。
-- **コミットのたびに点検する**には一度だけ `git config core.hooksPath .githooks` を実行（clone ごとに必要）。以降 `git commit` 前に `.githooks/pre-commit` が走り、失敗でコミットを止める。push / PR では `.github/workflows/test.yml` が同じ点検を回す。
+- 点検内容（3層）：
+  - **データ**：id の一意性・kebab-case、必須フィールド、`cat` の妥当性、Tips が `cat` と一致する `TIPS_*` 配列に置かれているか、`added` の日付、`links` の整合（実在 id・rel 4種・自己/両端リンク禁止）、`HISTORY` の書式と新着順。
+  - **作図ルール（実 DOM で検査）**：図が妥当な DOM/SVG としてパースできるか（malformed 検知）、`role="img"`＋一文の `aria-label`、SVG の `viewBox`、生hex禁止、accent は1図1箇所、図が参照する CSS 変数が `styles.css` に定義済みか。
+  - **画面ロジック（`app.js` を jsdom で起動）**：全 Tips の描画、カテゴリ絞り込み・検索・並べ替え、モーダルの内容と「つながり」表示、更新履歴の描画。
+- **許容例外は `tests/data.test.js` 冒頭の allowlist に id 指定で集約**している（生hexの色実演図、1注目点を2要素で描く図）。新たに例外が要るときは、理由を添えてここに id を足す。安易に増やさない。
+- `CATEGORIES` / `REL` は `app.js` を唯一の定義元として `tests/loader.js` が読むので、カテゴリやrelを変えたら点検も自動で追従する。`app.js` の起動は `tests/harness.js`（本番の `index.html` ＋ 3本の JS を読み込む）。
+- **コミットのたびに点検する**には一度だけ `git config core.hooksPath .githooks` を実行（clone ごとに必要）。以降 `git commit` 前に `.githooks/pre-commit` が走り（依存が無ければ初回だけ自動で `npm install`）、失敗でコミットを止める。push / PR では `.github/workflows/test.yml` が同じ点検を回す。
 
 ---
 
