@@ -832,6 +832,48 @@ const TIPS_flow = [
     term:"手段の目的化",
   },
   {
+    id:"who-acts",
+    added:"2026-06-30",
+    cat:"flow",
+    links:[{to:"means-not-end",rel:"akin"}],
+    tags:[],
+    title:"誰に、何をしてほしいか",
+    claim:"相手の行動で言えない目的は、まだ図にしなくていい。",
+    why:"ボールは、受け取る相手がいて初めて投げる意味が生まれます。誰に向けて、どう受けてほしいのかが決まると、肩は自然とそちらを向き、力の入れ方まで定まる。図も同じで、見た人に何をしてほしいのか——上の人にうなずいてほしいのか、隣の人に同じしくじりを避けてほしいのか——が言葉にできると、どこを強くすればいいかまで決まってきます。それが言えないうちは、まだ投げ先が定まっていない合図です。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="宛先のない図はどこにも届かず、誰に何をしてほしいかを定めると相手にまっすぐ届く">
+      <rect x="24" y="36" width="32" height="48" rx="6" fill="none" stroke="var(--ink-soft)"/>
+      <g fill="var(--line)">
+        <rect x="30" y="43" width="20" height="6" rx="2"/>
+        <rect x="30" y="53" width="20" height="6" rx="2"/>
+        <rect x="30" y="63" width="14" height="6" rx="2"/>
+      </g>
+      <g stroke="var(--ink-soft)" stroke-width="1.5" opacity=".55">
+        <line x1="60" y1="56" x2="90" y2="34"/>
+        <line x1="60" y1="60" x2="96" y2="60"/>
+        <line x1="60" y1="64" x2="90" y2="86"/>
+      </g>
+      <g fill="var(--ink-soft)" opacity=".55">
+        <polygon points="90,30 100,33 90,40"/>
+        <polygon points="96,55 106,60 96,65"/>
+        <polygon points="90,80 100,87 90,90"/>
+      </g>
+      <text x="78" y="112" text-anchor="middle" font-size="11" fill="var(--ink-soft)">宛先がない</text>
+      <rect x="188" y="36" width="32" height="48" rx="6" fill="none" stroke="var(--calm)"/>
+      <g fill="var(--calm)" opacity=".5">
+        <rect x="194" y="43" width="20" height="6" rx="2"/>
+        <rect x="194" y="53" width="20" height="6" rx="2"/>
+        <rect x="194" y="63" width="14" height="6" rx="2"/>
+      </g>
+      <line x1="224" y1="60" x2="250" y2="60" stroke="var(--calm)" stroke-width="2"/>
+      <polygon points="248,54 262,60 248,66" fill="var(--accent)"/>
+      <circle cx="278" cy="46" r="7" fill="var(--calm)"/>
+      <rect x="269" y="56" width="18" height="22" rx="9" fill="var(--calm)"/>
+      <text x="246" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">誰に・何を</text>
+    </svg>`,
+    apply:"作る前に『誰に、何をしてほしいか』を一言で書く。『上司に承認してほしい』『同僚に同じミスを避けてほしい』のように相手の行動で言えないなら、その図はまだ作らなくていい。",
+    term:"コール・トゥ・アクション（行動喚起）",
+  },
+  {
     id:"show-early",
     added:"2026-06-17",
     cat:"flow",
