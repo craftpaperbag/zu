@@ -36,7 +36,7 @@ const HEX_ALLOWED = new Set([
 ]);
 
 // accent は1図に1箇所まで。1つの注目点を「線＋矢じり」など2要素に割る図だけは2を許す。
-const ACCENT_TWO_TOKEN = new Set(["just-start"]);
+const ACCENT_TWO_TOKEN = new Set(["just-start", "who-acts"]);
 
 const ALLOWED_VIEWBOX = new Set(["0 0 320 120", "0 0 320 160"]);
 
