@@ -847,15 +847,10 @@ const TIPS_flow = [
         <rect x="30" y="53" width="20" height="6" rx="2"/>
         <rect x="30" y="63" width="14" height="6" rx="2"/>
       </g>
-      <g stroke="var(--ink-soft)" stroke-width="1.5" opacity=".55">
-        <line x1="60" y1="56" x2="90" y2="34"/>
-        <line x1="60" y1="60" x2="96" y2="60"/>
-        <line x1="60" y1="64" x2="90" y2="86"/>
-      </g>
-      <g fill="var(--ink-soft)" opacity=".55">
-        <polygon points="90,30 100,33 90,40"/>
-        <polygon points="96,55 106,60 96,65"/>
-        <polygon points="90,80 100,87 90,90"/>
+      <g stroke="var(--ink-soft)" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="14 4 1 5 1 6 1 7" opacity=".55">
+        <line x1="60" y1="56" x2="92" y2="32"/>
+        <line x1="60" y1="60" x2="100" y2="60"/>
+        <line x1="60" y1="64" x2="92" y2="88"/>
       </g>
       <text x="78" y="112" text-anchor="middle" font-size="11" fill="var(--ink-soft)">宛先がない</text>
       <rect x="188" y="36" width="32" height="48" rx="6" fill="none" stroke="var(--calm)"/>
