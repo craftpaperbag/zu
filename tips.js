@@ -859,7 +859,7 @@ const TIPS_flow = [
         <rect x="194" y="53" width="20" height="6" rx="2"/>
         <rect x="194" y="63" width="14" height="6" rx="2"/>
       </g>
-      <line x1="224" y1="60" x2="250" y2="60" stroke="var(--calm)" stroke-width="2"/>
+      <line x1="224" y1="60" x2="250" y2="60" stroke="var(--accent)" stroke-width="2"/>
       <polygon points="248,54 262,60 248,66" fill="var(--accent)"/>
       <circle cx="278" cy="46" r="7" fill="var(--calm)"/>
       <rect x="269" y="56" width="18" height="22" rx="9" fill="var(--calm)"/>
