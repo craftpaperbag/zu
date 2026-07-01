@@ -436,6 +436,35 @@ const TIPS_space = [
     apply:"最初に見せたいものを、画面の左上に置く。タイトルや要点は、目が最初に降りる入口から始める。",
     term:"Z型の視線移動",
   },
+  {
+    id:"align-left",
+    added:"2026-07-01",
+    cat:"space",
+    links:[{to:"invisible-line",rel:"akin"},{to:"line-length",rel:"akin"}],
+    tags:["text"],
+    title:"左で、そろえる",
+    claim:"迷ったら左揃え。行頭がそろうと、目の帰る場所ができる。",
+    why:"階段をのぼるとき、足元をいちいち確かめないのは、次の段がいつも同じ位置にあると知っているからです。読むときの目も同じで、行の終わりまで来ると、次の行のはじまりへ跳んで帰る。左がそろっていれば、目は迷わず同じ場所へ帰れます。中央揃えの文章は行ごとにはじまりの位置が変わるので、一行ごとに目が着地点を探し直すことになります。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="左がそろった文章は目の帰る場所ができ、中央揃えは行ごとにはじまりの位置が変わって目が迷う">
+      <g fill="var(--ink-soft)">
+        <rect x="32" y="24" width="96" height="9" rx="3"/>
+        <rect x="48" y="40" width="64" height="9" rx="3"/>
+        <rect x="38" y="56" width="84" height="9" rx="3"/>
+        <rect x="56" y="72" width="48" height="9" rx="3"/>
+      </g>
+      <text x="80" y="110" text-anchor="middle" font-size="11" fill="var(--ink-soft)">毎行ずれる</text>
+      <line x1="196" y1="20" x2="196" y2="85" stroke="var(--accent)" stroke-width="2"/>
+      <g fill="var(--calm)">
+        <rect x="202" y="24" width="96" height="9" rx="3"/>
+        <rect x="202" y="40" width="64" height="9" rx="3"/>
+        <rect x="202" y="56" width="84" height="9" rx="3"/>
+        <rect x="202" y="72" width="48" height="9" rx="3"/>
+      </g>
+      <text x="248" y="110" text-anchor="middle" font-size="11" fill="var(--calm)">帰る場所がある</text>
+    </svg>`,
+    apply:"本文と箇条書きは左揃えを基本にする。中央揃えは、タイトルや一言の見出しなど『ここぞ』に取っておく。",
+    term:"左揃え（ラグ組み）",
+  },
 ];
 
 const TIPS_hierarchy = [
@@ -801,6 +830,54 @@ const TIPS_hierarchy = [
     apply:"まず紙面の六〜七割を絵・写真の場所として確保し、残りに文字を置く。",
     term:"アイキャッチ",
   },
+  {
+    id:"big-number",
+    added:"2026-07-01",
+    cat:"hierarchy",
+    links:[{to:"jump-rate",rel:"echo"},{to:"big-short",rel:"akin"}],
+    tags:["text"],
+    title:"数字は大きく、単位は小さく",
+    claim:"主役は数字。単位と補足は、脇に引かせる。",
+    why:"体温計をのぞくとき、目に飛び込んでくるのは『36.5』の数字で、『℃』を確かめる人はいません。速度計も時計も、一瞬で読み取るための道具は、数字だけを大きく、単位を隅に小さく置いています。資料の数字も同じで、読む人が知りたいのは値そのもの。単位や期間まで同じ大きさで並べると、肝心の値が埋もれてしまいます。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="数字を大きく単位を小さくすると、知りたい値が一瞬で目に入る">
+      <text x="80" y="62" text-anchor="middle" font-size="14" fill="var(--ink-soft)">今月は120件</text>
+      <text x="80" y="110" text-anchor="middle" font-size="11" fill="var(--ink-soft)">全部おなじ大きさ</text>
+      <text x="240" y="36" text-anchor="middle" font-size="11" fill="var(--ink-soft)">今月</text>
+      <text x="234" y="74" text-anchor="middle" font-size="34" font-weight="700" fill="var(--calm)">120</text>
+      <text x="266" y="74" font-size="11" fill="var(--ink-soft)">件</text>
+      <text x="240" y="110" text-anchor="middle" font-size="11" fill="var(--calm)">数字が主役</text>
+    </svg>`,
+    apply:"件数や割合を見せるときは、数字を見出しなみに大きく、単位・期間・補足は小さく添える。",
+    term:"",
+  },
+  {
+    id:"icon-touch",
+    added:"2026-07-01",
+    cat:"hierarchy",
+    links:[{to:"unify-font",rel:"echo"},{to:"repeat-form",rel:"akin"}],
+    tags:[],
+    title:"アイコンは、同じタッチで",
+    claim:"線画と塗りつぶしが混ざると、それだけで散らかって見える。",
+    why:"そろいの食器で並んだ食卓に、一枚だけ柄の違う皿が混ざると、料理は同じでもその一枚だけ借り物に見えます。アイコンも同じで、線だけで描かれたものと塗りつぶされたものが並ぶと、意味は通じても、ちぐはぐさのほうが先に目に入る。タッチがそろっているだけで、図の全体が『同じ世界』としてすっと馴染みます。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="タッチの混ざったアイコンはちぐはぐに見え、同じタッチでそろえるとひとつの世界になる">
+      <g stroke="var(--ink-soft)" fill="none" stroke-width="2">
+        <circle cx="38" cy="52" r="11"/>
+        <path d="M92 63 L103 41 L114 63 Z"/>
+      </g>
+      <rect x="58" y="41" width="22" height="22" rx="5" fill="var(--ink-soft)"/>
+      <circle cx="130" cy="52" r="12" fill="var(--ink-soft)"/>
+      <text x="80" y="110" text-anchor="middle" font-size="11" fill="var(--ink-soft)">線と塗りが混在</text>
+      <g stroke="var(--calm)" fill="none" stroke-width="2">
+        <circle cx="198" cy="52" r="11"/>
+        <rect x="219" y="41" width="22" height="22" rx="5"/>
+        <path d="M252 63 L263 41 L274 63 Z"/>
+        <path d="M283 52 L293 42 L303 52 L293 62 Z"/>
+      </g>
+      <text x="245" y="110" text-anchor="middle" font-size="11" fill="var(--calm)">同じタッチ</text>
+    </svg>`,
+    apply:"アイコンは一つの提供元・一つのスタイル（線画なら線画、塗りなら塗り）からだけ選ぶ。混ざってしまったら、どちらかにそろえ直す。",
+    term:"",
+  },
 ];
 
 /* 進め方：図そのものの作法ではなく、作る過程・こころがけ。 */
@@ -1046,6 +1123,43 @@ const TIPS_flow = [
       <text x="236" y="116" text-anchor="middle" font-size="11" fill="var(--calm)">フックが上→見える</text>
     </svg>`,
     apply:"作る前に『どこに・どう置かれるか』を思い描き、見える位置（ラックなら上端）に一番のフックを置く。",
+    term:"",
+  },
+  {
+    id:"next-morning",
+    added:"2026-07-01",
+    cat:"flow",
+    links:[{to:"squint-test",rel:"akin"},{to:"show-early",rel:"akin"}],
+    tags:[],
+    title:"翌朝の目で、見る",
+    claim:"一晩置くだけで、作った本人にも粗が見える。",
+    why:"夜に書いた手紙を朝読み返すと、なぜこんな一文を、と直したくなります。作った直後の目は、作ったものに近すぎて、頭の中の『言いたかったこと』を紙の上に重ねて見てしまうからです。一晩置くだけでその重なりがほどけて、はじめて読む人の目に近づく。自分ひとりでできる、いちばん安上がりな検算です。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="一晩置いて朝の目で見直すと、夜には気づけなかった粗が浮かんで見える">
+      <circle cx="44" cy="29" r="9" fill="var(--ink-soft)"/>
+      <circle cx="48" cy="26" r="8" fill="var(--card)"/>
+      <rect x="36" y="44" width="88" height="48" rx="8" fill="none" stroke="var(--line)"/>
+      <g fill="var(--ink-soft)" opacity=".7">
+        <rect x="44" y="52" width="72" height="7" rx="3"/>
+        <rect x="44" y="63" width="72" height="7" rx="3"/>
+        <rect x="52" y="74" width="56" height="7" rx="3"/>
+      </g>
+      <text x="80" y="110" text-anchor="middle" font-size="11" fill="var(--ink-soft)">夜は気づかない</text>
+      <g stroke="var(--calm)" stroke-width="2" fill="none">
+        <circle cx="204" cy="31" r="8"/>
+        <line x1="204" y1="18" x2="204" y2="21"/>
+        <line x1="204" y1="41" x2="204" y2="44"/>
+        <line x1="191" y1="31" x2="194" y2="31"/>
+        <line x1="214" y1="31" x2="217" y2="31"/>
+      </g>
+      <rect x="196" y="44" width="88" height="48" rx="8" fill="none" stroke="var(--line)"/>
+      <g fill="var(--calm)" opacity=".8">
+        <rect x="204" y="52" width="72" height="7" rx="3"/>
+        <rect x="204" y="63" width="72" height="7" rx="3"/>
+      </g>
+      <rect x="212" y="74" width="56" height="7" rx="3" fill="var(--accent)"/>
+      <text x="240" y="110" text-anchor="middle" font-size="11" fill="var(--calm)">朝の目には見える</text>
+    </svg>`,
+    apply:"提出の前の日に仕上げて、翌朝もう一度だけ通して見る時間を、はじめから計画に入れておく。",
     term:"",
   },
 ];
@@ -1379,6 +1493,28 @@ const TIPS_color = [
     </svg>`,
     apply:"文章は墨一色を基本にして、色を変えるのは『ここだけは』という一語に絞る。",
     term:"アクセントカラー",
+  },
+  {
+    id:"not-color-alone",
+    added:"2026-07-01",
+    cat:"color",
+    links:[{to:"semantic-color",rel:"akin"},{to:"shade-not-hue",rel:"akin"}],
+    tags:["draw"],
+    title:"色だけに、頼らない",
+    claim:"色の区別だけに頼った図は、届かない人と場面がある。",
+    why:"信号を待つとき、私たちは色だけを見ているわけではありません。いちばん右（縦なら上）が止まれ、と場所でも覚えているから、西日で色が飛んでも判断できます。色の見え方は人によって幅があり、白黒で刷られる場面もある。色に、かたち・位置・ことばを重ねておけば、色が失われても図は伝わります。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="色だけで分けた線は色が飛ぶと見分けられず、線種と名前を重ねれば誰にでも届く">
+      <path d="M28 44 C52 36 76 56 100 40 L132 46" fill="none" stroke="var(--ink-soft)" stroke-width="2"/>
+      <path d="M28 68 C52 76 76 56 100 70 L132 60" fill="none" stroke="var(--ink-soft)" stroke-width="2" opacity=".55"/>
+      <text x="80" y="110" text-anchor="middle" font-size="11" fill="var(--ink-soft)">色が飛ぶと見分けられない</text>
+      <path d="M188 44 C210 36 232 56 254 40 L280 46" fill="none" stroke="var(--calm)" stroke-width="2"/>
+      <text x="288" y="49" font-size="11" fill="var(--calm)">あ</text>
+      <path d="M188 68 C210 76 232 56 254 70 L280 60" fill="none" stroke="var(--calm)" stroke-width="2" stroke-dasharray="5 4" opacity=".7"/>
+      <text x="288" y="66" font-size="11" fill="var(--calm)" opacity=".7">い</text>
+      <text x="240" y="110" text-anchor="middle" font-size="11" fill="var(--calm)">線種と名前を重ねる</text>
+    </svg>`,
+    apply:"色分けには、ラベル・線種・かたち・位置のどれかを必ず重ねる。白黒コピーしても意味が残るかで検算する。",
+    term:"色覚多様性（カラーユニバーサルデザイン）",
   },
 ];
 
@@ -1766,6 +1902,32 @@ const TIPS_text = [
     apply:"見出しは本文の続きで流し込まず、大きさ・太さ・位置を絵の部品として決める。",
     term:"",
   },
+  {
+    id:"align-digits",
+    added:"2026-07-01",
+    cat:"text",
+    links:[{to:"invisible-line",rel:"akin"}],
+    tags:["space"],
+    title:"数字は、右でそろえる",
+    claim:"並べて比べる数字は、右揃え。桁がそろって、はじめて比べられる。",
+    why:"筆算を書くとき、数字を右へ右へとそろえるのは、一の位と一の位、十の位と十の位を向かい合わせるためです。桁が縦にそろってはじめて、どちらが大きいか、いくつ違うかが見える。表に数字を並べて比べるときも同じで、左でそろえると桁がずれて、大きさの違いが読めなくなります。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="並べて比べる数字は右揃えにすると桁がそろい、大小がひと目で読める">
+      <g font-size="14" fill="var(--ink-soft)">
+        <text x="52" y="40">1,280</text>
+        <text x="52" y="62">96</text>
+        <text x="52" y="84">12,400</text>
+      </g>
+      <text x="80" y="110" text-anchor="middle" font-size="11" fill="var(--ink-soft)">左揃え＝桁がずれる</text>
+      <g font-size="14" fill="var(--calm)" text-anchor="end">
+        <text x="268" y="40">1,280</text>
+        <text x="268" y="62">96</text>
+        <text x="268" y="84">12,400</text>
+      </g>
+      <text x="240" y="110" text-anchor="middle" font-size="11" fill="var(--calm)">右揃え＝桁が向き合う</text>
+    </svg>`,
+    apply:"表の数値の列は右揃えにする。桁区切りのカンマもそろえて打つ。単独で見せる数字は、この限りではない。",
+    term:"等幅数字",
+  },
 ];
 
 const TIPS_draw = [
@@ -2038,5 +2200,131 @@ const TIPS_draw = [
     </svg>`,
     apply:"量の大小は数字で書くより、面積や大きさのちがいそのもので見せる。",
     term:"前注意処理（プリアテンティブ）",
+  },
+  {
+    id:"one-way-flow",
+    added:"2026-07-01",
+    cat:"draw",
+    links:[{to:"no-lost-reader",rel:"akin"},{to:"z-pattern",rel:"akin"}],
+    tags:[],
+    title:"流れは、一方向に",
+    claim:"視線を行ったり来たりさせる図は、迷路になる。",
+    why:"はじめての美術館でも迷わず回れるのは、順路の矢印がずっと一方向を向いているからです。来た道を戻らせたり、右へ左へ折り返させたりしないから、体は流れに乗るだけでいい。図の中の視線も同じで、流れが行ったり来たりすると、見る人はいまどこにいるのか分からなくなります。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="流れを一方向にそろえると迷わず、行ったり来たり折り返すと迷路になる">
+      <g fill="var(--line)">
+        <rect x="30" y="20" width="26" height="16" rx="4"/>
+        <rect x="78" y="20" width="26" height="16" rx="4"/>
+        <rect x="78" y="50" width="26" height="16" rx="4"/>
+        <rect x="30" y="50" width="26" height="16" rx="4"/>
+        <rect x="30" y="80" width="26" height="16" rx="4"/>
+      </g>
+      <g fill="var(--ink-soft)">
+        <path d="M62 23 L71 28 L62 33 Z"/>
+        <path d="M86 38 L96 38 L91 46 Z"/>
+        <path d="M72 53 L63 58 L72 63 Z"/>
+        <path d="M38 70 L48 70 L43 78 Z"/>
+      </g>
+      <text x="80" y="112" text-anchor="middle" font-size="11" fill="var(--ink-soft)">折り返す＝迷路</text>
+      <g fill="var(--calm-soft)">
+        <rect x="176" y="48" width="22" height="16" rx="4"/>
+        <rect x="210" y="48" width="22" height="16" rx="4"/>
+        <rect x="244" y="48" width="22" height="16" rx="4"/>
+        <rect x="278" y="48" width="22" height="16" rx="4"/>
+      </g>
+      <g fill="var(--calm)">
+        <path d="M200 51 L207 56 L200 61 Z"/>
+        <path d="M234 51 L241 56 L234 61 Z"/>
+        <path d="M268 51 L275 56 L268 61 Z"/>
+      </g>
+      <text x="238" y="112" text-anchor="middle" font-size="11" fill="var(--calm)">一方向＝迷わない</text>
+    </svg>`,
+    apply:"手順やフローは、左から右か、上から下の一方向にそろえる。一方向で収まらないなら、図を分ける。",
+    term:"",
+  },
+  {
+    id:"label-directly",
+    added:"2026-07-01",
+    cat:"draw",
+    links:[{to:"annotation-target",rel:"echo"},{to:"graph-colors",rel:"akin"}],
+    tags:[],
+    title:"凡例より、じかに書く",
+    claim:"凡例は往復を生む。名前は、線のそばに書く。",
+    why:"集合写真で人を探すとき、『上段の左から三人目が部長です』と言われるより、顔の横に名札があるほうが早い。凡例は、図と表のあいだを何度も往復させる『左から三人目』方式です。線のそばに直接名前が書いてあれば、視線は一度も図から離れずに済む。系列が四つ五つと多いときは凡例も手ですが、その前に、そもそも本数を減らせないかを疑ってみます。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="凡例と図を往復させるより、線のそばに名前を書けばひと目でわかる">
+      <line x1="28" y1="84" x2="92" y2="84" stroke="var(--line)" stroke-width="1.5"/>
+      <path d="M28 60 L49 50 L70 56 L92 42" fill="none" stroke="var(--ink-soft)" stroke-width="2"/>
+      <path d="M28 74 L49 68 L70 71 L92 62" fill="none" stroke="var(--ink-soft)" stroke-width="2" opacity=".5"/>
+      <rect x="102" y="36" width="34" height="32" rx="6" fill="none" stroke="var(--line)"/>
+      <rect x="107" y="43" width="10" height="4" fill="var(--ink-soft)"/>
+      <text x="121" y="49" font-size="9" fill="var(--ink-soft)">あ</text>
+      <rect x="107" y="56" width="10" height="4" fill="var(--ink-soft)" opacity=".5"/>
+      <text x="121" y="62" font-size="9" fill="var(--ink-soft)">い</text>
+      <text x="80" y="110" text-anchor="middle" font-size="11" fill="var(--ink-soft)">凡例と往復する</text>
+      <line x1="188" y1="84" x2="268" y2="84" stroke="var(--line)" stroke-width="1.5"/>
+      <path d="M188 58 L215 48 L242 54 L268 40" fill="none" stroke="var(--calm)" stroke-width="2"/>
+      <text x="274" y="44" font-size="11" fill="var(--calm)">あ</text>
+      <path d="M188 74 L215 68 L242 71 L268 62" fill="none" stroke="var(--calm)" stroke-width="2" opacity=".55"/>
+      <text x="274" y="66" font-size="11" fill="var(--calm)" opacity=".7">い</text>
+      <text x="240" y="110" text-anchor="middle" font-size="11" fill="var(--calm)">線のそばに名前</text>
+    </svg>`,
+    apply:"系列が2〜3本なら、凡例をやめて線や棒のそばに直接名前を書く。多くて書ききれないなら、まず本数を絞れないか考える。",
+    term:"直接ラベリング",
+  },
+  {
+    id:"line-or-bar",
+    added:"2026-07-01",
+    cat:"draw",
+    links:[{to:"bar-from-zero",rel:"akin"},{to:"pie-two-max",rel:"akin"}],
+    tags:[],
+    title:"推移は線で、比較は棒で",
+    claim:"グラフの形は、答えたい問いで決まる。",
+    why:"歩いてきた道のりは一本の線でたどれますが、背くらべは横に並んで立ちます。知りたいことによって、体の使い方が違うのです。グラフも同じで、『どう変わってきたか』という時間の問いには折れ線が、『どちらが大きいか』という量の問いには棒が答えてくれます。かたちを先に選ぶのではなく、問いを先に決めます。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="時間の推移は折れ線で、量くらべは棒で見せると、問いにかたちが合う">
+      <text x="80" y="28" text-anchor="middle" font-size="11" fill="var(--ink-soft)">どう変わった？</text>
+      <line x1="32" y1="88" x2="128" y2="88" stroke="var(--line)" stroke-width="1.5"/>
+      <path d="M32 76 L56 64 L80 68 L104 48 L128 40" fill="none" stroke="var(--calm)" stroke-width="2"/>
+      <text x="80" y="110" text-anchor="middle" font-size="11" fill="var(--calm)">推移は、線</text>
+      <text x="248" y="28" text-anchor="middle" font-size="11" fill="var(--ink-soft)">どちらが大きい？</text>
+      <line x1="192" y1="88" x2="304" y2="88" stroke="var(--line)" stroke-width="1.5"/>
+      <g fill="var(--calm)">
+        <rect x="200" y="54" width="20" height="34"/>
+        <rect x="228" y="36" width="20" height="52"/>
+        <rect x="256" y="64" width="20" height="24"/>
+        <rect x="284" y="46" width="20" height="42"/>
+      </g>
+      <text x="248" y="110" text-anchor="middle" font-size="11" fill="var(--calm)">比較は、棒</text>
+    </svg>`,
+    apply:"グラフを描く前に、答えたい問いを一つに決める。変化を見せたいなら折れ線、大小を比べたいなら棒。",
+    term:"",
+  },
+  {
+    id:"flat-graph",
+    added:"2026-07-01",
+    cat:"draw",
+    links:[{to:"bar-from-zero",rel:"echo"}],
+    tags:[],
+    title:"グラフは、立体にしない",
+    claim:"立体にした瞬間、手前が大きく見えて値が歪む。",
+    why:"集合写真では、最前列の人がいちばん大きく写ります。カメラに近いものほど大きく見える——遠近は、そういう演出の道具です。グラフを立体にすると、この遠近が値に混ざって、手前の棒がじっさいより大きく見えてしまう。飾ったつもりで、数字を歪めています。",
+    visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="立体のグラフは手前が大きく見えて値が歪み、平らな棒ならそのまま比べられる">
+      <path d="M28 88 L116 88 L132 72 L44 72 Z" fill="var(--line)" opacity=".5"/>
+      <text x="52" y="38" text-anchor="middle" font-size="10" fill="var(--ink-soft)">40</text>
+      <path d="M40 46 L64 46 L74 38 L50 38 Z" fill="var(--ink-soft)" opacity=".55"/>
+      <path d="M64 46 L74 38 L74 80 L64 88 Z" fill="var(--ink-soft)" opacity=".35"/>
+      <rect x="40" y="46" width="24" height="42" fill="var(--ink-soft)"/>
+      <text x="95" y="28" text-anchor="middle" font-size="10" fill="var(--ink-soft)">50</text>
+      <path d="M86 42 L104 42 L111 36 L93 36 Z" fill="var(--ink-soft)" opacity=".55"/>
+      <path d="M104 42 L111 36 L111 68 L104 74 Z" fill="var(--ink-soft)" opacity=".35"/>
+      <rect x="86" y="42" width="18" height="32" fill="var(--ink-soft)" opacity=".8"/>
+      <text x="80" y="110" text-anchor="middle" font-size="11" fill="var(--ink-soft)">立体は手前が勝つ</text>
+      <line x1="196" y1="88" x2="300" y2="88" stroke="var(--line)" stroke-width="1.5"/>
+      <text x="222" y="42" text-anchor="middle" font-size="10" fill="var(--calm)">40</text>
+      <rect x="210" y="48" width="24" height="40" fill="var(--calm)"/>
+      <text x="266" y="32" text-anchor="middle" font-size="10" fill="var(--calm)">50</text>
+      <rect x="254" y="38" width="24" height="50" fill="var(--calm)"/>
+      <text x="248" y="110" text-anchor="middle" font-size="11" fill="var(--calm)">平らなら正しい</text>
+    </svg>`,
+    apply:"グラフの3D効果は使わない。立体にしたくなったら、色と余白で整える。",
+    term:"",
   },
 ];
