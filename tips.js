@@ -1136,7 +1136,7 @@ const TIPS_flow = [
     why:"夜に書いた手紙を朝読み返すと、なぜこんな一文を、と直したくなります。作った直後の目は、作ったものに近すぎて、頭の中の『言いたかったこと』を紙の上に重ねて見てしまうからです。一晩置くだけでその重なりがほどけて、はじめて読む人の目に近づく。自分ひとりでできる、いちばん安上がりな検算です。",
     visual:`<svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="一晩置いて朝の目で見直すと、夜には気づけなかった粗が浮かんで見える">
       <circle cx="44" cy="29" r="9" fill="var(--ink-soft)"/>
-      <circle cx="48" cy="26" r="8" fill="var(--card)"/>
+      <circle cx="48" cy="26" r="8" fill="var(--paper)"/>
       <rect x="36" y="44" width="88" height="48" rx="8" fill="none" stroke="var(--line)"/>
       <g fill="var(--ink-soft)" opacity=".7">
         <rect x="44" y="52" width="72" height="7" rx="3"/>
