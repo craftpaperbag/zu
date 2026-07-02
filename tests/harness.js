@@ -17,6 +17,8 @@ export function bootApp() {
 
   // 起動時に app.js が呼ぶ lucide.createIcons() を無害化（アイコン描画は検査対象外）。
   window.lucide = { createIcons() {} };
+  // jsdom は window.scrollTo 未実装で警告を吐くだけなので、静かな no-op に差し替える。
+  window.scrollTo = () => {};
 
   // 本番の読み込み順（history.js → tips.js → app.js）を1つの eval にまとめて評価する。
   // 別々に eval すると各ファイルの const（TIPS_space や HISTORY）が互いに見えず、

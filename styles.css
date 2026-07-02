@@ -1,4 +1,5 @@
   :root{
+    color-scheme:light;   /* フォーム部品やスクロールバーも配色に追従させる */
     --ink:#1a1d24;        /* 主たる文字 */
     --ink-soft:#5b6270;   /* 副次的な文字 */
     --line:#cdd3dc;       /* 罫・境界（生成りの地でも見える程度に） */
@@ -15,6 +16,7 @@
   }
   /* ダークモード：紙を暗く、墨を明るく。図はCSS変数参照なので一緒に反転する。 */
   :root[data-theme="dark"]{
+    color-scheme:dark;
     --ink:#e7e9ee;
     --ink-soft:#a0a6b2;
     --line:#383d49;
@@ -78,6 +80,8 @@
     #cats::-webkit-scrollbar{display:none;}
     #cats>button{flex:0 0 auto;}      /* chip を縮めず横に流す */
   }
+  /* 検索窓の手引き文：副次の墨で、地の文よりそっと引く */
+  #q::placeholder{color:var(--ink-soft);opacity:.75;}
   /* 検索ヒット語のハイライト：朱の「点」ではなく、ごく薄い検索補助の地色 */
   mark.hl{background:var(--accent-soft);color:inherit;border-radius:3px;padding:0 .1em;}
   /* 入場アニメは backwards で。both（forwards）だと終了後も to{opacity:1} を保持し続け、

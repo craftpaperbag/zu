@@ -109,7 +109,12 @@ function renderCats(){
     mk("all","すべて","layout-grid",activeCat==="all") +
     CATEGORIES.map(c=>mk(c.id,c.label,c.icon,activeCat===c.id)).join("");
   wrap.querySelectorAll("button").forEach(b=>{
-    b.onclick=()=>{activeCat=b.dataset.cat;renderCats();renderGrid();};
+    b.onclick=()=>{
+      activeCat=b.dataset.cat;
+      renderCats(); renderGrid();
+      // ページの深くで切り替えても、結果を先頭から見られるように
+      window.scrollTo({top:0,behavior:"smooth"});
+    };
   });
   syncCatsEnd();
   lucide.createIcons();
@@ -671,7 +676,15 @@ function allClosed(){
 }
 
 document.addEventListener("keydown",e=>{
-  if(e.key==="Escape"){ closeModal(); closeHistory(); closePrivacy(); closeVisited(); return; }
+  if(e.key==="Escape"){
+    // 検索の入力中：まず検索語を消し、もう一度で絞り込みの欄ごと閉じる（キーボードだけで往復できる）
+    if(e.target===qInput){
+      if(qInput.value){ qInput.value=""; keyword=""; syncClear(); renderCats(); renderGrid(); }
+      else { setFiltersOpen(false); qInput.blur(); }
+      return;
+    }
+    closeModal(); closeHistory(); closePrivacy(); closeVisited(); return;
+  }
   // 軽いショートカット（修飾キー併用・入力中は無効にして邪魔をしない）
   if(!e.metaKey && !e.ctrlKey && !e.altKey){
     const tag=(e.target.tagName||"").toLowerCase();
@@ -721,6 +734,13 @@ function syncClear(){ qClear.classList.toggle("is-hidden", !qInput.value); }
 // 入力のたびにカテゴリchipの件数も更新する
 qInput.addEventListener("input",e=>{ keyword=e.target.value; syncClear(); renderCats(); renderGrid(); });
 qClear.onclick=()=>{ qInput.value=""; keyword=""; syncClear(); renderCats(); renderGrid(); qInput.focus(); };
+
+// 0件の行き止まりから、ひと押しで全部の一覧へ戻る
+document.getElementById("empty-reset").onclick=()=>{
+  activeCat="all"; keyword=""; qInput.value=""; syncClear();
+  renderCats(); renderGrid();
+  window.scrollTo({top:0,behavior:"smooth"});
+};
 
 // 表示切り替え（カード / 目次）：選択を localStorage に保存（テーマと同型）
 const viewCardBtn = document.getElementById("view-card");
