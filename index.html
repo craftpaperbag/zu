@@ -108,8 +108,8 @@
     <div class="relative mt-2.5">
       <i data-lucide="search" class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2" style="color:var(--ink-soft)"></i>
       <input id="q" type="text" placeholder="キーワードで探す（例：余白、角丸、色）"
-        class="focusable w-full pl-12 pr-11 py-3 md:py-3.5 soft border bg-white text-base"
-        style="border-color:var(--line)">
+        class="focusable w-full pl-12 pr-11 py-3 md:py-3.5 soft border text-base"
+        style="border-color:var(--line);background:var(--card);color:var(--ink)">
       <button id="q-clear" type="button" aria-label="検索をクリア"
         class="is-hidden focusable chip absolute right-3 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-7 h-7 soft"
         style="background:var(--paper);color:var(--ink-soft);border:none;cursor:pointer">
@@ -144,6 +144,11 @@
   <div id="empty" class="hidden text-center py-16" style="color:var(--ink-soft)">
     <i data-lucide="telescope" class="w-8 h-8 mx-auto mb-3"></i>
     <p>覚え書きが見つかりませんでした。別の言葉で探してみてください。</p>
+    <button id="empty-reset" type="button"
+      class="focusable chip mt-5 inline-flex items-center gap-1.5 text-sm soft px-4 py-2 border"
+      style="color:var(--ink);background:var(--card);border-color:var(--line);cursor:pointer">
+      <i data-lucide="rotate-ccw" class="w-4 h-4"></i>絞り込みを解除して、すべて見る
+    </button>
   </div>
 </main>
 

@@ -44,6 +44,16 @@ test("検索で grid が絞り込まれ、クリアで戻る", () => {
   expect(count("#grid article")).toBe(TIPS.length);
 });
 
+test("0件のとき空表示が出て、「絞り込みを解除」で全件に戻る", () => {
+  typeInto(q("#q"), "そんな覚え書きはないはずの長い呪文");
+  expect(count("#grid article")).toBe(0);
+  expect(q("#empty").classList.contains("hidden")).toBe(false);
+  click(q("#empty-reset"));
+  expect(count("#grid article")).toBe(TIPS.length);
+  expect(q("#empty").classList.contains("hidden")).toBe(true);
+  expect(q("#q").value).toBe("");
+});
+
 test("カテゴリ順ではセクション見出しが出て、新着順では消える", () => {
   // 既定（カテゴリ順・すべて）は各カテゴリの見出しが出る。
   expect(count("#grid .sec-head")).toBe(CAT_ORDER.length);
