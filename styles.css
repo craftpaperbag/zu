@@ -189,7 +189,6 @@
      スマホは縦一列——2列に詰めると言葉が3行に折れて札だけで画面を占めてしまう。
      一列なら一枚が一行に収まり、上から順に自分の困りごとを探せる。 */
   #concern-chips{display:grid;grid-template-columns:1fr;gap:.5rem;}
-  @media (min-width:768px){#concern-chips{display:flex;flex-wrap:wrap;gap:.6rem;}}
   .concern{
     display:inline-flex;align-items:center;gap:.5rem;
     padding:.6rem .95rem;border:1px solid var(--line);border-radius:18px;
@@ -197,9 +196,27 @@
     text-align:left;cursor:pointer;
   }
   .concern i,.concern svg{color:var(--ink-soft);}
+  .concern .concern-ic{display:contents;}   /* スマホでは包みを消して、小さなアイコンを行内に置く */
   .concern .concern-label{flex:1 1 auto;min-width:0;}
   .concern[aria-pressed="true"]{background:var(--strong);color:var(--on-strong);border-color:var(--strong);}
   .concern[aria-pressed="true"] i,.concern[aria-pressed="true"] svg{color:var(--on-strong);}
+  /* PC：小さなピルのままだと「最初の一手」に見えない。アイコンを大きく掲げた
+     タイル型の札に組み直し、4枚×2段で入口の主役らしい存在感を持たせる。
+     色は足さず、アイコンの座布団（paperの角丸）とホバーの浮きだけで引き付ける。 */
+  @media (min-width:768px){
+    #concern-chips{grid-template-columns:repeat(4,1fr);gap:.7rem;}
+    .concern{gap:.8rem;padding:.75rem .95rem;}
+    .concern .concern-ic{
+      display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;
+      width:52px;height:52px;border-radius:16px;background:var(--paper);
+    }
+    .concern .concern-ic svg{width:26px;height:26px;}
+    .concern .concern-label{font-size:.92rem;font-weight:500;line-height:1.5;}
+    .concern:hover{transform:translateY(-2px);box-shadow:0 4px 8px rgba(26,29,36,.05),0 14px 30px -14px rgba(26,29,36,.18);}
+    /* 選択中：札は反転し、座布団はpaperのまま残す（明暗どちらでもアイコンが沈まない） */
+    .concern[aria-pressed="true"] .concern-ic{background:var(--paper);}
+    .concern[aria-pressed="true"] .concern-ic svg{color:var(--ink-soft);}
+  }
   /* 処方箋の一言：選んだ困りごとに応える静かな帯。sticky の絞り込みバーの下に潜らない余裕をとる */
   #concern-lead{
     scroll-margin-top:76px;margin-bottom:1.25rem;

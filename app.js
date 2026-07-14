@@ -164,7 +164,7 @@ function renderConcerns(){
   wrap.innerHTML = CONCERNS.map(c=>{
     const on = activeConcern===c.id;
     return `<button type="button" data-concern="${c.id}" class="concern chip focusable" aria-pressed="${on}">
-      <i data-lucide="${c.icon}" class="w-4 h-4 shrink-0"></i><span class="concern-label">${c.label}</span>
+      <span class="concern-ic"><i data-lucide="${c.icon}" class="w-4 h-4 shrink-0"></i></span><span class="concern-label">${c.label}</span>
     </button>`;
   }).join("");
   wrap.querySelectorAll("button").forEach(b=>{
