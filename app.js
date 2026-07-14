@@ -10,6 +10,39 @@ const CATEGORIES = [
   { id:"flow",      label:"進め方",         icon:"route" },
 ];
 
+/* 困りごとの入口：カテゴリ名ではなく「いま困っていること」の言葉で選ぶ。
+   マッピングは cats（そのカテゴリ丸ごと＋同名タグの横串）∪ plus（カテゴリ横断の名指し）。
+   新しい種は cats 経由で自動で入る。cats/tags で拾える種を plus に重ねて書かない（テストが検査する）。
+   tests/loader.js がこの配列をリテラル抽出して読むため、純リテラルで書き、内側の配列は1行に保つ。 */
+const CONCERNS = [
+  { id:"crowded",       icon:"layers",       label:"ごちゃごちゃして、見づらい",
+    lead:"まずは引き算です。余白と揃えが、散らかりを片づけてくれます。",
+    cats:["space"], plus:["dilute","donki","fewer-colors"] },
+  { id:"where-to-look", icon:"eye",          label:"どこを見ればいいか、分からない",
+    lead:"主役をひとつ決めましょう。順位がつくと、目は迷いません。",
+    cats:["hierarchy"], plus:["label-directly"] },
+  { id:"noisy-color",   icon:"droplet",      label:"色が、うるさい気がする",
+    lead:"色は増やさず、濃淡で。絞るほど、一点が効いてきます。",
+    cats:["color"], plus:[] },
+  { id:"too-much-text", icon:"align-left",   label:"文字ばかりに、なってしまう",
+    lead:"文は短く、図に譲る。削ったぶんだけ、伝わります。",
+    cats:["text"], plus:["one-message","eye-catch"] },
+  { id:"graph-clumsy",  icon:"chart-column", label:"グラフや矢印が、さまにならない",
+    lead:"線には作法があります。少しの手当てで、図は静かに整います。",
+    cats:["draw"], plus:["align-digits","big-number"] },
+  { id:"amateurish",    icon:"sparkles",     label:"なんだか、素人っぽく見える",
+    lead:"揃える・絞る・くり返す。細部の作法が、佇まいを決めます。",
+    cats:[], plus:["invisible-line","align-left","concentric-radius","unify-font","avoid-monospace","icon-touch","repeat-form","fewer-colors","soft-contrast","fill-not-border","gradient-careful","avoid-italic","triangle-arrow","keep-ratio","no-jaggy","consistent-line-weight","flat-graph"] },
+  { id:"takes-forever", icon:"hourglass",    label:"作るのに、時間がかかる",
+    lead:"完璧はあとで。早く見せることが、いちばんの近道です。",
+    cats:["flow"], plus:[] },
+];
+// 種がその困りごとに効くか：主カテゴリ一致・タグの横串一致・名指し（plus）のいずれか
+function matchConcern(t, c){
+  return c.cats.includes(t.cat)
+      || (t.tags||[]).some(tg=>c.cats.includes(tg))
+      || c.plus.includes(t.id);
+}
 
 /* 6カテゴリの配列を1本につなぐ。順序はカテゴリ体系の並びに合わせる。 */
 const TIPS = [].concat(
@@ -67,6 +100,7 @@ function tiesFor(t){
 }
 
 let activeCat = "all";
+let activeConcern = "";  // ""=なし / CONCERNS の id。カテゴリとは排他（後から選んだ方を生かす）
 let keyword = "";
 let viewMode = "card";   // "card"=図つきカード / "list"=目次（図を省いた1行）
 let sortMode = "cat";    // "cat"=カテゴリ順（既定） / "new"=新着順（追加日の新しい順）
@@ -111,7 +145,8 @@ function renderCats(){
   wrap.querySelectorAll("button").forEach(b=>{
     b.onclick=()=>{
       activeCat=b.dataset.cat;
-      renderCats(); renderGrid();
+      activeConcern="";   // カテゴリと困りごとは同じ「範囲」の選択。後から選んだ方を生かす
+      renderConcerns(); renderCats(); renderGrid();
       // ページの深くで切り替えても、結果を先頭から見られるように
       window.scrollTo({top:0,behavior:"smooth"});
     };
@@ -120,12 +155,62 @@ function renderCats(){
   lucide.createIcons();
 }
 
+/* 困りごとの入口（ヒーロー直下）：選ぶと一覧がその困りごとに効く種だけに絞られる。
+   同じものをもう一度押すと解除。カテゴリ絞り込みとは排他（renderCats 側でも解除する）。 */
+function renderConcerns(){
+  const wrap = document.getElementById("concern-chips");
+  if(!wrap) return;
+  const pool = TIPS.filter(matchKeyword);
+  wrap.innerHTML = CONCERNS.map(c=>{
+    const on = activeConcern===c.id;
+    const n = pool.filter(t=>matchConcern(t,c)).length;
+    return `<button type="button" data-concern="${c.id}" class="concern chip focusable" aria-pressed="${on}">
+      <i data-lucide="${c.icon}" class="w-4 h-4 shrink-0"></i><span class="concern-label">${c.label}</span><span class="concern-n tnum">${n}</span>
+    </button>`;
+  }).join("");
+  wrap.querySelectorAll("button").forEach(b=>{
+    b.onclick=()=>{
+      activeConcern = (activeConcern===b.dataset.concern) ? "" : b.dataset.concern;
+      activeCat = "all";
+      renderConcerns(); renderCats(); renderGrid();
+      // 選んだら処方箋の一言まで下りて、答えの一覧を先頭から見せる（解除時はその場に留まる）
+      const lead = document.getElementById("concern-lead");
+      if(activeConcern && lead && lead.scrollIntoView) lead.scrollIntoView({behavior:"smooth", block:"start"});
+    };
+  });
+  lucide.createIcons();
+}
+
+// 処方箋の一言：選んだ困りごとに応える一文を、一覧の直上に静かな帯で出す（朱は使わない）
+function renderConcernLead(){
+  const box = document.getElementById("concern-lead");
+  if(!box) return;
+  const c = CONCERNS.find(x=>x.id===activeConcern);
+  if(!c){ box.classList.add("is-hidden"); box.innerHTML=""; return; }
+  box.classList.remove("is-hidden");
+  box.innerHTML = `
+    <div class="lead-head">
+      <i data-lucide="${c.icon}" class="w-4 h-4 shrink-0"></i>
+      <span class="lead-label maru">${c.label}</span>
+      <button id="concern-clear" type="button" class="chip focusable lead-clear" aria-label="困りごとの絞り込みを解除して、すべて見る">
+        <i data-lucide="x" class="w-3.5 h-3.5"></i>すべて見る
+      </button>
+    </div>
+    <p class="lead-text">${c.lead}</p>`;
+  document.getElementById("concern-clear").onclick=()=>{
+    activeConcern="";
+    renderConcerns(); renderGrid();
+  };
+}
+
 function match(t){
   const okCat = activeCat==="all" || t.cat===activeCat;
+  const con = CONCERNS.find(x=>x.id===activeConcern);
+  const okConcern = !con || matchConcern(t, con);
   const k = keyword.trim();
   const hay = (t.title+t.claim+t.why+t.apply+t.term+catLabel(t.cat)+(t.tags||[]).map(catLabel).join("")+(t.tags||[]).join("")).toLowerCase();
   const okKey = !k || hay.includes(k.toLowerCase());
-  return okCat && okKey;
+  return okCat && okConcern && okKey;
 }
 
 function tagChips(t){
@@ -238,8 +323,9 @@ function renderGrid(){
   const item = viewMode==="list" ? cardRow : card;
   // カード表示はレスポンシブグリッド、目次表示は1列。区画ごとに付け外しする。
   const gridCls = "grid gap-5 md:grid-cols-2 xl:grid-cols-3";
-  // 章立て（カテゴリ見出し）は「すべて」かつカテゴリ順のときだけ。新着順は全カテゴリ横断でフラットに並べる。
-  if(activeCat==="all" && sortMode!=="new"){
+  // 章立て（カテゴリ見出し）は「すべて」かつカテゴリ順のときだけ。
+  // 新着順と困りごと選択中は、全カテゴリ横断でフラットに並べる（処方箋はひとつづきのリスト）。
+  if(activeCat==="all" && !activeConcern && sortMode!=="new"){
     // 「すべて」：カテゴリで章立てして全体像を見せる（0件の区画は出さない）
     grid.className = "";
     grid.innerHTML = CATEGORIES.map(c=>{
@@ -263,6 +349,7 @@ function renderGrid(){
     c.onclick=()=>openTip(c.dataset.id);
     c.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openTip(c.dataset.id); } };
   });
+  renderConcernLead();          // 処方箋の一言（困りごと選択中だけ出る）
   writeFilterToURL();
   renderFilterSummary();        // 折りたたみバーの状態要約を最新化（並べ替え/表示/カテゴリ/キーワード）
   lucide.createIcons();
@@ -280,8 +367,13 @@ function renderFilterSummary(){
     return;
   }
   const parts = [];
-  // カテゴリ：そのカテゴリのアイコン＋ラベル（「すべて」は一覧アイコン）
-  parts.push(`<span class="fsum-item"><i data-lucide="${activeCat==="all"?"layout-grid":catIcon(activeCat)}" class="w-3.5 h-3.5"></i>${activeCat==="all"?"すべて":catLabel(activeCat)}</span>`);
+  // 範囲：困りごと選択中はその言葉を、そうでなければカテゴリのアイコン＋ラベル（「すべて」は一覧アイコン）
+  const con = CONCERNS.find(x=>x.id===activeConcern);
+  if(con){
+    parts.push(`<span class="fsum-item"><i data-lucide="${con.icon}" class="w-3.5 h-3.5"></i>${con.label}</span>`);
+  } else {
+    parts.push(`<span class="fsum-item"><i data-lucide="${activeCat==="all"?"layout-grid":catIcon(activeCat)}" class="w-3.5 h-3.5"></i>${activeCat==="all"?"すべて":catLabel(activeCat)}</span>`);
+  }
   // 並べ替え
   parts.push(`<span class="fsum-item">${sortMode==="new"?"新着":"標準"}</span>`);
   // 表示形式
@@ -346,6 +438,7 @@ function tipIdFromHash(){
 function writeFilterToURL(){
   const p = new URLSearchParams();
   if(activeCat!=="all") p.set("cat", activeCat);
+  if(activeConcern)     p.set("komari", activeConcern);   // 困りごと（カテゴリとは排他なので cat と同時には載らない）
   if(keyword.trim())    p.set("q", keyword.trim());
   const qs = p.toString();
   history.replaceState(history.state, "", location.pathname + (qs?("?"+qs):"") + location.hash);
@@ -369,11 +462,11 @@ function showModal(id, dir=0){
   // モーダル内のタグから絞り込みジャンプ
   modalBody.querySelectorAll("button[data-jump]").forEach(b=>{
     b.onclick=()=>{
-      activeCat=b.dataset.jump; keyword="";
+      activeCat=b.dataset.jump; activeConcern=""; keyword="";
       qInput.value=""; syncClear();
       hideModal();
       history.replaceState(null,"",location.pathname);  // 詳細#tip と旧クエリを消す（renderGridが?cat=を書き直す）
-      renderCats(); renderGrid();
+      renderConcerns(); renderCats(); renderGrid();
       window.scrollTo({top:0,behavior:"smooth"});
     };
   });
@@ -679,7 +772,7 @@ document.addEventListener("keydown",e=>{
   if(e.key==="Escape"){
     // 検索の入力中：まず検索語を消し、もう一度で絞り込みの欄ごと閉じる（キーボードだけで往復できる）
     if(e.target===qInput){
-      if(qInput.value){ qInput.value=""; keyword=""; syncClear(); renderCats(); renderGrid(); }
+      if(qInput.value){ qInput.value=""; keyword=""; syncClear(); renderConcerns(); renderCats(); renderGrid(); }
       else { setFiltersOpen(false); qInput.blur(); }
       return;
     }
@@ -731,14 +824,14 @@ filterToggle.onclick=()=>setFiltersOpen(!filtersOpen);
 const qInput = document.getElementById("q");
 const qClear = document.getElementById("q-clear");
 function syncClear(){ qClear.classList.toggle("is-hidden", !qInput.value); }
-// 入力のたびにカテゴリchipの件数も更新する
-qInput.addEventListener("input",e=>{ keyword=e.target.value; syncClear(); renderCats(); renderGrid(); });
-qClear.onclick=()=>{ qInput.value=""; keyword=""; syncClear(); renderCats(); renderGrid(); qInput.focus(); };
+// 入力のたびにカテゴリ・困りごとchipの件数も更新する
+qInput.addEventListener("input",e=>{ keyword=e.target.value; syncClear(); renderConcerns(); renderCats(); renderGrid(); });
+qClear.onclick=()=>{ qInput.value=""; keyword=""; syncClear(); renderConcerns(); renderCats(); renderGrid(); qInput.focus(); };
 
 // 0件の行き止まりから、ひと押しで全部の一覧へ戻る
 document.getElementById("empty-reset").onclick=()=>{
-  activeCat="all"; keyword=""; qInput.value=""; syncClear();
-  renderCats(); renderGrid();
+  activeCat="all"; activeConcern=""; keyword=""; qInput.value=""; syncClear();
+  renderConcerns(); renderCats(); renderGrid();
   window.scrollTo({top:0,behavior:"smooth"});
 };
 
@@ -813,6 +906,9 @@ syncScrollUI();
   const p = new URLSearchParams(location.search);
   const cat = p.get("cat");
   if(cat && (cat==="all" || CATEGORIES.some(c=>c.id===cat))) activeCat = cat;
+  // 困りごと（?komari=）。カテゴリとは排他なので、両方あれば困りごとを生かす。不正な id は無視。
+  const komari = p.get("komari");
+  if(komari && CONCERNS.some(c=>c.id===komari)){ activeConcern = komari; activeCat = "all"; }
   const q = p.get("q");
   if(q){ keyword = q; qInput.value = q; syncClear(); }
   // 表示の好み（カード/目次）を復元（URLには載せず localStorage のみ）
@@ -823,6 +919,7 @@ syncScrollUI();
   paintSortSeg();
 })();
 
+renderConcerns();
 renderCats();
 renderGrid();
 

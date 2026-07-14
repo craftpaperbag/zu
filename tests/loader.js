@@ -31,15 +31,18 @@ function loadHistory() {
   return ctx.__H;
 }
 
-// app.js から CATEGORIES と REL のリテラルだけを抜き出して評価する。
+// app.js から CATEGORIES / CONCERNS / REL のリテラルだけを抜き出して評価する。
 function loadAppMeta() {
   const src = readFile("app.js");
   const catLit = src.match(/const CATEGORIES\s*=\s*(\[[\s\S]*?\]);/);
+  const conLit = src.match(/const CONCERNS\s*=\s*(\[[\s\S]*?\]);/);
   const relLit = src.match(/const REL\s*=\s*(\{[\s\S]*?\});\s*\nconst REL_ORDER/);
   if (!catLit) throw new Error("app.js から CATEGORIES を抽出できなかった");
+  if (!conLit) throw new Error("app.js から CONCERNS を抽出できなかった");
   if (!relLit) throw new Error("app.js から REL を抽出できなかった");
   return {
     CATEGORIES: vm.runInNewContext("(" + catLit[1] + ")"),
+    CONCERNS: vm.runInNewContext("(" + conLit[1] + ")"),
     REL: vm.runInNewContext("(" + relLit[1] + ")"),
   };
 }
@@ -60,4 +63,10 @@ export const TIPS = [].concat(...CAT_ORDER.map((c) => GROUPS[c] || []));
 export const HISTORY = loadHistory();
 const meta = loadAppMeta();
 export const CATEGORIES = meta.CATEGORIES;
+export const CONCERNS = meta.CONCERNS;
 export const REL = meta.REL;
+
+// app.js の matchConcern と同じ判定（cats のカテゴリ一致・タグの横串一致・plus の名指し）。
+// テストからも同じ物差しで数えられるよう、ここに同型を置く（実物は render.test.js が動かして検証する）。
+export const matchConcern = (t, c) =>
+  c.cats.includes(t.cat) || (t.tags || []).some((tg) => c.cats.includes(tg)) || c.plus.includes(t.id);

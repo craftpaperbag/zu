@@ -84,6 +84,12 @@
   </p>
 </header>
 
+<!-- 困りごとの入口：カテゴリ名ではなく「いま困っていること」の言葉から選ぶ。中身は app.js が描く -->
+<nav id="concerns" class="px-6 max-w-5xl xl:max-w-7xl mx-auto pb-3 md:pb-4" aria-label="困りごとから探す">
+  <p class="maru font-bold" style="color:var(--ink);font-size:clamp(1rem,3vw,1.15rem)">いま、どんなことに困っていますか？</p>
+  <div id="concern-chips" class="mt-2.5"></div>
+</nav>
+
 <!-- 検索 + カテゴリ + 一覧の操作（総数・表示切替・ランダム）をひとまとめに固定する。
      操作は嵩張りやすいので折りたたみ式にし、既定は閉じる。閉じている間も
      開閉バーが今の状態（カテゴリ・並べ替え・表示・キーワード）を要約して見せる。 -->
@@ -140,6 +146,8 @@
 
 <!-- Tips一覧 -->
 <main class="px-6 max-w-5xl xl:max-w-7xl mx-auto pt-4 pb-8">
+  <!-- 処方箋の一言：困りごとを選んだときだけ、一覧の直上に出る。中身は app.js が描く -->
+  <div id="concern-lead" class="is-hidden"></div>
   <div id="grid" class="grid gap-5 md:grid-cols-2 xl:grid-cols-3"></div>
   <div id="empty" class="hidden text-center py-16" style="color:var(--ink-soft)">
     <i data-lucide="telescope" class="w-8 h-8 mx-auto mb-3"></i>

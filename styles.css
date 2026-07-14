@@ -184,6 +184,34 @@
   .tie .tie-title{flex:1 1 auto;min-width:0;color:var(--ink);font-weight:700;
     overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .tie .tie-go{flex:0 0 auto;opacity:.4;}
+  /* 困りごとの入口：ヒーロー直下の主役。カテゴリchipよりひと回り大きい押せる札。
+     朱は使わず、選択中は既存chipと同じ「濃い面に明るい字」の反転で示す。 */
+  #concern-chips{display:grid;grid-template-columns:1fr 1fr;gap:.55rem;}
+  @media (min-width:768px){#concern-chips{display:flex;flex-wrap:wrap;gap:.6rem;}}
+  .concern{
+    display:inline-flex;align-items:center;gap:.5rem;
+    padding:.66rem .95rem;border:1px solid var(--line);border-radius:18px;
+    background:var(--card);color:var(--ink);font-size:.86rem;line-height:1.45;
+    text-align:left;cursor:pointer;
+  }
+  .concern i,.concern svg{color:var(--ink-soft);}
+  .concern .concern-label{flex:1 1 auto;min-width:0;}
+  .concern .concern-n{flex:0 0 auto;font-size:.72rem;opacity:.55;}
+  .concern[aria-pressed="true"]{background:var(--strong);color:var(--on-strong);border-color:var(--strong);}
+  .concern[aria-pressed="true"] i,.concern[aria-pressed="true"] svg{color:var(--on-strong);}
+  /* 処方箋の一言：選んだ困りごとに応える静かな帯。sticky の絞り込みバーの下に潜らない余裕をとる */
+  #concern-lead{
+    scroll-margin-top:76px;margin-bottom:1.25rem;
+    padding:1rem 1.25rem;border:1px solid var(--line);border-radius:18px;background:var(--card);
+  }
+  #concern-lead .lead-head{display:flex;align-items:center;gap:.5rem;color:var(--ink-soft);}
+  #concern-lead .lead-label{color:var(--ink);font-weight:700;font-size:1.05rem;}
+  #concern-lead .lead-clear{
+    margin-left:auto;flex:0 0 auto;display:inline-flex;align-items:center;gap:.3rem;
+    font-size:.78rem;line-height:1;padding:.38rem .65rem;
+    border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink-soft);cursor:pointer;
+  }
+  #concern-lead .lead-text{margin:.45rem 0 0;color:var(--ink);font-size:.92rem;}
   /* 固定バーの下端：スクロールする一覧が、すっと溶けて潜るように薄める */
   #filterbar::after{
     content:"";position:absolute;left:0;right:0;top:100%;height:18px;
