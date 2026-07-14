@@ -185,18 +185,19 @@
     overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .tie .tie-go{flex:0 0 auto;opacity:.4;}
   /* 困りごとの入口：ヒーロー直下の主役。カテゴリchipよりひと回り大きい押せる札。
-     朱は使わず、選択中は既存chipと同じ「濃い面に明るい字」の反転で示す。 */
-  #concern-chips{display:grid;grid-template-columns:1fr 1fr;gap:.55rem;}
+     朱は使わず、選択中は既存chipと同じ「濃い面に明るい字」の反転で示す。
+     スマホは縦一列——2列に詰めると言葉が3行に折れて札だけで画面を占めてしまう。
+     一列なら一枚が一行に収まり、上から順に自分の困りごとを探せる。 */
+  #concern-chips{display:grid;grid-template-columns:1fr;gap:.5rem;}
   @media (min-width:768px){#concern-chips{display:flex;flex-wrap:wrap;gap:.6rem;}}
   .concern{
     display:inline-flex;align-items:center;gap:.5rem;
-    padding:.66rem .95rem;border:1px solid var(--line);border-radius:18px;
+    padding:.6rem .95rem;border:1px solid var(--line);border-radius:18px;
     background:var(--card);color:var(--ink);font-size:.86rem;line-height:1.45;
     text-align:left;cursor:pointer;
   }
   .concern i,.concern svg{color:var(--ink-soft);}
   .concern .concern-label{flex:1 1 auto;min-width:0;}
-  .concern .concern-n{flex:0 0 auto;font-size:.72rem;opacity:.55;}
   .concern[aria-pressed="true"]{background:var(--strong);color:var(--on-strong);border-color:var(--strong);}
   .concern[aria-pressed="true"] i,.concern[aria-pressed="true"] svg{color:var(--on-strong);}
   /* 処方箋の一言：選んだ困りごとに応える静かな帯。sticky の絞り込みバーの下に潜らない余裕をとる */

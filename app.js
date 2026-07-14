@@ -156,16 +156,15 @@ function renderCats(){
 }
 
 /* 困りごとの入口（ヒーロー直下）：選ぶと一覧がその困りごとに効く種だけに絞られる。
-   同じものをもう一度押すと解除。カテゴリ絞り込みとは排他（renderCats 側でも解除する）。 */
+   同じものをもう一度押すと解除。カテゴリ絞り込みとは排他（renderCats 側でも解除する）。
+   件数の数字は付けない——入口は言葉だけの静かな札にする（数字は選んだ後の「n 件」で足りる）。 */
 function renderConcerns(){
   const wrap = document.getElementById("concern-chips");
   if(!wrap) return;
-  const pool = TIPS.filter(matchKeyword);
   wrap.innerHTML = CONCERNS.map(c=>{
     const on = activeConcern===c.id;
-    const n = pool.filter(t=>matchConcern(t,c)).length;
     return `<button type="button" data-concern="${c.id}" class="concern chip focusable" aria-pressed="${on}">
-      <i data-lucide="${c.icon}" class="w-4 h-4 shrink-0"></i><span class="concern-label">${c.label}</span><span class="concern-n tnum">${n}</span>
+      <i data-lucide="${c.icon}" class="w-4 h-4 shrink-0"></i><span class="concern-label">${c.label}</span>
     </button>`;
   }).join("");
   wrap.querySelectorAll("button").forEach(b=>{
@@ -356,7 +355,9 @@ function renderGrid(){
 }
 
 // 折りたたみバーの中身。
-// ・閉じているとき：今の絞り込み状態（カテゴリ→並べ替え→表示→キーワード）を静かに要約する。
+// ・閉じているとき：既定から変えたものだけ（困りごと/カテゴリ→並べ替え→表示→キーワード）を静かに要約する。
+//   何も変えていなければ要約は出さず、「検索・絞り込み」の見出しだけの静かな摘みでいる
+//   （「すべて・標準・カード」と既定値を並べるのは、入口では数字と同じノイズになる）。
 // ・開いているとき：下の操作そのものが状態を示すので要約は出さず、区画の見出しとして一語だけ置く（重複を避ける）。
 function escAttr(s){ return String(s).replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
 function renderFilterSummary(){
@@ -367,23 +368,24 @@ function renderFilterSummary(){
     return;
   }
   const parts = [];
-  // 範囲：困りごと選択中はその言葉を、そうでなければカテゴリのアイコン＋ラベル（「すべて」は一覧アイコン）
+  // 範囲：困りごと選択中はその言葉を、カテゴリで絞っていればそのアイコン＋ラベルを（「すべて」なら何も出さない）
   const con = CONCERNS.find(x=>x.id===activeConcern);
   if(con){
     parts.push(`<span class="fsum-item"><i data-lucide="${con.icon}" class="w-3.5 h-3.5"></i>${con.label}</span>`);
-  } else {
-    parts.push(`<span class="fsum-item"><i data-lucide="${activeCat==="all"?"layout-grid":catIcon(activeCat)}" class="w-3.5 h-3.5"></i>${activeCat==="all"?"すべて":catLabel(activeCat)}</span>`);
+  } else if(activeCat!=="all"){
+    parts.push(`<span class="fsum-item"><i data-lucide="${catIcon(activeCat)}" class="w-3.5 h-3.5"></i>${catLabel(activeCat)}</span>`);
   }
-  // 並べ替え
-  parts.push(`<span class="fsum-item">${sortMode==="new"?"新着":"標準"}</span>`);
-  // 表示形式
-  parts.push(`<span class="fsum-item">${viewMode==="list"?"目次":"カード"}</span>`);
+  // 並べ替え・表示形式：既定（標準・カード）から変えたときだけ
+  if(sortMode==="new")  parts.push(`<span class="fsum-item">新着順</span>`);
+  if(viewMode==="list") parts.push(`<span class="fsum-item">目次</span>`);
   // キーワード：あるときだけ。検索アイコンを添えて「いま検索中」だと伝える
   const k = keyword.trim();
   if(k){
     parts.push(`<span class="fsum-item fsum-key"><i data-lucide="search" class="w-3.5 h-3.5"></i><span class="kw">「${escAttr(k)}」</span></span>`);
   }
-  el.innerHTML = parts.join('<span class="fsum-sep" aria-hidden="true">·</span>');
+  el.innerHTML = parts.length
+    ? parts.join('<span class="fsum-sep" aria-hidden="true">·</span>')
+    : `<span class="fsum-label">検索・絞り込み</span>`;
 }
 
 /* ---- 閲覧履歴（最近見た覚え書き） ----
@@ -772,7 +774,7 @@ document.addEventListener("keydown",e=>{
   if(e.key==="Escape"){
     // 検索の入力中：まず検索語を消し、もう一度で絞り込みの欄ごと閉じる（キーボードだけで往復できる）
     if(e.target===qInput){
-      if(qInput.value){ qInput.value=""; keyword=""; syncClear(); renderConcerns(); renderCats(); renderGrid(); }
+      if(qInput.value){ qInput.value=""; keyword=""; syncClear(); renderCats(); renderGrid(); }
       else { setFiltersOpen(false); qInput.blur(); }
       return;
     }
@@ -824,9 +826,9 @@ filterToggle.onclick=()=>setFiltersOpen(!filtersOpen);
 const qInput = document.getElementById("q");
 const qClear = document.getElementById("q-clear");
 function syncClear(){ qClear.classList.toggle("is-hidden", !qInput.value); }
-// 入力のたびにカテゴリ・困りごとchipの件数も更新する
-qInput.addEventListener("input",e=>{ keyword=e.target.value; syncClear(); renderConcerns(); renderCats(); renderGrid(); });
-qClear.onclick=()=>{ qInput.value=""; keyword=""; syncClear(); renderConcerns(); renderCats(); renderGrid(); qInput.focus(); };
+// 入力のたびにカテゴリchipの件数も更新する（困りごとの札は件数を持たないので描き直さない）
+qInput.addEventListener("input",e=>{ keyword=e.target.value; syncClear(); renderCats(); renderGrid(); });
+qClear.onclick=()=>{ qInput.value=""; keyword=""; syncClear(); renderCats(); renderGrid(); qInput.focus(); };
 
 // 0件の行き止まりから、ひと押しで全部の一覧へ戻る
 document.getElementById("empty-reset").onclick=()=>{
