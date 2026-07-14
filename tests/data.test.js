@@ -10,7 +10,9 @@ import {
   TIPS,
   HISTORY,
   CATEGORIES,
+  CONCERNS,
   REL,
+  matchConcern,
   loadTokens,
 } from "./loader.js";
 
@@ -138,6 +140,49 @@ test("links は片側だけ（両端に書かない）", () => {
         `${t.id}<->${l.to}: 両端に links がある。逆向きは自動で出るので片側だけにする`,
       ).toBe(false);
     }
+  }
+});
+
+/* ====================  困りごとの入口（CONCERNS）  ==================== */
+
+test("CONCERNS: id が一意で kebab-case、label / lead / icon が空でない", () => {
+  const ids = CONCERNS.map((c) => c.id);
+  expect([...new Set(ids)].length, "id が重複").toBe(ids.length);
+  for (const c of CONCERNS) {
+    expect(c.id, c.id).toMatch(/^[a-z0-9]+(-[a-z0-9]+)*$/);
+    for (const k of ["label", "lead", "icon"]) {
+      expect(typeof c[k] === "string" && c[k].trim().length > 0, `${c.id}: ${k} が空`).toBe(true);
+    }
+  }
+});
+
+test("CONCERNS: cats は定義済みカテゴリ、plus は実在の Tips id（重複なし）", () => {
+  for (const c of CONCERNS) {
+    expect(Array.isArray(c.cats) && Array.isArray(c.plus), `${c.id}: cats / plus は配列`).toBe(true);
+    for (const cat of c.cats) expect(CAT_IDS, `${c.id}: 未知の cat "${cat}"`).toContain(cat);
+    for (const id of c.plus) expect(ID_SET.has(id), `${c.id}: plus の "${id}" が存在しない`).toBe(true);
+    expect([...new Set(c.plus)].length, `${c.id}: plus に重複がある`).toBe(c.plus.length);
+  }
+});
+
+test("CONCERNS: cats・タグで拾える種を plus に重ねて書かない（自動で入るものは名指ししない）", () => {
+  for (const c of CONCERNS) {
+    for (const id of c.plus) {
+      const t = TIPS.find((x) => x.id === id);
+      const auto = c.cats.includes(t.cat) || (t.tags || []).some((tg) => c.cats.includes(tg));
+      expect(auto, `${c.id}: "${id}" は cats/tags で自動で入るので plus から外す`).toBe(false);
+    }
+  }
+});
+
+test("CONCERNS: どの困りごとにも応える種があり、全種がどこかの入口から届く", () => {
+  for (const c of CONCERNS) {
+    const n = TIPS.filter((t) => matchConcern(t, c)).length;
+    expect(n, `${c.id}: 1件もヒットしない`).toBeGreaterThan(0);
+  }
+  for (const t of TIPS) {
+    const reachable = CONCERNS.some((c) => matchConcern(t, c));
+    expect(reachable, `${t.id}: どの困りごとからも届かない`).toBe(true);
   }
 });
 

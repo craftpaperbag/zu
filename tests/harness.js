@@ -6,10 +6,11 @@ import { JSDOM } from "jsdom";
 import { readFile } from "./loader.js";
 
 // 新鮮な app インスタンスを1つ起動して { window, document } を返す。
-export function bootApp() {
+// url を渡すと、そのURLで開いたことにして起動する（?cat= や ?komari= の復元を試すため）。
+export function bootApp(url = "https://example.com/") {
   const html = readFile("index.html");
   const dom = new JSDOM(html, {
-    url: "https://example.com/",
+    url,
     runScripts: "outside-only", // ページ内の <script> は走らせない。こちらで3本だけ評価する。
     pretendToBeVisual: true,
   });
