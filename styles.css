@@ -200,6 +200,11 @@
   .concern .concern-label{flex:1 1 auto;min-width:0;}
   .concern[aria-pressed="true"]{background:var(--strong);color:var(--on-strong);border-color:var(--strong);}
   .concern[aria-pressed="true"] i,.concern[aria-pressed="true"] svg{color:var(--on-strong);}
+  /* AIにも聞けます札：絞り込みではなく「コピー」する別の働きなので、破線の縁と薄い面で
+     困りごとの札と見分ける（色は足さない）。PCでは4枚×2段の空いた8枠目に収まる。 */
+  .concern-ai{border-style:dashed;background:transparent;color:var(--ink-soft);}
+  .concern-ai .concern-label{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;column-gap:.6em;}
+  .concern-ai .concern-sub{white-space:nowrap;font-size:.72rem;color:var(--ink-soft);}
   /* PC：小さなピルのままだと「最初の一手」に見えない。アイコンを大きく掲げた
      タイル型の札に組み直し、4枚×2段で入口の主役らしい存在感を持たせる。
      色は足さず、アイコンの座布団（paperの角丸）とホバーの浮きだけで引き付ける。 */
@@ -212,6 +217,8 @@
     }
     .concern .concern-ic svg{width:26px;height:26px;}
     .concern .concern-label{font-size:.92rem;font-weight:500;line-height:1.5;}
+    .concern-ai .concern-label{display:block;}
+    .concern-ai .concern-sub{display:block;}
     .concern:hover{transform:translateY(-2px);box-shadow:0 4px 8px rgba(26,29,36,.05),0 14px 30px -14px rgba(26,29,36,.18);}
     /* 選択中：札は反転し、座布団はpaperのまま残す（明暗どちらでもアイコンが沈まない） */
     .concern[aria-pressed="true"] .concern-ic{background:var(--paper);}
