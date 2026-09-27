@@ -200,7 +200,7 @@
   .concern .concern-label{flex:1 1 auto;min-width:0;}
   .concern[aria-pressed="true"]{background:var(--strong);color:var(--on-strong);border-color:var(--strong);}
   .concern[aria-pressed="true"] i,.concern[aria-pressed="true"] svg{color:var(--on-strong);}
-  /* AIに相談する札：絞り込みではなく「コピー」する別の働きなので、破線の縁と薄い面で
+  /* AIにも聞けます札：絞り込みではなく「コピー」する別の働きなので、破線の縁と薄い面で
      困りごとの札と見分ける（色は足さない）。PCでは4枚×2段の空いた8枠目に収まる。 */
   .concern-ai{border-style:dashed;background:transparent;color:var(--ink-soft);}
   .concern-ai .concern-label{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;column-gap:.6em;}

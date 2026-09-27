@@ -153,14 +153,14 @@ test("履歴モーダルを開くと更新履歴が描画される", () => {
   expect(q("#history-body").textContent).toContain("2026");
 });
 
-test("AIに相談する札：押すと、全 Tips をリンクつきで含むプロンプトがコピーされる", async () => {
+test("AIにも聞けます札：押すと、全 Tips をリンクつきで含むプロンプトがコピーされる", async () => {
   let copied = "";
   Object.defineProperty(window.navigator, "clipboard", {
     value: { writeText: (s) => { copied = s; return Promise.resolve(); } },
     configurable: true,
   });
   const btn = q("#ask-ai");
-  expect(btn, "AIに相談する札が無い").toBeTruthy();
+  expect(btn, "AIにも聞けます札が無い").toBeTruthy();
   click(btn);
   await Promise.resolve();
   expect(copied).toContain("困っていますか");

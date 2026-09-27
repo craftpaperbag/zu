@@ -167,8 +167,8 @@ function renderConcerns(){
       <span class="concern-ic"><i data-lucide="${c.icon}" class="w-4 h-4 shrink-0"></i></span><span class="concern-label">${c.label}</span>
     </button>`;
   }).join("") + `<button type="button" id="ask-ai" class="concern concern-ai chip focusable"
-      aria-label="AIに相談するためのプロンプトをコピー（AIが困りごとを聞いて、効く覚え書きとリンクを返します）">
-      <span class="concern-ic"><i data-lucide="bot" class="w-4 h-4 shrink-0"></i></span><span class="concern-label">ほかの困りごとは、AIに相談<small class="concern-sub">プロンプトをコピー</small></span>
+      aria-label="AIに聞くためのプロンプトをコピー（AIが困りごとを聞いて、効く覚え書きとリンクを返します）">
+      <span class="concern-ic"><i data-lucide="bot" class="w-4 h-4 shrink-0"></i></span><span class="concern-label">AIにも、聞けます<small class="concern-sub">プロンプトをコピー</small></span>
     </button>`;
   document.getElementById("ask-ai").onclick=copyAskPrompt;
   wrap.querySelectorAll("button[data-concern]").forEach(b=>{
@@ -599,7 +599,7 @@ function shareSite(){
     copiedMsg:"このサイトのリンクをコピーしました"
   });
 }
-/* AIに相談するプロンプト：AIがまず困りごとを聞き、下の覚え書き一覧から効くものをリンクつきで返す。
+/* AIに聞くプロンプト：AIがまず困りごとを聞き、下の覚え書き一覧から効くものをリンクつきで返す。
    一覧は押した時点の TIPS から組み立てるので、種を足せば自動で追従する（手で書き写さない）。 */
 function plainText(s){
   return String(s||"").replace(/<[^>]*>/g,"").replace(/\s+/g," ").trim();
