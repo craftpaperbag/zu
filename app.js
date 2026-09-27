@@ -166,8 +166,12 @@ function renderConcerns(){
     return `<button type="button" data-concern="${c.id}" class="concern chip focusable" aria-pressed="${on}">
       <span class="concern-ic"><i data-lucide="${c.icon}" class="w-4 h-4 shrink-0"></i></span><span class="concern-label">${c.label}</span>
     </button>`;
-  }).join("");
-  wrap.querySelectorAll("button").forEach(b=>{
+  }).join("") + `<button type="button" id="ask-ai" class="concern concern-ai chip focusable"
+      aria-label="AIに相談するためのプロンプトをコピー（AIが困りごとを聞いて、効く覚え書きとリンクを返します）">
+      <span class="concern-ic"><i data-lucide="bot" class="w-4 h-4 shrink-0"></i></span><span class="concern-label">ほかの困りごとは、AIに相談<small class="concern-sub">プロンプトをコピー</small></span>
+    </button>`;
+  document.getElementById("ask-ai").onclick=copyAskPrompt;
+  wrap.querySelectorAll("button[data-concern]").forEach(b=>{
     b.onclick=()=>{
       activeConcern = (activeConcern===b.dataset.concern) ? "" : b.dataset.concern;
       activeCat = "all";
@@ -532,7 +536,7 @@ modalNext.onclick=()=>stepTip(1);
 
 // 静かな通知（リンクをコピーした等）。濃い面に明るい字で上からそっと出し、しばらくして消す。
 let toastTimer=null;
-function showToast(msg){
+function showToast(msg, ms=1900){
   const el=document.getElementById("toast");
   document.getElementById("toast-msg").textContent=msg;
   el.classList.remove("is-hidden","toast-show");
@@ -540,7 +544,7 @@ function showToast(msg){
   el.classList.add("toast-show");
   lucide.createIcons();
   clearTimeout(toastTimer);
-  toastTimer=setTimeout(()=>el.classList.add("is-hidden"),1900);
+  toastTimer=setTimeout(()=>el.classList.add("is-hidden"),ms);
 }
 
 // この覚え書きへの共有リンク（絞り込みクエリは外し、その一枚が素直に開く #tip=id の絶対URL）
@@ -594,6 +598,40 @@ function shareSite(){
     url:siteShareURL(),
     copiedMsg:"このサイトのリンクをコピーしました"
   });
+}
+/* AIに相談するプロンプト：AIがまず困りごとを聞き、下の覚え書き一覧から効くものをリンクつきで返す。
+   一覧は押した時点の TIPS から組み立てるので、種を足せば自動で追従する（手で書き写さない）。 */
+function plainText(s){
+  return String(s||"").replace(/<[^>]*>/g,"").replace(/\s+/g," ").trim();
+}
+function buildAskPrompt(){
+  const site = siteShareURL();
+  const list = CATEGORIES.map(c=>{
+    const items = TIPS.filter(t=>t.cat===c.id).map(t=>
+      `- 「${plainText(t.title)}」 ${plainText(t.claim)}\n  使い方：${plainText(t.apply)}\n  ${tipShareURL(t.id)}`);
+    return items.length ? `## ${c.label}\n${items.join("\n")}` : "";
+  }).filter(Boolean).join("\n\n");
+  return `あなたは、図の伝わりやすさのコツ集「zu — 伝わりやすい形について」（${site}）の相談役です。
+zu では、スライド・資料・Excel・ホワイトボード・チャット投稿など、見せて伝えるものをすべて「図」と呼びます。
+
+# 進め方
+1. 最初は答えを出さず、私に「いま、何を作っていて、どんなことに困っていますか？」と短く一つだけ聞いてください。
+2. 私の答えを読んだら、下の「覚え書き一覧」から、いちばん効きそうなものを1〜3個選んで返してください。一つずつ、
+   - タイトル
+   - 私の状況に当てはめると、なぜ効くのか（一〜二文）
+   - まず何をすればいいか（一文）
+   - 覚え書きのリンク（一覧のURLをそのまま）
+3. 困りごとがあいまいなら、選ぶ前に一つだけ聞き返してかまいません。
+4. 一覧にないコツを作らないでください。ぴったりのものがなければ、そう正直に伝えてください。
+5. 専門用語は避け、平易に、短く答えてください。
+
+# 覚え書き一覧（全${TIPS.length}件）
+${list}`;
+}
+function copyAskPrompt(){
+  copyText(buildAskPrompt())
+    .then(()=>showToast("プロンプトをコピーしました。AIに貼って送ってください", 3600))
+    .catch(()=>showToast("コピーできませんでした"));
 }
 document.getElementById("modal-share").onclick=shareCurrentTip;
 document.getElementById("share-site").onclick=shareSite;

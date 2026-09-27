@@ -64,7 +64,7 @@ test("カテゴリ順ではセクション見出しが出て、新着順では�
 });
 
 test("困りごとチップが全件描画される", () => {
-  expect(count("#concern-chips button")).toBe(CONCERNS.length);
+  expect(count("#concern-chips button[data-concern]")).toBe(CONCERNS.length);
   for (const c of CONCERNS) expect(conBtn(c.id), `${c.id} のチップが無い`).toBeTruthy();
   // 初期状態では処方箋の帯は出ない
   expect(q("#concern-lead").classList.contains("is-hidden")).toBe(true);
@@ -151,4 +151,21 @@ test("履歴モーダルを開くと更新履歴が描画される", () => {
   click(q("#history-open"));
   expect(q("#history-body").textContent.trim().length).toBeGreaterThan(0);
   expect(q("#history-body").textContent).toContain("2026");
+});
+
+test("AIに相談する札：押すと、全 Tips をリンクつきで含むプロンプトがコピーされる", async () => {
+  let copied = "";
+  Object.defineProperty(window.navigator, "clipboard", {
+    value: { writeText: (s) => { copied = s; return Promise.resolve(); } },
+    configurable: true,
+  });
+  const btn = q("#ask-ai");
+  expect(btn, "AIに相談する札が無い").toBeTruthy();
+  click(btn);
+  await Promise.resolve();
+  expect(copied).toContain("困っていますか");
+  for (const t of TIPS) expect(copied, `${t.id} のリンクが無い`).toContain(`#tip=${t.id}`);
+  expect(copied).not.toMatch(/<[a-z][^>]*>/i); // HTML タグを持ち込まない
+  // 札を押しても困りごとの絞り込みは変わらない
+  expect(count("#grid article")).toBe(TIPS.length);
 });
