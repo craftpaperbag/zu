@@ -152,3 +152,60 @@ test("履歴モーダルを開くと更新履歴が描画される", () => {
   expect(q("#history-body").textContent.trim().length).toBeGreaterThan(0);
   expect(q("#history-body").textContent).toContain("2026");
 });
+
+// クリップボードへの書き込みを横取りして、コピーされた文面を返す
+function captureClipboard(win) {
+  const box = { text: null };
+  Object.defineProperty(win.navigator, "clipboard", {
+    configurable: true,
+    value: { writeText: (t) => { box.text = t; return Promise.resolve(); } },
+  });
+  return box;
+}
+
+test("一覧の「AIに渡す」で、いま並んでいる覚え書きが why まで入ったプロンプトになる", () => {
+  const box = captureClipboard(window);
+  click(catBtn("color"));
+  click(q("#prompt-list"));
+  const colors = TIPS.filter((t) => t.cat === "color");
+  expect(box.text).toContain(`ガイドライン（${colors.length}件）`);
+  // サイトの紹介・出典やカテゴリ名は入れない（AI の判断に効かない自己主張を省く）
+  expect(box.text).not.toContain("zu");
+  expect(box.text).not.toContain("http");
+  expect(box.text).not.toContain("いま困っていること");
+  for (const t of colors) {
+    expect(box.text).toContain(t.title);
+    expect(box.text).toContain(t.why);
+    expect(box.text).toContain(t.apply);
+  }
+  const other = TIPS.find((t) => t.cat !== "color");
+  expect(box.text).not.toContain(`### ${other.title}\n`);
+});
+
+test("0件のときは一覧の「AIに渡す」を隠す", () => {
+  typeInto(q("#q"), "存在しないはずの言葉zzz");
+  expect(q("#prompt-list").classList.contains("is-hidden")).toBe(true);
+});
+
+test("詳細の「AIに渡す」で、その一枚だけのプロンプトになる", () => {
+  const box = captureClipboard(window);
+  const tip = TIPS[0];
+  click(q(`#grid article[data-id="${tip.id}"]`));
+  click(q("#modal-prompt"));
+  expect(box.text).toContain(`ガイドライン（1件）`);
+  expect(box.text).toContain(`### ${tip.title}`);
+  expect(box.text).toContain(tip.why);
+  expect(box.text.match(/^### /gm).length).toBe(1);
+});
+
+test("困りごとを選ぶと、処方箋の帯から、その件数ぶんを AI に渡せる", () => {
+  const box = captureClipboard(window);
+  const c = CONCERNS[0];
+  click(conBtn(c.id));
+  const n = TIPS.filter((t) => matchConcern(t, c)).length;
+  expect(q("#prompt-list .prompt-n").textContent).toBe(String(n));
+  expect(q("#prompt-lead").textContent).toContain(`${n}`);
+  click(q("#prompt-lead"));
+  expect(box.text).toContain(`## いま困っていること\n${c.label}`);
+  expect(box.text.match(/^### /gm).length).toBe(n);
+});

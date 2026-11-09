@@ -107,6 +107,11 @@
       <span id="filter-summary" aria-live="polite"></span>
       <i id="filter-chevron" data-lucide="chevron-down" class="w-5 h-5 shrink-0"></i>
     </button>
+    <!-- AIに渡す：いま並んでいる覚え書きをプロンプトにしてコピー。件数が絞り込みに追従し「絞ってから押す」と伝える -->
+    <button id="prompt-list" type="button" class="prompt-btn focusable chip soft border shrink-0"
+      title="いま並んでいる覚え書きを、AIに渡すプロンプトとしてコピー">
+      <i data-lucide="bot" class="w-4 h-4 shrink-0"></i><span class="prompt-word">AIに渡す</span><span class="prompt-n tnum"></span>
+    </button>
   </div>
 
   <!-- 本体：既定は折りたたみ。開くと検索窓・カテゴリ・並べ替え/表示/ランダムが出る -->
@@ -167,6 +172,11 @@
        前後送りで開き直しても大きさが変わらず、量が増えても読みやすい。 -->
   <div id="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title"
     class="relative softer card-shadow overflow-hidden flex flex-col w-full max-w-xl h-[85dvh] md:h-[82vh]" style="background:var(--card)">
+    <button id="modal-prompt" aria-label="この覚え書きを、AIに渡すプロンプトとしてコピー" title="この覚え書きを、AIに渡すプロンプトとしてコピー"
+      class="focusable chip absolute right-[6.25rem] top-3 z-10 inline-flex items-center justify-center w-9 h-9 soft border"
+      style="background:var(--card);border-color:var(--line);color:var(--ink-soft)">
+      <i data-lucide="bot" class="w-[18px] h-[18px]"></i>
+    </button>
     <button id="modal-share" aria-label="この覚え書きへのリンクを共有"
       class="focusable chip absolute right-14 top-3 z-10 inline-flex items-center justify-center w-9 h-9 soft border"
       style="background:var(--card);border-color:var(--line);color:var(--ink-soft)">
