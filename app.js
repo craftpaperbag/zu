@@ -195,7 +195,14 @@ function renderConcernLead(){
         <i data-lucide="x" class="w-3.5 h-3.5"></i>すべて見る
       </button>
     </div>
-    <p class="lead-text">${c.lead}</p>`;
+    <p class="lead-text">${c.lead}</p>
+    <div class="lead-foot">
+      <button id="prompt-lead" type="button" class="prompt-btn focusable chip soft border"
+        aria-label="この${currentList.length}件の覚え書きを、AIに渡すプロンプトとしてコピー">
+        <i data-lucide="bot" class="w-4 h-4 shrink-0"></i><span>この<span class="tnum">${currentList.length}</span>件を、AIに渡す</span>
+      </button>
+    </div>`;
+  document.getElementById("prompt-lead").onclick=copyListPrompt;
   document.getElementById("concern-clear").onclick=()=>{
     activeConcern="";
     renderConcerns(); renderGrid();
@@ -344,6 +351,11 @@ function renderGrid(){
   count.textContent = `${currentList.length} 件の覚え書き`;
   // ランダムに一枚：選べる候補があるときだけ出す
   document.getElementById("random").classList.toggle("is-hidden", currentList.length===0);
+  // AIに渡すプロンプト：渡す覚え書きがあるときだけ出す。件数は絞り込みに追従させ、「絞ってから押す」と伝える
+  const promptBtn = document.getElementById("prompt-list");
+  promptBtn.classList.toggle("is-hidden", currentList.length===0);
+  promptBtn.querySelector(".prompt-n").textContent = currentList.length;
+  promptBtn.setAttribute("aria-label", `いま並んでいる${currentList.length}件の覚え書きを、AIに渡すプロンプトとしてコピー`);
   grid.querySelectorAll("article[data-id]").forEach(c=>{
     c.onclick=()=>openTip(c.dataset.id);
     c.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openTip(c.dataset.id); } };
@@ -595,6 +607,58 @@ function shareSite(){
     copiedMsg:"このサイトのリンクをコピーしました"
   });
 }
+/* ---- AI に渡すプロンプト ----
+   覚え書きを、生成AIにそのまま貼れる文章にしてコピーする。
+   AI の判断に効くものだけを渡し、サイトの紹介や出典などの自己主張は入れない。
+   apply（やり方）だけでなく why（なぜそう感じるか）まで渡す——理由があれば、AI は
+   「この図にそのルールが効くか」「ルール同士がぶつかったらどちらを取るか」を自分で判断できる。 */
+function promptTipBlock(t){
+  return [
+    `### ${t.title}`,
+    `- 原則：${t.claim}`,
+    `- なぜ：${t.why}`,
+    `- やり方：${t.apply}`,
+    t.term ? `- 関連する用語：${t.term}` : "",
+  ].filter(Boolean).join("\n");
+}
+// 困りごと選択中なら、その言葉は AI にとって「何を直したいか」の手がかりになるので渡す。
+// カテゴリやキーワードは絞り込みの手段にすぎず、判断の材料にならないので渡さない。
+function buildPrompt(list, concern){
+  return [
+    "図（スライド・資料・表・チャートなど、見せて伝えるもの）を作る・直すのを手伝ってください。",
+    "下のガイドラインを判断基準にしてください。",
+    "",
+    "## 進め方",
+    "- 全部を当てはめず、この図に効くものだけを選ぶ。",
+    "- 効くかどうかは、各項目の「なぜ」に照らして判断する。項目同士がぶつかるときも同じ。",
+    "- 提案には、根拠にした項目の見出しを添える。",
+    "- 図の目的・読み手・中身が分からないときは、提案の前に質問する。",
+    "",
+    ...(concern ? ["## いま困っていること", concern.label, ""] : []),
+    `## ガイドライン（${list.length}件）`,
+    "",
+    list.map(promptTipBlock).join("\n\n"),
+    "",
+    "## 依頼",
+    "",
+  ].join("\n");
+}
+function copyPrompt(list, concern){
+  if(!list.length) return;
+  copyText(buildPrompt(list, concern))
+    .then(()=>showToast(`AIに渡すプロンプトをコピーしました（${list.length}件）`))
+    .catch(()=>showToast("コピーできませんでした"));
+}
+// 一覧でいま見えている覚え書き（絞り込み・検索の結果、並び順もそのまま）
+function copyListPrompt(){ copyPrompt(currentList, CONCERNS.find(x=>x.id===activeConcern)); }
+// 詳細で開いているこの一枚
+function copyTipPrompt(){
+  const t=TIPS.find(x=>x.id===currentId);
+  if(t) copyPrompt([t]);
+}
+document.getElementById("prompt-list").onclick=copyListPrompt;
+document.getElementById("modal-prompt").onclick=copyTipPrompt;
+
 document.getElementById("modal-share").onclick=shareCurrentTip;
 document.getElementById("share-site").onclick=shareSite;
 document.getElementById("share-site-top").onclick=shareSite;

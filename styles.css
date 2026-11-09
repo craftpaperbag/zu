@@ -230,6 +230,17 @@
     border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink-soft);cursor:pointer;
   }
   #concern-lead .lead-text{margin:.45rem 0 0;color:var(--ink);font-size:.92rem;}
+  #concern-lead .lead-foot{display:flex;justify-content:flex-end;margin-top:.75rem;}
+  /* AIに渡す：入口として見つかるよう、地色の操作バーより一段前に出す（card面＋墨色）。朱は使わない */
+  .prompt-btn{
+    display:inline-flex;align-items:center;gap:.4rem;
+    padding:.62rem .9rem;font-size:.85rem;line-height:1.2;font-weight:600;white-space:nowrap;cursor:pointer;
+    background:var(--card);border-color:var(--line);color:var(--ink);
+  }
+  .prompt-btn:hover{border-color:var(--ink-soft);}
+  .prompt-btn .prompt-n{color:var(--ink-soft);font-weight:500;}
+  /* スマホのバーは狭いので、アイコン＋件数だけにする（言葉は aria-label が担う） */
+  @media (max-width:639px){ #prompt-list .prompt-word{display:none;} }
   /* 固定バーの下端：スクロールする一覧が、すっと溶けて潜るように薄める */
   #filterbar::after{
     content:"";position:absolute;left:0;right:0;top:100%;height:18px;
